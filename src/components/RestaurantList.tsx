@@ -1,5 +1,18 @@
 import React, { useState } from 'react';
-import { Star, Clock, Heart, Filter, Flame, LayoutGrid, GalleryHorizontal } from 'lucide-react';
+import { 
+  Star, 
+  Clock, 
+  Heart, 
+  Filter, 
+  Flame, 
+  LayoutGrid, 
+  GalleryHorizontal, 
+  ChevronDown, 
+  SlidersHorizontal, 
+  RotateCcw, 
+  Utensils, 
+  Sparkles 
+} from 'lucide-react';
 import { Restaurant } from '../types';
 import { RESTAURANTS, FOOD_CATEGORIES } from '../data/mockData';
 import { useTheme } from '../context/ThemeContext';
@@ -18,6 +31,8 @@ export const RestaurantList: React.FC<RestaurantListProps> = ({
   searchQuery
 }) => {
   const { isDarkMode } = useTheme();
+  const [filterMode, setFilterMode] = useState<string>('all');
+  const [sortMode, setSortMode] = useState<'recommended' | 'rating' | 'time'>('recommended');
   const [vegOnly, setVegOnly] = useState(false);
   const [topRated, setTopRated] = useState(false);
   const [favorites, setFavorites] = useState<string[]>([]);
@@ -28,7 +43,23 @@ export const RestaurantList: React.FC<RestaurantListProps> = ({
     setFavorites(prev => prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]);
   };
 
+  const isFilterActive = 
+    filterMode !== 'all' || 
+    vegOnly || 
+    topRated || 
+    selectedCategory !== 'all' || 
+    sortMode !== 'recommended';
+
+  const resetAllFilters = () => {
+    setFilterMode('all');
+    setVegOnly(false);
+    setTopRated(false);
+    setSelectedCategory('all');
+    setSortMode('recommended');
+  };
+
   const filteredRestaurants = RESTAURANTS.filter(r => {
+    // Search query matching
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
       const matchName = r.name.toLowerCase().includes(q);
@@ -37,40 +68,69 @@ export const RestaurantList: React.FC<RestaurantListProps> = ({
       if (!matchName && !matchCuisine && !matchItem) return false;
     }
 
+    // Cuisine / Category filter
     if (selectedCategory !== 'all') {
       const matchCat = r.cuisine.some(c => c.toLowerCase().includes(selectedCategory.toLowerCase()));
       if (!matchCat) return false;
     }
 
-    if (vegOnly && !r.isPureVeg) return false;
-    if (topRated && r.rating < 4.8) return false;
+    // Mobile dropdown filter modes
+    if (filterMode === 'veg' && !r.isPureVeg) return false;
+    if (filterMode === 'topRated' && r.rating < 4.8) return false;
+    if (filterMode === 'fast') {
+      const mins = parseInt(r.deliveryTime);
+      if (mins > 25) return false;
+    }
+    if (filterMode === 'offers' && !r.discount) return false;
+    if (filterMode === 'veg_top' && (!r.isPureVeg || r.rating < 4.8)) return false;
+
+    // Desktop individual toggles if filterMode is default 'all'
+    if (filterMode === 'all') {
+      if (vegOnly && !r.isPureVeg) return false;
+      if (topRated && r.rating < 4.8) return false;
+    }
 
     return true;
+  }).sort((a, b) => {
+    if (sortMode === 'rating') return b.rating - a.rating;
+    if (sortMode === 'time') {
+      const aTime = parseInt(a.deliveryTime);
+      const bTime = parseInt(b.deliveryTime);
+      return aTime - bTime;
+    }
+    return 0;
   });
 
   return (
-    <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-8">
+    <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-6 sm:space-y-8">
       
-      {/* Category Icons Carousel */}
+      {/* Category Icons Carousel - EVEN SIZE FOR ALL */}
       <div className="space-y-3">
-        <h2 className={`text-lg sm:text-xl font-black tracking-tight ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
-          What's on your mind?
-        </h2>
-        <div className="flex items-center space-x-3 sm:space-x-4 overflow-x-auto pb-1 scroll-smooth">
+        <div className="flex items-center justify-between">
+          <h2 className={`text-base sm:text-xl font-black tracking-tight ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+            What's on your mind?
+          </h2>
+          <span className="text-[10px] sm:text-xs text-slate-400 font-bold hidden sm:inline">
+            Scroll to explore cuisines
+          </span>
+        </div>
+        <div className="flex items-center gap-2.5 sm:gap-3.5 overflow-x-auto pb-1 scroll-smooth">
           {FOOD_CATEGORIES.map((cat) => (
             <button
               key={cat.id}
               onClick={() => setSelectedCategory(cat.id)}
-              className={`flex flex-col items-center p-2.5 sm:p-3.5 rounded-2xl shrink-0 transition-all ${
+              className={`w-[84px] h-[84px] sm:w-[98px] sm:h-[98px] shrink-0 flex flex-col items-center justify-center p-2 rounded-2xl transition-all cursor-pointer text-center select-none ${
                 selectedCategory === cat.id
-                  ? 'bg-orange-600 text-white shadow-lg shadow-orange-600/30 scale-105'
+                  ? 'bg-orange-600 text-white shadow-lg shadow-orange-600/30 ring-2 ring-orange-400 font-black'
                   : isDarkMode
                     ? 'bg-slate-900 hover:bg-slate-850 border border-slate-800 text-slate-300'
                     : 'bg-white hover:bg-orange-50 border border-slate-200 text-slate-700'
               }`}
             >
-              <span className="text-2xl sm:text-3xl mb-0.5">{cat.icon}</span>
-              <span className="text-[11px] sm:text-xs font-black whitespace-nowrap">{cat.name}</span>
+              <span className="text-2xl sm:text-3xl mb-1 shrink-0">{cat.icon}</span>
+              <span className="text-[11px] sm:text-xs font-black text-center leading-tight truncate w-full px-1">
+                {cat.name}
+              </span>
             </button>
           ))}
         </div>
@@ -134,16 +194,161 @@ export const RestaurantList: React.FC<RestaurantListProps> = ({
         </div>
       </div>
 
-      {/* Filter Chips Bar with Mobile View Switcher */}
-      <div className="flex items-center justify-between gap-2 overflow-x-auto py-1">
-        <div className="flex items-center space-x-2 shrink-0">
+      {/* MOBILE DROPDOWN FILTERS (sm:hidden) */}
+      <div className="sm:hidden space-y-2.5 p-3 rounded-2xl border transition-all duration-200 shadow-xs" style={{
+        backgroundColor: isDarkMode ? '#0f172a' : '#ffffff',
+        borderColor: isDarkMode ? '#1e293b' : '#e2e8f0'
+      }}>
+        {/* Mobile Header with Layout Switcher */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-1.5 text-xs font-black">
+            <SlidersHorizontal className="w-3.5 h-3.5 text-orange-500" />
+            <span className={isDarkMode ? 'text-slate-200' : 'text-slate-800'}>
+              Filter & Sort
+            </span>
+            {isFilterActive && (
+              <span className="bg-orange-500 text-white text-[9px] font-black px-1.5 py-0.2 rounded-full">
+                Active
+              </span>
+            )}
+          </div>
+
+          {/* Mobile Layout Switcher: 2-Col vs 1 1/2 Peek */}
+          <div className={`flex items-center p-0.5 rounded-lg border ${
+            isDarkMode ? 'bg-slate-950 border-slate-800' : 'bg-slate-100 border-slate-200'
+          }`}>
+            <button
+              onClick={() => setMobileLayout('two-col')}
+              className={`px-2 py-1 rounded-md text-[11px] font-bold flex items-center space-x-1 transition-all ${
+                mobileLayout === 'two-col' 
+                  ? 'bg-orange-600 text-white shadow-xs' 
+                  : isDarkMode ? 'text-slate-400' : 'text-slate-600'
+              }`}
+              title="2-Column Grid"
+            >
+              <LayoutGrid className="w-3 h-3" />
+              <span>2-Col</span>
+            </button>
+            <button
+              onClick={() => setMobileLayout('peek')}
+              className={`px-2 py-1 rounded-md text-[11px] font-bold flex items-center space-x-1 transition-all ${
+                mobileLayout === 'peek' 
+                  ? 'bg-orange-600 text-white shadow-xs' 
+                  : isDarkMode ? 'text-slate-400' : 'text-slate-600'
+              }`}
+              title="1 1/2 Peek Swipe"
+            >
+              <GalleryHorizontal className="w-3 h-3" />
+              <span>1 ½ Peek</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Dual Responsive Mobile Dropdowns */}
+        <div className="grid grid-cols-2 gap-2">
+          {/* Dropdown 1: Filter By (Diet & Rating & Delivery) */}
+          <div className="relative">
+            <Filter className="w-3.5 h-3.5 text-orange-500 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none z-10" />
+            <select
+              value={filterMode}
+              onChange={(e) => {
+                const val = e.target.value;
+                setFilterMode(val);
+                if (val === 'veg') { setVegOnly(true); setTopRated(false); }
+                else if (val === 'topRated') { setVegOnly(false); setTopRated(true); }
+                else if (val === 'veg_top') { setVegOnly(true); setTopRated(true); }
+                else if (val === 'all') { setVegOnly(false); setTopRated(false); }
+              }}
+              className={`w-full appearance-none pl-7 pr-6 py-2 text-xs font-bold rounded-xl border transition-all cursor-pointer shadow-xs outline-none ${
+                filterMode !== 'all'
+                  ? 'border-orange-500 text-orange-500 bg-orange-500/10 font-black ring-1 ring-orange-500/30'
+                  : isDarkMode
+                    ? 'bg-slate-950 border-slate-800 text-slate-200 hover:border-slate-700'
+                    : 'bg-slate-50 border-slate-200 text-slate-800 hover:border-slate-300'
+              }`}
+            >
+              <option value="all">⚡ Filter: All</option>
+              <option value="veg">🌱 Pure Veg Only</option>
+              <option value="topRated">⭐ Top Rated (4.8+)</option>
+              <option value="fast">🚀 Fast (&lt; 25 mins)</option>
+              <option value="offers">🏷️ Offers & Deals</option>
+              <option value="veg_top">🌱⭐ Veg & Top Rated</option>
+            </select>
+            <ChevronDown className="w-3.5 h-3.5 text-slate-400 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
+          </div>
+
+          {/* Dropdown 2: Cuisine / Category */}
+          <div className="relative">
+            <Utensils className="w-3.5 h-3.5 text-orange-500 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none z-10" />
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className={`w-full appearance-none pl-7 pr-6 py-2 text-xs font-bold rounded-xl border transition-all cursor-pointer shadow-xs outline-none ${
+                selectedCategory !== 'all'
+                  ? 'border-orange-500 text-orange-500 bg-orange-500/10 font-black ring-1 ring-orange-500/30'
+                  : isDarkMode
+                    ? 'bg-slate-950 border-slate-800 text-slate-200 hover:border-slate-700'
+                    : 'bg-slate-50 border-slate-200 text-slate-800 hover:border-slate-300'
+              }`}
+            >
+              <option value="all">🍽️ All Cuisines</option>
+              {FOOD_CATEGORIES.filter(c => c.id !== 'all').map(c => (
+                <option key={c.id} value={c.id}>
+                  {c.icon} {c.name}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="w-3.5 h-3.5 text-slate-400 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
+          </div>
+        </div>
+
+        {/* Dropdown 3 & Reset (Sort Bar) */}
+        <div className="flex items-center justify-between gap-2 pt-0.5">
+          <div className="relative flex-1">
+            <select
+              value={sortMode}
+              onChange={(e) => setSortMode(e.target.value as any)}
+              className={`w-full appearance-none pl-3 pr-6 py-1.5 text-[11px] font-bold rounded-lg border transition-all cursor-pointer outline-none ${
+                sortMode !== 'recommended'
+                  ? 'border-orange-500/50 text-orange-500 bg-orange-500/5'
+                  : isDarkMode
+                    ? 'bg-slate-950 border-slate-800 text-slate-400'
+                    : 'bg-slate-50 border-slate-200 text-slate-600'
+              }`}
+            >
+              <option value="recommended">↕️ Sort: Recommended</option>
+              <option value="rating">★ Sort: Highest Rating</option>
+              <option value="time">⏱️ Sort: Fastest Delivery</option>
+            </select>
+            <ChevronDown className="w-3 h-3 text-slate-400 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
+          </div>
+
+          {isFilterActive && (
+            <button
+              onClick={resetAllFilters}
+              className="flex items-center space-x-1 px-2.5 py-1.5 rounded-lg bg-orange-500/10 border border-orange-500/30 text-orange-500 text-[11px] font-bold hover:bg-orange-500/20 transition-all shrink-0"
+            >
+              <RotateCcw className="w-3 h-3" />
+              <span>Reset</span>
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* DESKTOP FILTER BAR (hidden sm:flex) */}
+      <div className="hidden sm:flex items-center justify-between gap-3 py-1">
+        <div className="flex items-center space-x-2">
           <div className="flex items-center space-x-1 text-slate-500 font-bold text-xs uppercase tracking-wider shrink-0 pr-1">
             <Filter className="w-3.5 h-3.5 text-orange-500" />
-            <span className="hidden sm:inline">Filters:</span>
+            <span>Filters:</span>
           </div>
 
           <button
-            onClick={() => setVegOnly(!vegOnly)}
+            onClick={() => {
+              const next = !vegOnly;
+              setVegOnly(next);
+              setFilterMode(next ? 'veg' : 'all');
+            }}
             className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center space-x-1 shrink-0 ${
               vegOnly 
                 ? 'bg-emerald-600 text-white shadow-sm' 
@@ -153,11 +358,15 @@ export const RestaurantList: React.FC<RestaurantListProps> = ({
             }`}
           >
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-            <span>Veg</span>
+            <span>Pure Veg</span>
           </button>
 
           <button
-            onClick={() => setTopRated(!topRated)}
+            onClick={() => {
+              const next = !topRated;
+              setTopRated(next);
+              setFilterMode(next ? 'topRated' : 'all');
+            }}
             className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 ${
               topRated 
                 ? 'bg-orange-600 text-white shadow-sm' 
@@ -166,52 +375,53 @@ export const RestaurantList: React.FC<RestaurantListProps> = ({
                   : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'
             }`}
           >
-            ⭐ 4.8+
+            ⭐ 4.8+ Top Rated
           </button>
 
-          {(vegOnly || topRated || selectedCategory !== 'all') && (
+          <button
+            onClick={() => {
+              const next = filterMode === 'fast' ? 'all' : 'fast';
+              setFilterMode(next);
+            }}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 flex items-center space-x-1 ${
+              filterMode === 'fast'
+                ? 'bg-orange-600 text-white shadow-sm' 
+                : isDarkMode
+                  ? 'bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-850'
+                  : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'
+            }`}
+          >
+            <Clock className="w-3 h-3 text-orange-400" />
+            <span>Fast Delivery (&lt; 25m)</span>
+          </button>
+
+          {isFilterActive && (
             <button
-              onClick={() => {
-                setVegOnly(false);
-                setTopRated(false);
-                setSelectedCategory('all');
-              }}
-              className="text-xs font-bold text-orange-500 hover:underline px-1 shrink-0"
+              onClick={resetAllFilters}
+              className="text-xs font-bold text-orange-500 hover:underline px-2 flex items-center space-x-1"
             >
-              Reset
+              <RotateCcw className="w-3 h-3" />
+              <span>Reset All</span>
             </button>
           )}
         </div>
 
-        {/* Mobile Layout Switcher */}
-        <div className={`flex items-center p-1 rounded-xl shrink-0 sm:hidden border ${
-          isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-slate-100 border-slate-200'
-        }`}>
-          <button
-            onClick={() => setMobileLayout('two-col')}
-            className={`p-1.5 rounded-lg text-xs font-bold flex items-center space-x-1 transition-all ${
-              mobileLayout === 'two-col' 
-                ? 'bg-orange-600 text-white shadow-xs' 
-                : isDarkMode ? 'text-slate-400' : 'text-slate-600'
+        {/* Desktop Sort Dropdown */}
+        <div className="relative">
+          <select
+            value={sortMode}
+            onChange={(e) => setSortMode(e.target.value as any)}
+            className={`appearance-none pl-3 pr-7 py-1.5 text-xs font-bold rounded-xl border transition-all cursor-pointer ${
+              isDarkMode
+                ? 'bg-slate-900 border-slate-800 text-slate-300'
+                : 'bg-white border-slate-200 text-slate-700'
             }`}
-            title="2-Column Grid"
           >
-            <LayoutGrid className="w-3.5 h-3.5" />
-            <span className="text-[10px]">2-Col</span>
-          </button>
-
-          <button
-            onClick={() => setMobileLayout('peek')}
-            className={`p-1.5 rounded-lg text-xs font-bold flex items-center space-x-1 transition-all ${
-              mobileLayout === 'peek' 
-                ? 'bg-orange-600 text-white shadow-xs' 
-                : isDarkMode ? 'text-slate-400' : 'text-slate-600'
-            }`}
-            title="1 1/2 Peek Swipe"
-          >
-            <GalleryHorizontal className="w-3.5 h-3.5" />
-            <span className="text-[10px]">1 ½ Peek</span>
-          </button>
+            <option value="recommended">Sort by: Recommended</option>
+            <option value="rating">Sort by: Rating (High to Low)</option>
+            <option value="time">Sort by: Delivery Time</option>
+          </select>
+          <ChevronDown className="w-3.5 h-3.5 text-slate-400 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
         </div>
       </div>
 
@@ -235,6 +445,12 @@ export const RestaurantList: React.FC<RestaurantListProps> = ({
             <p className="text-xs text-slate-500 max-w-sm mx-auto">
               We couldn't find any spots matching your filter criteria. Try resetting filters.
             </p>
+            <button
+              onClick={resetAllFilters}
+              className="mt-2 px-4 py-2 bg-orange-600 text-white text-xs font-bold rounded-xl shadow-xs hover:bg-orange-700"
+            >
+              Reset Filters
+            </button>
           </div>
         ) : (
           <div
@@ -254,13 +470,13 @@ export const RestaurantList: React.FC<RestaurantListProps> = ({
                     isDarkMode 
                       ? 'bg-slate-900 border-slate-800 hover:border-orange-500/40 text-white' 
                       : 'bg-white border-slate-200 text-slate-900'
-                  } ${mobileLayout === 'peek' ? 'w-[76vw] sm:w-auto shrink-0 snap-start' : 'w-full'}`}
+                  } ${mobileLayout === 'peek' ? 'w-[76vw] sm:w-auto shrink-0 snap-start' : 'w-full h-full'}`}
                 >
                   {/* Image Header */}
                   <div className="relative aspect-[4/3] sm:aspect-[16/10] overflow-hidden bg-slate-100">
                     <img 
                       src={restaurant.image} 
-                      alt={restaurant.name}
+                      alt={restaurant.name} 
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent"></div>

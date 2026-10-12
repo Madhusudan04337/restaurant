@@ -5,9 +5,9 @@ export const FOOD_CATEGORIES = [
   { id: 'biryani', name: 'Biryani', icon: '🍛' },
   { id: 'pizza', name: 'Pizza', icon: '🍕' },
   { id: 'burgers', name: 'Burgers', icon: '🍔' },
-  { id: 'sushi', name: 'Sushi & Asian', icon: '🍣' },
-  { id: 'healthy', name: 'Healthy Bowls', icon: '🥗' },
-  { id: 'desserts', name: 'Desserts & Shakes', icon: '🧇' }
+  { id: 'sushi', name: 'Sushi', icon: '🍣' },
+  { id: 'healthy', name: 'Healthy', icon: '🥗' },
+  { id: 'desserts', name: 'Desserts', icon: '🧇' }
 ];
 
 export const RESTAURANTS: Restaurant[] = [
@@ -279,6 +279,7 @@ export const RESTAURANTS: Restaurant[] = [
     image: 'https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&q=80&w=1000',
     address: '88 Confectionery Street, Downtown',
     discount: 'FLAT $5 OFF',
+    isPureVeg: true,
     menu: [
       {
         name: 'Warm Belgian Waffles',
