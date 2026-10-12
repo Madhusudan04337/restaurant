@@ -1,0 +1,6 @@
+{
+  "name": "CraveDrop - Food & Quick Delivery",
+  "description": "Discover top restaurants, order delicious food with lightning-fast delivery, grocery essentials, and AI culinary recommendations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
