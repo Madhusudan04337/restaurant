@@ -1,6 +1,7 @@
 import React from 'react';
 import { Utensils, Zap, Users, Crown, Bike } from 'lucide-react';
 import { Order } from '../types';
+import { useTheme } from '../context/ThemeContext';
 
 export type MobileTab = 'delivery' | 'instamart' | 'feast' | 'dinein' | 'orders';
 
@@ -15,6 +16,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
   setActiveTab,
   orders
 }) => {
+  const { isDarkMode } = useTheme();
   const activeOrdersCount = orders.filter(o => o.status !== 'DELIVERED').length;
 
   const tabs: { id: MobileTab; label: string; icon: React.ElementType; badge?: number }[] = [
@@ -28,7 +30,11 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
   return (
     <nav 
       aria-label="Mobile Navigation" 
-      className="fixed bottom-0 inset-x-0 z-40 sm:hidden bg-white/95 backdrop-blur-md border-t border-slate-200/90 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] py-1.5 px-2 safe-area-pb"
+      className={`fixed bottom-0 inset-x-0 z-40 sm:hidden backdrop-blur-md border-t transition-colors duration-200 py-1.5 px-2 safe-area-pb ${
+        isDarkMode 
+          ? 'bg-slate-950/95 border-slate-800/90 shadow-[0_-4px_25px_rgba(0,0,0,0.6)] text-slate-400' 
+          : 'bg-white/95 border-slate-200/90 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] text-slate-500'
+      }`}
     >
       <div className="flex items-center justify-around">
         {tabs.map((tab) => {
@@ -44,8 +50,10 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
               }}
               className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition-all relative ${
                 isActive 
-                  ? 'text-orange-600 font-black scale-105' 
-                  : 'text-slate-500 hover:text-slate-900 font-semibold'
+                  ? 'text-orange-500 font-black scale-105' 
+                  : isDarkMode
+                    ? 'text-slate-400 hover:text-slate-200 font-semibold'
+                    : 'text-slate-500 hover:text-slate-900 font-semibold'
               }`}
             >
               <div className="relative">
@@ -60,7 +68,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
                 {tab.label}
               </span>
               {isActive && (
-                <span className="w-1.5 h-1.5 rounded-full bg-orange-600 mt-0.5" />
+                <span className="w-1.5 h-1.5 rounded-full bg-orange-500 mt-0.5 shadow-sm" />
               )}
             </button>
           );

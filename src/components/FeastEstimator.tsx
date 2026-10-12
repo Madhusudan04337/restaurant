@@ -101,7 +101,7 @@ export const FeastEstimator: React.FC<FeastEstimatorProps> = ({ onAddFeastToCart
               </button>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-2 gap-2.5 sm:gap-4">
               {FEAST_OPTIONS.map((item) => {
                 const isSelected = selectedIds.includes(item.id);
                 return (
@@ -110,35 +110,39 @@ export const FeastEstimator: React.FC<FeastEstimatorProps> = ({ onAddFeastToCart
                     whileHover={{ scale: 1.01 }}
                     whileTap={{ scale: 0.99 }}
                     onClick={() => toggleItem(item.id)}
-                    className={`p-4 rounded-2xl border cursor-pointer transition-all flex items-start space-x-3.5 ${
+                    className={`p-2.5 sm:p-4 rounded-2xl border cursor-pointer transition-all flex flex-col sm:flex-row items-start sm:space-x-3.5 space-y-2 sm:space-y-0 ${
                       isSelected
                         ? 'bg-slate-950 border-orange-500 shadow-lg shadow-orange-600/10'
                         : 'bg-slate-950/60 border-slate-800 hover:border-slate-700 opacity-80'
                     }`}
                   >
-                    {/* Custom Checkbox */}
-                    <div className={`w-5 h-5 rounded-lg border flex items-center justify-center shrink-0 mt-0.5 transition-colors ${
-                      isSelected ? 'bg-orange-600 border-orange-600 text-white' : 'border-slate-600 bg-slate-900'
-                    }`}>
-                      {isSelected && <Check className="w-3.5 h-3.5 stroke-[3]" />}
+                    <div className="flex items-center justify-between w-full sm:w-auto">
+                      {/* Custom Checkbox */}
+                      <div className={`w-4 h-4 sm:w-5 sm:h-5 rounded-md sm:rounded-lg border flex items-center justify-center shrink-0 transition-colors ${
+                        isSelected ? 'bg-orange-600 border-orange-600 text-white' : 'border-slate-600 bg-slate-900'
+                      }`}>
+                        {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
+                      </div>
+
+                      <span className="text-[10px] sm:hidden font-black uppercase text-orange-400">${item.price.toFixed(2)}</span>
                     </div>
 
                     <img 
                       src={item.image} 
                       alt={item.name} 
-                      className="w-16 h-16 rounded-xl object-cover shrink-0" 
+                      className="w-full sm:w-16 h-20 sm:h-16 rounded-xl object-cover shrink-0" 
                     />
 
-                    <div className="flex-1 min-w-0 space-y-1">
-                      <div className="flex items-center justify-between">
+                    <div className="flex-1 min-w-0 space-y-1 w-full">
+                      <div className="hidden sm:flex items-center justify-between">
                         <span className="text-[10px] font-black uppercase text-orange-400">{item.category}</span>
                         <span className="text-xs font-black text-white">${item.price.toFixed(2)}</span>
                       </div>
                       <h4 className="text-xs sm:text-sm font-bold text-white line-clamp-1">{item.name}</h4>
-                      <div className="flex items-center space-x-3 text-[10px] text-slate-400 pt-0.5 font-medium">
+                      <div className="flex items-center justify-between sm:justify-start sm:space-x-3 text-[10px] text-slate-400 font-medium">
                         <span className="flex items-center space-x-0.5">
                           <Clock className="w-3 h-3 text-orange-400" />
-                          <span>{item.prepMins}m prep</span>
+                          <span>{item.prepMins}m</span>
                         </span>
                         <span className="flex items-center space-x-0.5">
                           <Flame className="w-3 h-3 text-amber-400" />

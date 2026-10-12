@@ -21,8 +21,10 @@ import { OrderTrackerModal } from './components/OrderTrackerModal';
 import { OrdersDrawer } from './components/OrdersDrawer';
 import { FoodieAiModal } from './components/FoodieAiModal';
 import { Bike, Clock, ArrowRight } from 'lucide-react';
+import { useTheme } from './context/ThemeContext';
 
 export default function App() {
+  const { isDarkMode } = useTheme();
   const [location, setLocation] = useState('Downtown Metro Center');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -191,7 +193,9 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-orange-500 selection:text-white relative pb-20 sm:pb-0 overflow-x-hidden">
+    <div className={`min-h-screen font-sans selection:bg-orange-500 selection:text-white relative pb-20 sm:pb-0 overflow-x-hidden transition-colors duration-200 ${
+      isDarkMode ? 'bg-slate-950 text-slate-100' : 'bg-slate-50 text-slate-900'
+    }`}>
       
       {/* Sticky Top Header */}
       <Navbar
@@ -249,12 +253,12 @@ export default function App() {
 
         {mobileTab === 'dinein' && (
           <div className="space-y-6 pb-6">
-            <div className="p-4 bg-slate-900 text-white rounded-b-3xl text-center space-y-2">
+            <div className="p-4 bg-slate-900 text-white rounded-b-3xl text-center space-y-2 border-b border-slate-800">
               <span className="text-[10px] font-black uppercase text-amber-400">VIP DINING PRIVILEGES</span>
               <h2 className="text-xl font-black">Table Booking & CraveClub</h2>
               <button
                 onClick={() => setIsReservationOpen(true)}
-                className="mt-2 bg-orange-600 text-white px-5 py-2.5 rounded-xl text-xs font-black uppercase shadow-md"
+                className="mt-2 bg-orange-600 hover:bg-orange-700 text-white px-5 py-2.5 rounded-xl text-xs font-black uppercase shadow-md active:scale-95 transition-transform"
               >
                 Reserve a Table Now
               </button>
@@ -267,15 +271,25 @@ export default function App() {
         {mobileTab === 'orders' && (
           <div className="py-6 px-4 max-w-lg mx-auto space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-black text-slate-900">Your Orders ({orders.length})</h2>
-              <span className="text-xs text-orange-600 font-bold">{orders.filter(o => o.status !== 'DELIVERED').length} Active</span>
+              <h2 className={`text-lg font-black ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+                Your Orders ({orders.length})
+              </h2>
+              <span className="text-xs text-orange-600 dark:text-orange-400 font-bold">
+                {orders.filter(o => o.status !== 'DELIVERED').length} Active
+              </span>
             </div>
 
             {orders.length === 0 ? (
-              <div className="text-center py-16 bg-white rounded-3xl border border-slate-200 p-6 space-y-2">
-                <Bike className="w-10 h-10 text-orange-600 mx-auto" />
-                <h3 className="text-sm font-bold text-slate-900">No active orders right now</h3>
-                <p className="text-xs text-slate-500">Order from top restaurants to track live GPS delivery.</p>
+              <div className={`text-center py-16 rounded-3xl border p-6 space-y-2 ${
+                isDarkMode ? 'bg-slate-900 border-slate-800 text-white' : 'bg-white border-slate-200 text-slate-900'
+              }`}>
+                <Bike className="w-10 h-10 text-orange-500 mx-auto" />
+                <h3 className={`text-sm font-bold ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+                  No active orders right now
+                </h3>
+                <p className={`text-xs ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
+                  Order from top restaurants to track live GPS delivery.
+                </p>
                 <button
                   onClick={() => setMobileTab('delivery')}
                   className="bg-orange-600 text-white px-4 py-2 rounded-xl text-xs font-bold"
@@ -291,27 +305,41 @@ export default function App() {
                     <div
                       key={order.id}
                       onClick={() => setTrackedOrder(order)}
-                      className="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs hover:border-orange-500 cursor-pointer space-y-3"
+                      className={`rounded-2xl p-4 border shadow-xs hover:border-orange-500 cursor-pointer space-y-3 transition-colors ${
+                        isDarkMode 
+                          ? 'bg-slate-900 border-slate-800 text-white hover:border-orange-500/40' 
+                          : 'bg-white border-slate-200 text-slate-900'
+                      }`}
                     >
                       <div className="flex items-center justify-between">
                         <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase ${
-                          isDelivered ? 'bg-emerald-100 text-emerald-800' : 'bg-orange-100 text-orange-800 animate-pulse'
+                          isDelivered 
+                            ? isDarkMode ? 'bg-emerald-950/70 text-emerald-400 border border-emerald-800/60' : 'bg-emerald-100 text-emerald-800'
+                            : isDarkMode ? 'bg-orange-950/70 text-orange-400 border border-orange-800/60 animate-pulse' : 'bg-orange-100 text-orange-800 animate-pulse'
                         }`}>
                           {isDelivered ? 'Delivered' : `Live: ${order.status}`}
                         </span>
-                        <span className="text-xs text-slate-400 font-bold">#{order.id}</span>
+                        <span className={`text-xs font-bold ${isDarkMode ? 'text-slate-400' : 'text-slate-400'}`}>
+                          #{order.id}
+                        </span>
                       </div>
 
                       <div>
-                        <h4 className="text-sm font-black text-slate-900">{order.restaurantName}</h4>
-                        <p className="text-xs text-slate-500 truncate mt-0.5">
+                        <h4 className={`text-sm font-black ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+                          {order.restaurantName}
+                        </h4>
+                        <p className={`text-xs truncate mt-0.5 ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
                           {order.items.map(i => `${i.quantity}x ${i.dish.name}`).join(', ')}
                         </p>
                       </div>
 
-                      <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
-                        <span className="font-black text-slate-900">${order.totalAmount.toFixed(2)}</span>
-                        <button className="bg-orange-600 text-white px-3 py-1.5 rounded-xl font-bold text-xs flex items-center space-x-1">
+                      <div className={`pt-2 border-t flex items-center justify-between text-xs ${
+                        isDarkMode ? 'border-slate-800' : 'border-slate-100'
+                      }`}>
+                        <span className={`font-black ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+                          ${order.totalAmount.toFixed(2)}
+                        </span>
+                        <button className="bg-orange-600 text-white px-3 py-1.5 rounded-xl font-bold text-xs flex items-center space-x-1 shadow-xs">
                           <span>{isDelivered ? 'View Receipt' : 'Live GPS Track'}</span>
                           <ArrowRight className="w-3.5 h-3.5" />
                         </button>

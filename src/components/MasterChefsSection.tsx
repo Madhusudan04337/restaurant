@@ -3,12 +3,15 @@ import { Award, Star, Flame, Utensils, ArrowRight } from 'lucide-react';
 import { motion } from 'motion/react';
 import { RESTAURANTS } from '../data/mockData';
 import { Restaurant } from '../types';
+import { useTheme } from '../context/ThemeContext';
 
 interface MasterChefsSectionProps {
   onSelectRestaurant: (restaurant: Restaurant) => void;
 }
 
 export const MasterChefsSection: React.FC<MasterChefsSectionProps> = ({ onSelectRestaurant }) => {
+  const { isDarkMode } = useTheme();
+
   const chefs = [
     {
       id: 'chef-1',
@@ -60,18 +63,23 @@ export const MasterChefsSection: React.FC<MasterChefsSectionProps> = ({ onSelect
   };
 
   return (
-    <section id="master-chefs" className="py-20 bg-white border-b border-slate-200">
+    <section 
+      id="master-chefs" 
+      className={`py-16 sm:py-20 border-b transition-colors duration-200 ${
+        isDarkMode ? 'bg-slate-950 border-slate-800/80 text-white' : 'bg-white border-slate-200 text-slate-900'
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto space-y-2">
-          <span className="text-[11px] font-black uppercase tracking-[0.25em] text-orange-600">
+          <span className="text-[11px] font-black uppercase tracking-[0.25em] text-orange-600 dark:text-orange-400">
             THE CULINARY ARTISANS
           </span>
-          <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-slate-900">
+          <h2 className={`text-3xl sm:text-5xl font-black tracking-tight ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
             Meet Our Master Chefs
           </h2>
-          <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
+          <p className={`text-xs sm:text-sm leading-relaxed ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
             Visionary culinary artists dedicated to fresh ingredients, authentic traditions, and unforgettable dining delivered directly to your doorstep.
           </p>
         </div>
@@ -81,17 +89,21 @@ export const MasterChefsSection: React.FC<MasterChefsSectionProps> = ({ onSelect
           {chefs.map((chef) => (
             <div
               key={chef.id}
-              className="bg-white rounded-3xl overflow-hidden border border-slate-200 hover:shadow-xl transition-all duration-300 flex flex-col justify-between group transform hover:-translate-y-1"
+              className={`rounded-3xl overflow-hidden border transition-all duration-300 flex flex-col justify-between group transform hover:-translate-y-1 shadow-sm hover:shadow-xl ${
+                isDarkMode 
+                  ? 'bg-slate-900 border-slate-800 text-white hover:border-orange-500/30' 
+                  : 'bg-white border-slate-200 text-slate-900 hover:border-orange-300'
+              }`}
             >
               <div>
                 {/* Photo with experience badge */}
-                <div className="relative aspect-square overflow-hidden bg-slate-100">
+                <div className="relative aspect-square overflow-hidden bg-slate-100 dark:bg-slate-800">
                   <img
                     src={chef.image}
                     alt={chef.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
-                  <div className="absolute top-3 left-3 bg-slate-900/85 backdrop-blur-md text-white text-[10px] font-black px-2.5 py-1 rounded-lg uppercase tracking-wider flex items-center space-x-1 shadow-md">
+                  <div className="absolute top-3 left-3 bg-slate-950/85 backdrop-blur-md text-white text-[10px] font-black px-2.5 py-1 rounded-lg uppercase tracking-wider flex items-center space-x-1 shadow-md">
                     <Award className="w-3 h-3 text-amber-400" />
                     <span>{chef.experience}</span>
                   </div>
@@ -100,21 +112,27 @@ export const MasterChefsSection: React.FC<MasterChefsSectionProps> = ({ onSelect
                 {/* Details */}
                 <div className="p-5 space-y-3">
                   <div>
-                    <h3 className="text-base font-black text-slate-900 group-hover:text-orange-600 transition-colors">
+                    <h3 className={`text-base font-black transition-colors ${
+                      isDarkMode ? 'text-white group-hover:text-orange-400' : 'text-slate-900 group-hover:text-orange-600'
+                    }`}>
                       {chef.name}
                     </h3>
-                    <p className="text-[11px] font-bold text-orange-600 uppercase tracking-wider mt-0.5">
+                    <p className="text-[11px] font-bold text-orange-600 dark:text-orange-400 uppercase tracking-wider mt-0.5">
                       {chef.title}
                     </p>
                   </div>
 
-                  <p className="text-xs text-slate-500 leading-relaxed line-clamp-3">
+                  <p className={`text-xs leading-relaxed line-clamp-3 ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
                     {chef.bio}
                   </p>
 
-                  <div className="pt-2 border-t border-slate-100">
-                    <span className="text-[10px] font-black uppercase text-slate-400 block">Signature Creation:</span>
-                    <span className="text-xs font-bold text-slate-800">{chef.signatureDish}</span>
+                  <div className={`pt-2.5 border-t ${isDarkMode ? 'border-slate-800' : 'border-slate-100'}`}>
+                    <span className="text-[10px] font-black uppercase text-slate-400 dark:text-slate-500 block">
+                      Signature Creation:
+                    </span>
+                    <span className={`text-xs font-bold ${isDarkMode ? 'text-slate-200' : 'text-slate-800'}`}>
+                      {chef.signatureDish}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -123,7 +141,11 @@ export const MasterChefsSection: React.FC<MasterChefsSectionProps> = ({ onSelect
               <div className="p-5 pt-0">
                 <button
                   onClick={() => handleChefClick(chef.restaurantId)}
-                  className="w-full bg-slate-900 hover:bg-orange-600 text-white font-black py-3 rounded-xl text-xs uppercase tracking-wider transition-colors shadow-sm flex items-center justify-center space-x-1.5"
+                  className={`w-full font-black py-3 rounded-xl text-xs uppercase tracking-wider transition-all shadow-sm flex items-center justify-center space-x-1.5 ${
+                    isDarkMode 
+                      ? 'bg-slate-800 hover:bg-orange-600 text-white' 
+                      : 'bg-slate-900 hover:bg-orange-600 text-white'
+                  }`}
                 >
                   <span>Taste Chef's Menu</span>
                   <ArrowRight className="w-3.5 h-3.5" />

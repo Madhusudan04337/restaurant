@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, ShoppingBag, Plus, Minus, Tag, ArrowRight, CheckCircle2, Bike } from 'lucide-react';
 import { CartItem, Order, MenuItem } from '../types';
+import { useTheme } from '../context/ThemeContext';
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -23,6 +24,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   onCheckout,
   location
 }) => {
+  const { isDarkMode } = useTheme();
   const [coupon, setCoupon] = useState('CRAVE50');
   const [couponApplied, setCouponApplied] = useState(false);
   const [tip, setTip] = useState(2.00);
@@ -74,19 +76,34 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex justify-end">
-      <div className="bg-white w-full max-w-md h-full shadow-2xl flex flex-col justify-between animate-in slide-in-from-right duration-300">
+    <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex justify-end">
+      <div className={`w-full max-w-md h-full shadow-2xl flex flex-col justify-between animate-in slide-in-from-right duration-300 transition-colors ${
+        isDarkMode 
+          ? 'bg-slate-900 border-l border-slate-800 text-white shadow-black/80' 
+          : 'bg-white border-l border-slate-200 text-slate-900'
+      }`}>
         
         {/* Header */}
-        <div className="p-5 border-b border-slate-100 flex items-center justify-between">
+        <div className={`p-5 border-b flex items-center justify-between ${
+          isDarkMode ? 'border-slate-800' : 'border-slate-100'
+        }`}>
           <div className="flex items-center space-x-2">
-            <ShoppingBag className="w-5 h-5 text-orange-600" />
+            <ShoppingBag className="w-5 h-5 text-orange-500" />
             <div>
-              <h2 className="text-base font-black text-slate-900">Your Cart ({cartItems.reduce((a, b) => a + b.quantity, 0)})</h2>
-              <p className="text-[10px] text-slate-500 font-bold truncate max-w-[200px]">From {restaurantName}</p>
+              <h2 className={`text-base font-black ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+                Your Cart ({cartItems.reduce((a, b) => a + b.quantity, 0)})
+              </h2>
+              <p className={`text-[10px] font-bold truncate max-w-[200px] ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
+                From {restaurantName}
+              </p>
             </div>
           </div>
-          <button onClick={onClose} className="p-2 text-slate-400 hover:text-slate-600 rounded-full">
+          <button 
+            onClick={onClose} 
+            className={`p-2 rounded-full transition-colors ${
+              isDarkMode ? 'text-slate-400 hover:text-white hover:bg-slate-800' : 'text-slate-400 hover:text-slate-600 hover:bg-slate-100'
+            }`}
+          >
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -95,11 +112,13 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
         <div className="flex-1 overflow-y-auto p-5 space-y-4">
           {cartItems.length === 0 ? (
             <div className="text-center py-20 space-y-3">
-              <div className="w-16 h-16 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center mx-auto text-2xl">
+              <div className="w-16 h-16 bg-orange-100 dark:bg-orange-950/50 text-orange-600 dark:text-orange-400 rounded-full flex items-center justify-center mx-auto text-2xl">
                 🛒
               </div>
-              <h3 className="text-base font-bold text-slate-900">Your cart is empty</h3>
-              <p className="text-xs text-slate-500 max-w-xs mx-auto">
+              <h3 className={`text-base font-bold ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+                Your cart is empty
+              </h3>
+              <p className={`text-xs max-w-xs mx-auto ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
                 Discover mouthwatering dishes from top restaurants and add them to your cart.
               </p>
             </div>
@@ -109,12 +128,25 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               {/* Itemized list */}
               <div className="space-y-3">
                 {cartItems.map((cartItem) => (
-                  <div key={cartItem.dish.id} className="flex items-center justify-between py-3 border-b border-slate-100">
+                  <div 
+                    key={cartItem.dish.id} 
+                    className={`flex items-center justify-between py-3 border-b ${
+                      isDarkMode ? 'border-slate-800' : 'border-slate-100'
+                    }`}
+                  >
                     <div className="flex items-center space-x-3 flex-1 min-w-0 pr-2">
-                      <img src={cartItem.dish.image} alt={cartItem.dish.name} className="w-12 h-12 rounded-xl object-cover shrink-0" />
+                      <img 
+                        src={cartItem.dish.image} 
+                        alt={cartItem.dish.name} 
+                        className="w-12 h-12 rounded-xl object-cover shrink-0" 
+                      />
                       <div className="min-w-0 flex-1">
-                        <h4 className="text-xs font-black text-slate-900 truncate">{cartItem.dish.name}</h4>
-                        <p className="text-xs font-extrabold text-orange-600">${cartItem.dish.price.toFixed(2)}</p>
+                        <h4 className={`text-xs font-black truncate ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+                          {cartItem.dish.name}
+                        </h4>
+                        <p className="text-xs font-extrabold text-orange-600 dark:text-orange-400">
+                          ${cartItem.dish.price.toFixed(2)}
+                        </p>
                       </div>
                     </div>
 
@@ -141,18 +173,22 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                       value={coupon}
                       onChange={(e) => setCoupon(e.target.value)}
                       placeholder="Enter coupon (CRAVE50)"
-                      className="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-black uppercase tracking-wider"
+                      className={`w-full pl-9 pr-3 py-2.5 border rounded-xl text-xs font-black uppercase tracking-wider ${
+                        isDarkMode 
+                          ? 'bg-slate-950 border-slate-800 text-white placeholder-slate-500 focus:border-orange-500' 
+                          : 'bg-slate-50 border-slate-200 text-slate-900 placeholder-slate-400 focus:border-orange-500'
+                      }`}
                     />
                   </div>
                   <button
                     onClick={applyCoupon}
-                    className="bg-slate-900 hover:bg-orange-600 text-white px-4 py-2.5 rounded-xl text-xs font-black transition-colors"
+                    className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2.5 rounded-xl text-xs font-black transition-colors"
                   >
                     Apply
                   </button>
                 </div>
                 {couponApplied && (
-                  <p className="text-xs text-emerald-600 font-bold flex items-center space-x-1">
+                  <p className="text-xs text-emerald-500 font-bold flex items-center space-x-1">
                     <CheckCircle2 className="w-3.5 h-3.5" />
                     <span>50% discount applied! You saved ${discount.toFixed(2)}</span>
                   </p>
@@ -161,7 +197,9 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
               {/* Delivery Instruction */}
               <div className="pt-2 space-y-1.5">
-                <label className="text-xs font-bold text-slate-600 uppercase">Delivery Instruction</label>
+                <label className={`text-xs font-bold uppercase ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
+                  Delivery Instruction
+                </label>
                 <div className="grid grid-cols-3 gap-2">
                   {['Leave at door', 'Ring doorbell', 'Call me'].map((inst) => (
                     <button
@@ -169,8 +207,12 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                       onClick={() => setDeliveryInstruction(inst)}
                       className={`p-2 rounded-xl text-[11px] font-bold border transition-all ${
                         deliveryInstruction === inst 
-                          ? 'bg-orange-50 border-orange-500 text-orange-700' 
-                          : 'border-slate-200 text-slate-600 hover:bg-slate-50'
+                          ? isDarkMode 
+                            ? 'bg-orange-950/60 border-orange-500 text-orange-300' 
+                            : 'bg-orange-50 border-orange-500 text-orange-700'
+                          : isDarkMode 
+                            ? 'bg-slate-950 border-slate-800 text-slate-300 hover:border-slate-700' 
+                            : 'border-slate-200 text-slate-600 hover:bg-slate-50'
                       }`}
                     >
                       {inst}
@@ -181,7 +223,9 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
               {/* Tip Selection */}
               <div className="pt-2 space-y-1.5">
-                <label className="text-xs font-bold text-slate-600 uppercase">Delivery Partner Tip</label>
+                <label className={`text-xs font-bold uppercase ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
+                  Delivery Partner Tip
+                </label>
                 <div className="flex space-x-2">
                   {[1.00, 2.00, 5.00].map((t) => (
                     <button
@@ -190,7 +234,9 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                       className={`flex-1 py-2 rounded-xl text-xs font-black border transition-all ${
                         tip === t 
                           ? 'bg-orange-600 border-orange-600 text-white' 
-                          : 'border-slate-200 text-slate-700 hover:bg-slate-50'
+                          : isDarkMode
+                            ? 'bg-slate-950 border-slate-800 text-slate-300 hover:border-slate-700'
+                            : 'border-slate-200 text-slate-700 hover:bg-slate-50'
                       }`}
                     >
                       ${t.toFixed(2)}
@@ -200,30 +246,36 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               </div>
 
               {/* Bill Details */}
-              <div className="bg-slate-50 p-4 rounded-2xl space-y-2 text-xs pt-4 border border-slate-100">
-                <div className="flex justify-between text-slate-600">
+              <div className={`p-4 rounded-2xl space-y-2 text-xs pt-4 border ${
+                isDarkMode 
+                  ? 'bg-slate-950/80 border-slate-800 text-slate-300' 
+                  : 'bg-slate-50 border-slate-100 text-slate-600'
+              }`}>
+                <div className="flex justify-between">
                   <span>Item Total</span>
-                  <span>${subtotal.toFixed(2)}</span>
+                  <span className="font-bold">${subtotal.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between text-slate-600">
+                <div className="flex justify-between">
                   <span>Delivery Fee</span>
-                  <span>{deliveryFee === 0 ? <strong className="text-emerald-600">FREE</strong> : `$${deliveryFee.toFixed(2)}`}</span>
+                  <span>{deliveryFee === 0 ? <strong className="text-emerald-500">FREE</strong> : `$${deliveryFee.toFixed(2)}`}</span>
                 </div>
-                <div className="flex justify-between text-slate-600">
+                <div className="flex justify-between">
                   <span>Taxes & Restaurant Packing</span>
                   <span>${taxes.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between text-slate-600">
+                <div className="flex justify-between">
                   <span>Delivery Tip</span>
                   <span>${tip.toFixed(2)}</span>
                 </div>
                 {couponApplied && (
-                  <div className="flex justify-between text-emerald-600 font-bold">
+                  <div className="flex justify-between text-emerald-500 font-bold">
                     <span>Coupon Discount (CRAVE50)</span>
                     <span>-${discount.toFixed(2)}</span>
                   </div>
                 )}
-                <div className="pt-2 border-t border-slate-200 flex justify-between text-slate-900 font-black text-sm">
+                <div className={`pt-2 border-t flex justify-between font-black text-sm ${
+                  isDarkMode ? 'border-slate-800 text-white' : 'border-slate-200 text-slate-900'
+                }`}>
                   <span>To Pay</span>
                   <span>${total.toFixed(2)}</span>
                 </div>
@@ -235,13 +287,15 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
         {/* Checkout Footer */}
         {cartItems.length > 0 && (
-          <div className="p-5 border-t border-slate-100 bg-slate-50 space-y-3">
-            <div className="flex items-center justify-between text-xs text-slate-500">
-              <span className="truncate">Delivering to <strong className="text-slate-800">{location}</strong></span>
+          <div className={`p-5 border-t space-y-3 ${
+            isDarkMode ? 'bg-slate-950 border-slate-800' : 'bg-slate-50 border-slate-100'
+          }`}>
+            <div className={`flex items-center justify-between text-xs ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
+              <span className="truncate">Delivering to <strong className={isDarkMode ? 'text-slate-200' : 'text-slate-800'}>{location}</strong></span>
             </div>
             <button
               onClick={handlePlaceOrder}
-              className="w-full bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white font-black py-4 rounded-2xl shadow-lg shadow-orange-600/30 uppercase text-xs tracking-wider flex items-center justify-center space-x-2"
+              className="w-full bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white font-black py-4 rounded-2xl shadow-lg shadow-orange-600/30 uppercase text-xs tracking-wider flex items-center justify-center space-x-2 active:scale-98 transition-transform"
             >
               <span>Place Order • ${total.toFixed(2)}</span>
               <ArrowRight className="w-4 h-4" />

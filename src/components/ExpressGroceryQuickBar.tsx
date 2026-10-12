@@ -1,12 +1,15 @@
 import React from 'react';
 import { Zap, Clock, Plus, ShoppingBag } from 'lucide-react';
 import { MenuItem } from '../types';
+import { useTheme } from '../context/ThemeContext';
 
 interface ExpressGroceryQuickBarProps {
   onAddToCart: (dish: MenuItem, restaurantId: string, restaurantName: string) => void;
 }
 
 export const ExpressGroceryQuickBar: React.FC<ExpressGroceryQuickBarProps> = ({ onAddToCart }) => {
+  const { isDarkMode } = useTheme();
+
   const quickItems = [
     {
       id: 'mart-1',
@@ -61,7 +64,11 @@ export const ExpressGroceryQuickBar: React.FC<ExpressGroceryQuickBarProps> = ({ 
   };
 
   return (
-    <section className="py-12 bg-amber-50/60 border-y border-amber-200/60">
+    <section className={`py-10 sm:py-12 border-y transition-colors duration-200 ${
+      isDarkMode 
+        ? 'bg-slate-900/90 border-slate-800 text-white' 
+        : 'bg-amber-50/70 border-amber-200/70 text-slate-900'
+    }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
@@ -71,23 +78,33 @@ export const ExpressGroceryQuickBar: React.FC<ExpressGroceryQuickBarProps> = ({ 
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <h3 className="text-lg font-black text-slate-900">CraveMart 10-Minute Express</h3>
+                <h3 className={`text-base sm:text-lg font-black ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+                  CraveMart 10-Minute Express
+                </h3>
                 <span className="bg-emerald-600 text-white text-[10px] font-black px-2 py-0.5 rounded-full uppercase">
                   Lightning Fast
                 </span>
               </div>
-              <p className="text-xs text-slate-500">Late night munchies, artisanal beverages, bakery and gourmet snacks delivered in 10 minutes.</p>
+              <p className={`text-xs ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
+                Late night munchies, artisanal beverages, bakery and gourmet snacks delivered in 10 minutes.
+              </p>
             </div>
           </div>
-          <span className="text-xs font-bold text-amber-800">⚡ 1,200+ Express Delivery Partners Active</span>
+          <span className={`text-xs font-bold ${isDarkMode ? 'text-amber-400' : 'text-amber-800'}`}>
+            ⚡ 1,200+ Express Delivery Partners Active
+          </span>
         </div>
 
-        {/* Quick Items Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Quick Items 1 1/2 Horizontal Peek Carousel on Mobile, Grid on Desktop */}
+        <div className="flex overflow-x-auto snap-x snap-mandatory gap-3 pb-2 sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:overflow-visible scroll-smooth">
           {quickItems.map((item) => (
             <div
               key={item.id}
-              className="bg-white rounded-2xl p-3.5 border border-amber-200/80 shadow-xs hover:shadow-md transition-all flex items-center justify-between gap-3"
+              className={`w-[72vw] sm:w-auto shrink-0 snap-start rounded-2xl p-3.5 border transition-all flex items-center justify-between gap-3 shadow-xs hover:shadow-md ${
+                isDarkMode 
+                  ? 'bg-slate-950 border-slate-800 hover:border-amber-500/40 text-white' 
+                  : 'bg-white border-amber-200/80 hover:border-amber-300 text-slate-900'
+              }`}
             >
               <img
                 src={item.image}
@@ -96,12 +113,18 @@ export const ExpressGroceryQuickBar: React.FC<ExpressGroceryQuickBarProps> = ({ 
               />
 
               <div className="flex-1 min-w-0 space-y-0.5">
-                <span className="text-[10px] font-black uppercase text-amber-700 flex items-center space-x-0.5">
-                  <Clock className="w-3 h-3 text-amber-600" />
+                <span className={`text-[10px] font-black uppercase flex items-center space-x-0.5 ${
+                  isDarkMode ? 'text-amber-400' : 'text-amber-700'
+                }`}>
+                  <Clock className="w-3 h-3 text-amber-500" />
                   <span>{item.time}</span>
                 </span>
-                <h4 className="text-xs font-black text-slate-900 truncate">{item.name}</h4>
-                <p className="text-xs font-black text-orange-600">${item.price.toFixed(2)}</p>
+                <h4 className={`text-xs font-black truncate ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+                  {item.name}
+                </h4>
+                <p className="text-xs font-black text-orange-600 dark:text-orange-400">
+                  ${item.price.toFixed(2)}
+                </p>
               </div>
 
               <button

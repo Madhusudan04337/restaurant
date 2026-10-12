@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, CheckCircle2, Bike, Phone, MapPin, Clock, MessageSquare } from 'lucide-react';
 import { Order } from '../types';
+import { useTheme } from '../context/ThemeContext';
 
 interface OrderTrackerModalProps {
   order: Order | null;
@@ -13,6 +14,7 @@ export const OrderTrackerModal: React.FC<OrderTrackerModalProps> = ({
   onClose,
   onAdvanceOrderStatus
 }) => {
+  const { isDarkMode } = useTheme();
   const [showChat, setShowChat] = useState(false);
   const [chatInput, setChatInput] = useState('');
   const [messages, setMessages] = useState([
@@ -52,18 +54,29 @@ export const OrderTrackerModal: React.FC<OrderTrackerModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl relative overflow-hidden flex flex-col max-h-[90vh]">
+    <div className="fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-xs flex items-center justify-center p-4">
+      <div className={`rounded-3xl max-w-lg w-full p-6 shadow-2xl relative overflow-hidden flex flex-col max-h-[90vh] border transition-colors ${
+        isDarkMode ? 'bg-slate-900 border-slate-800 text-white shadow-black/80' : 'bg-white border-slate-200 text-slate-900'
+      }`}>
         
         {/* Header */}
-        <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+        <div className={`flex items-center justify-between pb-4 border-b ${
+          isDarkMode ? 'border-slate-800' : 'border-slate-100'
+        }`}>
           <div>
-            <span className="text-[10px] font-black text-orange-600 uppercase tracking-widest">
+            <span className="text-[10px] font-black text-orange-600 dark:text-orange-400 uppercase tracking-widest">
               Live Swiggy / Zomato Delivery Track
             </span>
-            <h3 className="text-xl font-black text-slate-900">Order #{order.id}</h3>
+            <h3 className={`text-xl font-black ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+              Order #{order.id}
+            </h3>
           </div>
-          <button onClick={onClose} className="p-2 text-slate-400 hover:text-slate-600 rounded-full">
+          <button 
+            onClick={onClose} 
+            className={`p-2 rounded-full transition-colors ${
+              isDarkMode ? 'text-slate-400 hover:text-white hover:bg-slate-800' : 'text-slate-400 hover:text-slate-600 hover:bg-slate-100'
+            }`}
+          >
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -85,7 +98,7 @@ export const OrderTrackerModal: React.FC<OrderTrackerModalProps> = ({
           </div>
 
           {/* Live Simulated GPS Map Route */}
-          <div className="relative rounded-2xl overflow-hidden bg-slate-900 border border-slate-800 p-4 space-y-3">
+          <div className="relative rounded-2xl overflow-hidden bg-slate-950 border border-slate-800 p-4 space-y-3">
             <div className="flex items-center justify-between text-xs">
               <span className="text-[10px] font-black uppercase text-orange-400 flex items-center space-x-1">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping inline-block mr-1"></span>
@@ -97,7 +110,7 @@ export const OrderTrackerModal: React.FC<OrderTrackerModalProps> = ({
             </div>
 
             {/* Stylized Visual Map Track */}
-            <div className="relative h-24 bg-slate-950/80 rounded-xl overflow-hidden border border-slate-800 flex items-center px-6">
+            <div className="relative h-24 bg-slate-900 rounded-xl overflow-hidden border border-slate-800 flex items-center px-6">
               {/* Route line */}
               <div className="absolute left-10 right-10 top-1/2 -translate-y-1/2 h-1.5 bg-slate-800 rounded-full">
                 <div 
@@ -143,24 +156,33 @@ export const OrderTrackerModal: React.FC<OrderTrackerModalProps> = ({
               <span className="text-slate-400">100% Tamper-Proof Seal ✓</span>
             </div>
           </div>
+
           <div className="space-y-3 px-2">
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Live Delivery Status</span>
-            <div className="space-y-4 relative before:absolute before:left-3.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200">
+            <span className={`text-xs font-bold uppercase tracking-wider ${isDarkMode ? 'text-slate-400' : 'text-slate-400'}`}>
+              Live Delivery Status
+            </span>
+            <div className={`space-y-4 relative before:absolute before:left-3.5 before:top-2 before:bottom-2 before:w-0.5 ${
+              isDarkMode ? 'before:bg-slate-800' : 'before:bg-slate-200'
+            }`}>
               {steps.map((step, idx) => {
                 const isCompleted = idx <= currentIdx;
                 const isCurrent = idx === currentIdx;
                 return (
                   <div key={step.key} className="flex items-start space-x-3 relative">
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 z-10 font-black text-xs transition-all ${
-                      isCompleted ? 'bg-orange-600 text-white shadow-md shadow-orange-500/30' : 'bg-slate-100 text-slate-400'
+                      isCompleted 
+                        ? 'bg-orange-600 text-white shadow-md shadow-orange-500/30' 
+                        : isDarkMode ? 'bg-slate-800 text-slate-500' : 'bg-slate-100 text-slate-400'
                     }`}>
                       {isCompleted ? <CheckCircle2 className="w-4 h-4" /> : idx + 1}
                     </div>
                     <div>
-                      <h5 className={`text-sm font-black ${isCurrent ? 'text-orange-600' : isCompleted ? 'text-slate-900' : 'text-slate-400'}`}>
+                      <h5 className={`text-sm font-black ${
+                        isCurrent ? 'text-orange-600 dark:text-orange-400' : isCompleted ? (isDarkMode ? 'text-slate-200' : 'text-slate-900') : 'text-slate-500'
+                      }`}>
                         {step.title}
                       </h5>
-                      <p className="text-xs text-slate-500">{step.desc}</p>
+                      <p className={`text-xs ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>{step.desc}</p>
                     </div>
                   </div>
                 );
@@ -172,28 +194,40 @@ export const OrderTrackerModal: React.FC<OrderTrackerModalProps> = ({
           {order.status !== 'DELIVERED' && (
             <button
               onClick={() => onAdvanceOrderStatus(order.id)}
-              className="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center space-x-1 transition-colors"
+              className={`w-full font-bold py-2.5 rounded-xl text-xs flex items-center justify-center space-x-1 transition-colors ${
+                isDarkMode 
+                  ? 'bg-slate-800 hover:bg-slate-750 text-slate-200 border border-slate-700' 
+                  : 'bg-slate-100 hover:bg-slate-200 text-slate-800'
+              }`}
             >
               <span>⚡ Fast-Forward Delivery Simulation</span>
             </button>
           )}
 
           {/* Driver details card */}
-          <div className="bg-slate-50 border border-slate-200 p-4 rounded-2xl flex items-center justify-between">
+          <div className={`p-4 rounded-2xl flex items-center justify-between border ${
+            isDarkMode 
+              ? 'bg-slate-950 border-slate-800 text-white' 
+              : 'bg-slate-50 border-slate-200 text-slate-900'
+          }`}>
             <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-orange-100 text-orange-700 font-black rounded-2xl flex items-center justify-center text-xl">
+              <div className="w-12 h-12 bg-orange-100 dark:bg-orange-950/60 text-orange-700 dark:text-orange-400 font-black rounded-2xl flex items-center justify-center text-xl">
                 🛵
               </div>
               <div>
-                <h5 className="text-sm font-black text-slate-900">{order.driver.name}</h5>
-                <p className="text-xs text-slate-500">{order.driver.vehicle} • ⭐ {order.driver.rating}</p>
+                <h5 className={`text-sm font-black ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{order.driver.name}</h5>
+                <p className={`text-xs ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>{order.driver.vehicle} • ⭐ {order.driver.rating}</p>
               </div>
             </div>
 
             <div className="flex items-center space-x-2">
               <button
                 onClick={() => setShowChat(!showChat)}
-                className="p-3 bg-white text-orange-600 border border-orange-200 rounded-xl shadow-xs hover:bg-orange-50 transition-all"
+                className={`p-3 rounded-xl border shadow-xs transition-all ${
+                  isDarkMode 
+                    ? 'bg-slate-900 text-orange-400 border-slate-700 hover:bg-slate-800' 
+                    : 'bg-white text-orange-600 border-orange-200 hover:bg-orange-50'
+                }`}
                 title="Chat with rider"
               >
                 <MessageSquare className="w-4 h-4" />
@@ -210,15 +244,23 @@ export const OrderTrackerModal: React.FC<OrderTrackerModalProps> = ({
 
           {/* Live Chat drawer */}
           {showChat && (
-            <div className="bg-white border border-slate-200 rounded-2xl p-4 space-y-3">
-              <div className="flex items-center justify-between border-b pb-2">
-                <span className="text-xs font-bold text-slate-700">Chat with {order.driver.name}</span>
-                <button onClick={() => setShowChat(false)} className="text-slate-400 hover:text-slate-600 text-xs font-bold">Close</button>
+            <div className={`p-4 rounded-2xl space-y-3 border ${
+              isDarkMode 
+                ? 'bg-slate-950 border-slate-800 text-white' 
+                : 'bg-white border-slate-200 text-slate-900'
+            }`}>
+              <div className={`flex items-center justify-between border-b pb-2 ${isDarkMode ? 'border-slate-800' : 'border-slate-100'}`}>
+                <span className={`text-xs font-bold ${isDarkMode ? 'text-slate-200' : 'text-slate-700'}`}>Chat with {order.driver.name}</span>
+                <button onClick={() => setShowChat(false)} className="text-slate-400 hover:text-orange-500 text-xs font-bold">Close</button>
               </div>
 
               <div className="space-y-2 max-h-36 overflow-y-auto text-xs">
                 {messages.map((m, idx) => (
-                  <div key={idx} className={`p-2.5 rounded-xl max-w-[80%] ${m.sender === 'user' ? 'bg-orange-600 text-white ml-auto' : 'bg-slate-100 text-slate-800'}`}>
+                  <div key={idx} className={`p-2.5 rounded-xl max-w-[80%] ${
+                    m.sender === 'user' 
+                      ? 'bg-orange-600 text-white ml-auto' 
+                      : isDarkMode ? 'bg-slate-900 text-slate-200 border border-slate-800' : 'bg-slate-100 text-slate-800'
+                  }`}>
                     {m.text}
                   </div>
                 ))}
@@ -230,7 +272,11 @@ export const OrderTrackerModal: React.FC<OrderTrackerModalProps> = ({
                   value={chatInput}
                   onChange={(e) => setChatInput(e.target.value)}
                   placeholder="Type message to delivery partner..."
-                  className="flex-1 p-2 bg-slate-50 border rounded-xl text-xs focus:outline-hidden"
+                  className={`flex-1 p-2 border rounded-xl text-xs focus:outline-hidden ${
+                    isDarkMode 
+                      ? 'bg-slate-900 border-slate-800 text-white placeholder-slate-500' 
+                      : 'bg-slate-50 border-slate-200 text-slate-900 placeholder-slate-400'
+                  }`}
                 />
                 <button type="submit" className="bg-orange-600 text-white px-3 py-2 rounded-xl text-xs font-bold">Send</button>
               </form>
@@ -238,11 +284,15 @@ export const OrderTrackerModal: React.FC<OrderTrackerModalProps> = ({
           )}
 
           {/* Address */}
-          <div className="bg-orange-50/50 border border-orange-100 p-4 rounded-2xl flex items-start space-x-3 text-xs">
-            <MapPin className="w-4 h-4 text-orange-600 shrink-0 mt-0.5" />
+          <div className={`p-4 rounded-2xl flex items-start space-x-3 text-xs border ${
+            isDarkMode 
+              ? 'bg-slate-950/80 border-slate-800 text-slate-300' 
+              : 'bg-orange-50/50 border-orange-100 text-slate-800'
+          }`}>
+            <MapPin className="w-4 h-4 text-orange-500 shrink-0 mt-0.5" />
             <div>
-              <span className="font-bold text-slate-800 block">Delivery Address</span>
-              <span className="text-slate-600">{order.deliveryAddress}</span>
+              <span className={`font-bold block ${isDarkMode ? 'text-slate-200' : 'text-slate-800'}`}>Delivery Address</span>
+              <span className={isDarkMode ? 'text-slate-400' : 'text-slate-600'}>{order.deliveryAddress}</span>
             </div>
           </div>
 

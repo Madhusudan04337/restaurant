@@ -1,6 +1,7 @@
 import React from 'react';
 import { Search, MapPin, Sparkles, Flame, Clock, Tag, ArrowRight } from 'lucide-react';
 import { motion } from 'motion/react';
+import { useTheme } from '../context/ThemeContext';
 
 interface HeroSectionProps {
   location: string;
@@ -17,6 +18,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   onSelectCategory,
   onOpenFoodieAi
 }) => {
+  const { isDarkMode } = useTheme();
+
   const quickPills = [
     { label: 'Biryani', id: 'biryani' },
     { label: 'Pizza', id: 'pizza' },
@@ -66,23 +69,29 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           </p>
         </div>
 
-        {/* Big Interactive Search Bar */}
-        <div className="max-w-2xl w-full bg-white/95 backdrop-blur-md p-1.5 sm:p-2.5 rounded-2xl shadow-2xl border border-white/40 flex flex-col sm:flex-row items-center gap-2">
+        {/* Big Interactive Search Bar (Theme adaptive) */}
+        <div className={`max-w-2xl w-full backdrop-blur-md p-1.5 sm:p-2.5 rounded-2xl shadow-2xl border flex flex-col sm:flex-row items-center gap-2 transition-colors duration-200 ${
+          isDarkMode 
+            ? 'bg-slate-900/95 border-slate-700/80 shadow-black/60' 
+            : 'bg-white/95 border-white/50 shadow-slate-950/20'
+        }`}>
           <div className="flex items-center space-x-2 pl-3 w-full sm:w-auto text-slate-400">
-            <Search className="w-4 h-4 sm:w-5 sm:h-5 text-orange-600 shrink-0" />
+            <Search className="w-4 h-4 sm:w-5 sm:h-5 text-orange-500 shrink-0" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search dishes, restaurants, biryani, burgers..."
-              className="w-full sm:w-80 py-1.5 sm:py-2 bg-transparent text-xs sm:text-sm font-bold text-slate-900 placeholder-slate-400 focus:outline-hidden"
+              className={`w-full sm:w-80 py-1.5 sm:py-2 bg-transparent text-xs sm:text-sm font-bold focus:outline-hidden ${
+                isDarkMode ? 'text-white placeholder-slate-400' : 'text-slate-900 placeholder-slate-400'
+              }`}
             />
           </div>
 
           <div className="flex items-center space-x-2 w-full sm:w-auto sm:ml-auto">
             <button
               onClick={onOpenFoodieAi}
-              className="w-full sm:w-auto bg-gradient-to-r from-orange-600 to-amber-500 hover:from-orange-700 hover:to-amber-600 text-white font-black px-4 py-2.5 sm:px-6 sm:py-3 rounded-xl text-xs uppercase tracking-wider shadow-md transition-all flex items-center justify-center space-x-1.5"
+              className="w-full sm:w-auto bg-gradient-to-r from-orange-600 to-amber-500 hover:from-orange-700 hover:to-amber-600 text-white font-black px-4 py-2.5 sm:px-6 sm:py-3 rounded-xl text-xs uppercase tracking-wider shadow-md transition-all flex items-center justify-center space-x-1.5 active:scale-98"
             >
               <Sparkles className="w-3.5 h-3.5" />
               <span>Ask Foodie AI</span>
@@ -99,7 +108,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             <button
               key={pill.id}
               onClick={() => onSelectCategory(pill.id)}
-              className="bg-slate-900/80 hover:bg-orange-600 hover:text-white text-slate-200 border border-white/20 backdrop-blur-md px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all shrink-0"
+              className="bg-slate-900/80 hover:bg-orange-600 hover:text-white text-slate-200 border border-white/20 backdrop-blur-md px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all shrink-0 active:scale-95"
             >
               {pill.label}
             </button>
@@ -108,7 +117,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
         {/* Promotional Ribbon Cards (Hidden on mobile to eliminate clutter!) */}
         <div className="hidden sm:grid grid-cols-1 md:grid-cols-3 gap-4 pt-2 border-t border-white/10">
-          <div className="bg-slate-900/80 backdrop-blur-md border border-white/15 p-3.5 rounded-2xl flex items-center space-x-3.5 text-white">
+          <div className="bg-slate-900/80 backdrop-blur-md border border-white/15 p-3.5 rounded-2xl flex items-center space-x-3.5 text-white shadow-xs">
             <div className="w-9 h-9 rounded-xl bg-orange-500/20 text-orange-400 flex items-center justify-center font-black">
               <Tag className="w-4 h-4" />
             </div>
@@ -118,7 +127,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </div>
           </div>
 
-          <div className="bg-slate-900/80 backdrop-blur-md border border-white/15 p-3.5 rounded-2xl flex items-center space-x-3.5 text-white">
+          <div className="bg-slate-900/80 backdrop-blur-md border border-white/15 p-3.5 rounded-2xl flex items-center space-x-3.5 text-white shadow-xs">
             <div className="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-black">
               <Clock className="w-4 h-4" />
             </div>
@@ -128,7 +137,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </div>
           </div>
 
-          <div className="bg-slate-900/80 backdrop-blur-md border border-white/15 p-3.5 rounded-2xl flex items-center space-x-3.5 text-white">
+          <div className="bg-slate-900/80 backdrop-blur-md border border-white/15 p-3.5 rounded-2xl flex items-center space-x-3.5 text-white shadow-xs">
             <div className="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-black">
               <Sparkles className="w-4 h-4" />
             </div>
