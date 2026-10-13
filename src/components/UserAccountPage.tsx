@@ -133,9 +133,10 @@ export const UserAccountPage: React.FC<UserAccountPageProps> = ({
         </div>
 
         {/* Tab Navigation: own row, horizontally scrollable on mobile, labels always visible */}
+        {/* Section switcher: no scrolling, no fixed bar. 3 columns on phones, inline row on larger screens */}
         <nav
           aria-label="Account sections"
-          className="-mx-4 px-4 sm:mx-0 sm:px-0 flex gap-2 overflow-x-auto snap-x [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="grid grid-cols-3 gap-2 sm:flex sm:flex-wrap"
         >
           {TABS.map((tab) => {
             const Icon = tab.icon;
@@ -145,7 +146,7 @@ export const UserAccountPage: React.FC<UserAccountPageProps> = ({
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 aria-current={isActive ? 'page' : undefined}
-                className={`shrink-0 snap-start flex items-center gap-2 px-4 min-h-[44px] rounded-xl text-xs font-bold transition-all ${
+                className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 px-3 sm:px-4 py-2 min-h-[56px] sm:min-h-[44px] rounded-xl text-xs font-bold transition-all ${
                   isActive
                     ? 'bg-orange-600 text-white shadow-md shadow-orange-600/30'
                     : isDarkMode
