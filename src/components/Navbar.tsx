@@ -26,7 +26,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenRegister,
   onOpenProfile
 }) => {
-  const { isDarkMode } = useTheme();
+  const { isDarkMode, toggleTheme } = useTheme();
   const [showLocationModal, setShowLocationModal] = useState(false);
   const [tempLocation, setTempLocation] = useState(location);
   const [activeNav, setActiveNav] = useState('home');
@@ -141,8 +141,20 @@ export const Navbar: React.FC<NavbarProps> = ({
             ))}
           </nav>
 
-          {/* Auth & User Profile Buttons */}
+          {/* Theme Toggle & Auth / Profile Buttons */}
           <div className="flex items-center space-x-2">
+            <button
+              onClick={toggleTheme}
+              className={`w-9 h-9 rounded-xl flex items-center justify-center transition-colors border ${
+                isDarkMode 
+                  ? 'bg-slate-900 border-slate-800 text-amber-400 hover:bg-slate-800' 
+                  : 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200'
+              }`}
+              title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            >
+              {isDarkMode ? <Sun className="w-4 h-4 fill-amber-400" /> : <Moon className="w-4 h-4 fill-slate-700" />}
+            </button>
+
             {isLoggedIn && currentUser ? (
               <button
                 onClick={onOpenProfile}
@@ -159,10 +171,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <span className="hidden sm:inline">{currentUser.name}</span>
               </button>
             ) : (
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-1 sm:space-x-2">
                 <button
                   onClick={onOpenLogin}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                  className={`px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
                     isDarkMode 
                       ? 'text-slate-300 hover:text-white hover:bg-slate-900' 
                       : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
@@ -172,7 +184,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </button>
                 <button
                   onClick={onOpenRegister}
-                  className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-orange-600 hover:bg-orange-700 text-white shadow-md shadow-orange-600/20 transition-all"
+                  className="px-3 sm:px-3.5 py-1.5 rounded-xl text-xs font-bold bg-orange-600 hover:bg-orange-700 text-white shadow-md shadow-orange-600/20 transition-all"
                 >
                   Register
                 </button>
