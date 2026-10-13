@@ -69,7 +69,7 @@ export const FoodieAiModal: React.FC<FoodieAiModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className={`rounded-3xl max-w-lg w-full p-6 shadow-2xl relative space-y-4 border transition-colors ${
+      <div className={`rounded-xl sm:rounded-2xl max-w-lg w-full p-6 shadow-2xl relative space-y-4 border transition-colors ${
         isDarkMode 
           ? 'bg-slate-900 border-slate-800 text-white shadow-black/80' 
           : 'bg-white border-slate-200 text-slate-900'
@@ -80,8 +80,8 @@ export const FoodieAiModal: React.FC<FoodieAiModalProps> = ({
           isDarkMode ? 'border-slate-800' : 'border-slate-100'
         }`}>
           <div className="flex items-center space-x-2.5">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-orange-600 to-amber-500 flex items-center justify-center text-white shadow-md">
-              <Sparkles className="w-5 h-5 animate-pulse" />
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-orange-600 to-amber-500 flex items-center justify-center text-white shadow-xs">
+              <Sparkles className="w-4 h-4 animate-pulse" />
             </div>
             <div>
               <h2 className={`text-base font-black ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Foodie AI Concierge</h2>
@@ -90,7 +90,7 @@ export const FoodieAiModal: React.FC<FoodieAiModalProps> = ({
           </div>
           <button 
             onClick={onClose} 
-            className={`p-2 rounded-full transition-colors ${
+            className={`p-2 rounded-lg transition-colors ${
               isDarkMode ? 'text-slate-400 hover:text-white hover:bg-slate-800' : 'text-slate-400 hover:text-slate-600 hover:bg-slate-100'
             }`}
           >
@@ -106,10 +106,10 @@ export const FoodieAiModal: React.FC<FoodieAiModalProps> = ({
               onChange={(e) => setQuery(e.target.value)}
               placeholder="What are you in the mood for? e.g. 'I want spicy chicken with garlic naan'"
               rows={2}
-              className={`w-full p-3.5 border rounded-2xl text-xs font-bold focus:outline-hidden ${
+              className={`w-full p-3 border rounded-lg text-xs font-semibold focus:outline-hidden ${
                 isDarkMode 
                   ? 'bg-slate-950 border-slate-800 text-white placeholder-slate-500 focus:border-orange-500' 
-                  : 'bg-orange-50/50 border-orange-200 text-slate-800 placeholder-slate-400 focus:bg-white focus:border-orange-500'
+                  : 'bg-orange-50/40 border-orange-200 text-slate-800 placeholder-slate-400 focus:bg-white focus:border-orange-500'
               }`}
             />
           </div>
@@ -120,7 +120,7 @@ export const FoodieAiModal: React.FC<FoodieAiModalProps> = ({
                 key={idx}
                 type="button"
                 onClick={() => setQuery(pq)}
-                className={`text-[10px] font-bold px-2.5 py-1 rounded-lg transition-colors ${
+                className={`text-[10px] font-semibold px-2.5 py-1 rounded-md transition-colors ${
                   isDarkMode 
                     ? 'bg-slate-800 hover:bg-slate-750 text-slate-300' 
                     : 'bg-slate-100 hover:bg-orange-50 hover:text-orange-700 text-slate-700'
@@ -134,7 +134,7 @@ export const FoodieAiModal: React.FC<FoodieAiModalProps> = ({
           <button
             type="submit"
             disabled={loading || !query.trim()}
-            className="w-full bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 disabled:opacity-50 text-white font-black py-3 rounded-xl text-xs uppercase shadow-md flex items-center justify-center space-x-2 transition-transform active:scale-98"
+            className="w-full bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 disabled:opacity-50 text-white font-bold py-3 rounded-lg text-xs uppercase tracking-wider shadow-sm flex items-center justify-center space-x-2 transition-transform active:scale-98 cursor-pointer"
           >
             {loading ? (
               <>
@@ -152,7 +152,7 @@ export const FoodieAiModal: React.FC<FoodieAiModalProps> = ({
 
         {/* Output */}
         {aiResponse && (
-          <div className={`border rounded-2xl p-4 space-y-3 ${
+          <div className={`border rounded-xl p-4 space-y-3 ${
             isDarkMode 
               ? 'bg-slate-950/80 border-slate-800 text-slate-200' 
               : 'bg-orange-50 border-orange-200 text-slate-800'
@@ -164,8 +164,8 @@ export const FoodieAiModal: React.FC<FoodieAiModalProps> = ({
                   {aiResponse.message}
                 </p>
                 {aiResponse.highlightDish && (
-                  <p className="text-[11px] font-black text-orange-600 dark:text-orange-400">
-                    ✨ Must Try: {aiResponse.highlightDish}
+                  <p className="text-[11px] font-bold text-orange-600 dark:text-orange-400">
+                    Must Try: {aiResponse.highlightDish}
                   </p>
                 )}
               </div>
@@ -173,7 +173,7 @@ export const FoodieAiModal: React.FC<FoodieAiModalProps> = ({
 
             {aiResponse.recommendedRestaurantIds?.length > 0 && (
               <div className={`space-y-1.5 pt-2 border-t ${isDarkMode ? 'border-slate-800' : 'border-orange-200'}`}>
-                <span className={`text-[10px] font-black uppercase ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
+                <span className={`text-[10px] font-bold uppercase ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
                   Recommended Spots
                 </span>
                 {RESTAURANTS.filter(r => aiResponse.recommendedRestaurantIds.includes(r.id)).map((rest) => (
@@ -183,14 +183,14 @@ export const FoodieAiModal: React.FC<FoodieAiModalProps> = ({
                       onSelectRestaurant(rest);
                       onClose();
                     }}
-                    className={`p-2.5 rounded-xl border cursor-pointer flex items-center justify-between text-xs font-bold transition-colors ${
+                    className={`p-2.5 rounded-lg border cursor-pointer flex items-center justify-between text-xs font-semibold transition-colors ${
                       isDarkMode 
-                        ? 'bg-slate-900 border-slate-800 hover:border-orange-500/40 text-white' 
+                        ? 'bg-slate-900 border-slate-800 hover:border-slate-700 text-white' 
                         : 'bg-white hover:bg-orange-100 border-orange-200 text-slate-800'
                     }`}
                   >
                     <span>{rest.name}</span>
-                    <span className="text-[10px] text-orange-600 dark:text-orange-400 font-black">View Menu &rarr;</span>
+                    <span className="text-[10px] text-orange-600 dark:text-orange-400 font-bold">View Menu &rarr;</span>
                   </div>
                 ))}
               </div>

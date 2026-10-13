@@ -26,7 +26,7 @@ export const GenieView: React.FC = () => {
         <div className="bg-white rounded-xl p-8 text-center border border-slate-200 space-y-3">
           <CheckCircle2 className="w-10 h-10 text-emerald-600 mx-auto" />
           <h3 className="text-base font-bold text-slate-900">Partner Assigned!</h3>
-          <p className="text-xs text-slate-600">Alex (Honda Activa • 4.9⭐) is heading to your pickup location.</p>
+          <p className="text-xs text-slate-600">Alex (Honda Activa • Rating 4.9) is heading to your pickup location.</p>
           <button
             onClick={() => setSubmitted(false)}
             className="bg-orange-600 text-white font-bold px-4 py-2 rounded-lg text-xs"

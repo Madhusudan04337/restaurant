@@ -10,6 +10,27 @@ export interface MenuItem {
   rating?: number;
   calories?: number;
   prepTime?: string;
+  portion?: string;
+  ingredients?: string[];
+  allergens?: string[];
+  nutrition?: {
+    calories: number;
+    protein: string;
+    carbs: string;
+    fat: string;
+  };
+  addOns?: {
+    id: string;
+    name: string;
+    price: number;
+  }[];
+}
+
+export interface FoodCategory {
+  id: string;
+  name: string;
+  icon: string;
+  image: string;
 }
 
 export interface MenuCategory {

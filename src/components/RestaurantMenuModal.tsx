@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Star, Clock, X, Flame, Plus, Minus, ShoppingBag, ArrowLeft } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Star, Clock, X, Flame, Plus, Minus, ShoppingBag, ArrowLeft, ArrowRight, Check, Sparkles, Utensils, ShieldCheck, HeartPulse, Info } from 'lucide-react';
 import { Restaurant, MenuItem, CartItem } from '../types';
 import { useTheme } from '../context/ThemeContext';
 
@@ -10,6 +10,7 @@ interface RestaurantMenuModalProps {
   onAddToCart: (dish: MenuItem, restaurant: Restaurant) => void;
   onRemoveFromCart: (dishId: string) => void;
   onOpenCart: () => void;
+  initialDish?: MenuItem | null;
 }
 
 export const RestaurantMenuModal: React.FC<RestaurantMenuModalProps> = ({
@@ -18,13 +19,27 @@ export const RestaurantMenuModal: React.FC<RestaurantMenuModalProps> = ({
   cartItems,
   onAddToCart,
   onRemoveFromCart,
-  onOpenCart
+  onOpenCart,
+  initialDish
 }) => {
   const { isDarkMode } = useTheme();
   const [vegOnlyFilter, setVegOnlyFilter] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string>(
     restaurant ? restaurant.menu[0]?.name : ''
   );
+  const [selectedDishDetail, setSelectedDishDetail] = useState<MenuItem | null>(initialDish || null);
+  const [detailQuantity, setDetailQuantity] = useState(1);
+  const [spiceLevel, setSpiceLevel] = useState<'Mild' | 'Medium' | 'Extra Spicy'>('Medium');
+  const [selectedAddOnIds, setSelectedAddOnIds] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (restaurant) {
+      setActiveCategory(restaurant.menu[0]?.name || '');
+      setSelectedDishDetail(initialDish || null);
+      setDetailQuantity(1);
+      setSelectedAddOnIds([]);
+    }
+  }, [restaurant, initialDish]);
 
   if (!restaurant) return null;
 
@@ -39,20 +54,20 @@ export const RestaurantMenuModal: React.FC<RestaurantMenuModalProps> = ({
   const totalCartPrice = cartItems.reduce((acc, i) => acc + (i.dish.price * i.quantity), 0);
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-xs flex items-center justify-center p-2 sm:p-4 overflow-y-auto">
-      <div className={`rounded-3xl max-w-4xl w-full max-h-[92vh] overflow-y-auto shadow-2xl relative flex flex-col my-auto border transition-colors duration-200 ${
+    <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+      <div className={`rounded-2xl sm:rounded-3xl max-w-5xl w-full max-h-[94vh] overflow-y-auto shadow-2xl relative flex flex-col my-auto border transition-colors duration-200 ${
         isDarkMode 
-          ? 'bg-slate-900 border-slate-800 text-white shadow-black/60' 
+          ? 'bg-slate-900 border-slate-800 text-white shadow-black/70' 
           : 'bg-white border-slate-200 text-slate-900'
       }`}>
         
         {/* Sticky Header with Back/Close button */}
-        <div className={`sticky top-0 z-20 backdrop-blur-md p-4 sm:p-5 border-b flex items-center justify-between transition-colors ${
+        <div className={`sticky top-0 z-20 backdrop-blur-md px-6 py-4 sm:px-8 sm:py-5 border-b flex items-center justify-between transition-colors ${
           isDarkMode ? 'bg-slate-900/95 border-slate-800 text-white' : 'bg-white/95 border-slate-100 text-slate-900'
         }`}>
           <button
             onClick={onClose}
-            className={`flex items-center space-x-1.5 text-xs font-black px-3.5 py-2 rounded-xl transition-all ${
+            className={`flex items-center space-x-2 text-xs font-bold px-3.5 py-2 rounded-xl transition-all cursor-pointer ${
               isDarkMode 
                 ? 'bg-slate-800 text-slate-200 hover:bg-slate-700 hover:text-white' 
                 : 'bg-slate-100 text-slate-700 hover:bg-orange-50 hover:text-orange-600'
@@ -64,8 +79,8 @@ export const RestaurantMenuModal: React.FC<RestaurantMenuModalProps> = ({
 
           <button 
             onClick={onClose} 
-            className={`p-2 rounded-full transition-colors ${
-              isDarkMode ? 'text-slate-400 hover:text-white hover:bg-slate-800' : 'text-slate-400 hover:text-slate-600 hover:bg-slate-100'
+            className={`p-2.5 rounded-xl transition-colors cursor-pointer ${
+              isDarkMode ? 'text-slate-400 hover:text-white hover:bg-slate-800' : 'text-slate-400 hover:text-slate-700 hover:bg-slate-100'
             }`}
           >
             <X className="w-5 h-5" />
@@ -73,62 +88,62 @@ export const RestaurantMenuModal: React.FC<RestaurantMenuModalProps> = ({
         </div>
 
         {/* Restaurant Banner & Details */}
-        <div className={`p-6 sm:p-8 border-b transition-colors ${
-          isDarkMode ? 'bg-slate-950/70 border-slate-800' : 'bg-slate-50 border-slate-100'
+        <div className={`p-6 sm:p-10 border-b transition-colors ${
+          isDarkMode ? 'bg-slate-950/60 border-slate-800' : 'bg-slate-50 border-slate-100'
         }`}>
-          <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
-            <div className="space-y-2">
-              <div className="flex items-center space-x-2">
-                <span className="bg-orange-600 text-white text-[10px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-lg">
-                  Top Rated
+          <div className="flex flex-col sm:flex-row justify-between items-start gap-6">
+            <div className="space-y-3">
+              <div className="flex items-center space-x-2.5">
+                <span className="bg-orange-600 text-white text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-lg shadow-xs">
+                  Top Rated Kitchen
                 </span>
                 {restaurant.discount && (
-                  <span className="bg-emerald-600 text-white text-[10px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-lg">
+                  <span className="bg-emerald-600 text-white text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-lg shadow-xs">
                     {restaurant.discount}
                   </span>
                 )}
               </div>
 
-              <h2 className={`text-2xl sm:text-3xl font-black ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+              <h2 className={`text-2xl sm:text-4xl font-black tracking-tight ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
                 {restaurant.name}
               </h2>
-              <p className={`text-xs ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
-                {restaurant.cuisine.join(', ')} • {restaurant.address}
+              <p className={`text-xs sm:text-sm font-medium ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
+                {restaurant.cuisine.join(' • ')} • {restaurant.address}
               </p>
             </div>
 
-            <div className={`flex items-center space-x-4 p-3 rounded-2xl border shadow-xs shrink-0 ${
+            <div className={`flex items-center space-x-5 p-4 rounded-2xl border shadow-xs shrink-0 ${
               isDarkMode ? 'bg-slate-900 border-slate-800 text-white' : 'bg-white border-slate-200 text-slate-800'
             }`}>
-              <div className="text-center">
-                <div className="flex items-center justify-center space-x-1 text-emerald-500 font-black text-xs">
-                  <Star className="w-3.5 h-3.5 fill-emerald-500 text-emerald-500" />
+              <div className="text-center px-1">
+                <div className="flex items-center justify-center space-x-1 text-emerald-500 font-extrabold text-sm">
+                  <Star className="w-4 h-4 fill-emerald-500 text-emerald-500" />
                   <span>{restaurant.rating}</span>
                 </div>
-                <span className="text-[10px] text-slate-400">{restaurant.ratingCount}</span>
+                <span className="text-[10px] text-slate-400 font-medium">{restaurant.ratingCount} reviews</span>
               </div>
-              <div className={`w-px h-6 ${isDarkMode ? 'bg-slate-800' : 'bg-slate-200'}`} />
-              <div className="text-center">
-                <div className={`flex items-center justify-center space-x-1 font-black text-xs ${isDarkMode ? 'text-slate-200' : 'text-slate-800'}`}>
-                  <Clock className="w-3.5 h-3.5 text-orange-500" />
+              <div className={`w-px h-8 ${isDarkMode ? 'bg-slate-800' : 'bg-slate-200'}`} />
+              <div className="text-center px-1">
+                <div className={`flex items-center justify-center space-x-1 font-extrabold text-sm ${isDarkMode ? 'text-slate-200' : 'text-slate-800'}`}>
+                  <Clock className="w-4 h-4 text-orange-500" />
                   <span>{restaurant.deliveryTime}</span>
                 </div>
-                <span className="text-[10px] text-slate-400">{restaurant.costForTwo}</span>
+                <span className="text-[10px] text-slate-400 font-medium">{restaurant.costForTwo}</span>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Menu Navigation Tabs & Filters */}
-        <div className={`sticky top-[73px] z-10 px-6 py-3 border-b flex items-center justify-between gap-4 overflow-x-auto transition-colors ${
-          isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-100'
+        {/* Menu Navigation Tabs & Filters - Spacious & Airy */}
+        <div className={`sticky top-[73px] z-10 px-6 sm:px-8 py-3.5 border-b flex items-center justify-between gap-6 overflow-x-auto transition-colors ${
+          isDarkMode ? 'bg-slate-900/95 border-slate-800' : 'bg-white/95 border-slate-100'
         }`}>
-          <div className="flex items-center space-x-2 overflow-x-auto pb-1 scrollbar-none">
+          <div className="flex items-center space-x-3 overflow-x-auto pb-1 scrollbar-none">
             {restaurant.menu.map((cat) => (
               <button
                 key={cat.name}
                 onClick={() => setActiveCategory(cat.name)}
-                className={`px-4 py-2 rounded-xl text-xs font-black whitespace-nowrap transition-all ${
+                className={`px-4.5 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all cursor-pointer ${
                   currentCategory === cat.name
                     ? 'bg-orange-600 text-white shadow-md shadow-orange-600/30'
                     : isDarkMode
@@ -136,22 +151,22 @@ export const RestaurantMenuModal: React.FC<RestaurantMenuModalProps> = ({
                       : 'bg-slate-100 hover:bg-orange-50 text-slate-700'
                 }`}
               >
-                {cat.name} ({cat.items.length})
+                {cat.name} <span className="opacity-75 font-normal ml-1">({cat.items.length})</span>
               </button>
             ))}
           </div>
 
           <button
             onClick={() => setVegOnlyFilter(!vegOnlyFilter)}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center space-x-1 shrink-0 ${
+            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center space-x-2 shrink-0 cursor-pointer ${
               vegOnlyFilter 
-                ? 'bg-emerald-600 text-white' 
+                ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/30' 
                 : isDarkMode 
-                  ? 'bg-slate-800 text-slate-300 border border-slate-700' 
-                  : 'bg-slate-100 text-slate-700'
+                  ? 'bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-750' 
+                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
             }`}
           >
-            <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
             <span>Veg Only</span>
           </button>
         </div>
@@ -172,76 +187,116 @@ export const RestaurantMenuModal: React.FC<RestaurantMenuModalProps> = ({
                     {cat.name} ({filteredItems.length})
                   </h3>
 
-                  <div className="grid grid-cols-2 sm:grid-cols-2 gap-2.5 sm:gap-4">
+                  <div className="grid grid-cols-2 gap-3 sm:grid-cols-1 sm:space-y-4">
                     {filteredItems.map((item) => {
                       const qty = getDishQty(item.id);
                       return (
                         <div
                           key={item.id}
-                          className={`rounded-2xl sm:rounded-3xl p-3 sm:p-4 border shadow-xs hover:shadow-md transition-all flex flex-col justify-between ${
+                          onClick={() => {
+                            setSelectedDishDetail(item);
+                            setDetailQuantity(qty > 0 ? qty : 1);
+                            setSelectedAddOnIds([]);
+                          }}
+                          className={`p-3 sm:p-6 rounded-xl sm:rounded-2xl border transition-all duration-200 cursor-pointer flex flex-col justify-between gap-2.5 sm:flex-row sm:items-center sm:gap-5 group ${
                             isDarkMode 
-                              ? 'bg-slate-950/80 border-slate-800 hover:border-slate-700 text-white' 
-                              : 'bg-white border-slate-200 text-slate-900'
+                              ? 'bg-slate-900/60 border-slate-800 hover:border-slate-700 text-white shadow-sm' 
+                              : 'bg-white border-slate-200 hover:border-orange-300 shadow-sm'
                           }`}
                         >
-                          <div className="space-y-2">
-                            {/* Image with Veg badge */}
-                            <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-800">
-                              <img
-                                src={item.image}
-                                alt={item.name}
-                                className="w-full h-full object-cover"
-                              />
-                              <div className="absolute top-2 left-2 flex items-center space-x-1">
-                                <span className="w-3.5 h-3.5 rounded-sm border flex items-center justify-center p-0.5 bg-white shadow-xs border-slate-300">
-                                  <span className={`w-2 h-2 rounded-full ${item.isVeg ? 'bg-emerald-600' : 'bg-rose-600'}`}></span>
-                                </span>
-                              </div>
-                              {item.isBestseller && (
-                                <span className="absolute bottom-2 left-2 bg-amber-500/95 backdrop-blur-xs text-slate-950 text-[9px] font-black px-1.5 py-0.5 rounded shadow-xs flex items-center space-x-0.5">
-                                  <Flame className="w-2.5 h-2.5" />
-                                  <span>Top Pick</span>
-                                </span>
-                              )}
-                            </div>
+                          {/* Top image on mobile, left on desktop */}
+                          <div className="relative w-full h-28 sm:w-36 sm:h-32 rounded-lg sm:rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-800 shrink-0">
+                            <img
+                              src={item.image}
+                              alt={item.name}
+                              referrerPolicy="no-referrer"
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=600';
+                              }}
+                            />
+                            {item.isBestseller && (
+                              <span className="absolute top-2 left-2 sm:hidden bg-amber-500 text-slate-950 text-[9px] font-extrabold px-1.5 py-0.5 rounded shadow-xs">
+                                ★ Best
+                              </span>
+                            )}
+                          </div>
 
-                            <div>
-                              <h4 className={`text-xs sm:text-sm font-black line-clamp-1 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+                          {/* Item Info */}
+                          <div className="space-y-1 sm:space-y-2.5 flex-1 flex flex-col justify-between">
+                            <div className="space-y-1">
+                              <div className="hidden sm:flex items-center space-x-2">
+                                <span className="w-4 h-4 rounded-xs border flex items-center justify-center p-0.5 bg-white shadow-xs border-slate-300 shrink-0">
+                                  <span className={`w-2.5 h-2.5 rounded-full ${item.isVeg ? 'bg-emerald-600' : 'bg-rose-600'}`}></span>
+                                </span>
+                                {item.isBestseller && (
+                                  <span className="bg-amber-500/15 text-amber-600 dark:text-amber-400 text-[10px] font-bold px-2 py-0.5 rounded-md flex items-center space-x-1">
+                                    <Flame className="w-3 h-3" />
+                                    <span>Bestseller</span>
+                                  </span>
+                                )}
+                              </div>
+
+                              <h4 className={`text-xs sm:text-lg font-bold sm:font-black group-hover:text-orange-500 transition-colors line-clamp-2 sm:line-clamp-1 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
                                 {item.name}
                               </h4>
-                              <p className="text-xs font-black text-orange-600 dark:text-orange-400 mt-0.5">
-                                ${item.price.toFixed(2)}
+
+                              <div className="flex items-center space-x-2 font-black text-xs sm:text-sm">
+                                <span className="text-orange-600 dark:text-orange-400">${item.price.toFixed(2)}</span>
+                                {item.rating && <span className="text-[10px] sm:text-xs text-slate-400 font-medium">★ {item.rating}</span>}
+                              </div>
+
+                              <p className={`hidden sm:block text-xs sm:text-sm leading-relaxed line-clamp-2 ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
+                                {item.description}
                               </p>
                             </div>
 
-                            <p className={`text-[10px] sm:text-xs line-clamp-2 leading-relaxed hidden sm:block ${
-                              isDarkMode ? 'text-slate-400' : 'text-slate-500'
-                            }`}>
-                              {item.description}
-                            </p>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedDishDetail(item);
+                                setDetailQuantity(qty > 0 ? qty : 1);
+                                setSelectedAddOnIds([]);
+                              }}
+                              className="hidden sm:flex text-xs font-bold text-orange-600 dark:text-orange-400 items-center space-x-1 hover:underline pt-1 cursor-pointer"
+                            >
+                              <span>View ingredients, nutrition & custom options</span>
+                              <ArrowRight className="w-3.5 h-3.5" />
+                            </button>
                           </div>
 
-                          {/* Add to cart quantity button */}
-                          <div className="pt-2 mt-auto">
+                          {/* Add button / Qty control */}
+                          <div className="w-full shrink-0 pt-1 sm:pt-0 sm:w-36" onClick={(e) => e.stopPropagation()}>
                             {qty === 0 ? (
                               <button
-                                onClick={() => onAddToCart(item, restaurant)}
-                                className={`w-full py-1.5 rounded-xl text-[11px] font-black shadow-xs transition-all uppercase tracking-wider text-center ${
-                                  isDarkMode
-                                    ? 'bg-slate-800 hover:bg-orange-600 hover:text-white text-orange-400 border border-slate-700'
-                                    : 'bg-orange-50 hover:bg-orange-600 hover:text-white text-orange-600 border border-orange-200'
-                                }`}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  onAddToCart(item, restaurant);
+                                }}
+                                className="w-full py-2 sm:py-2.5 bg-orange-600 hover:bg-orange-700 text-white rounded-lg sm:rounded-xl text-[11px] sm:text-xs font-bold uppercase tracking-wider shadow-sm transition-transform active:scale-95 cursor-pointer"
                               >
-                                + ADD
+                                ADD +
                               </button>
                             ) : (
-                              <div className="flex items-center justify-between bg-orange-600 text-white px-2 py-1 rounded-xl shadow-xs font-black text-xs">
-                                <button onClick={() => onRemoveFromCart(item.id)} className="p-0.5 hover:bg-orange-700 rounded">
-                                  <Minus className="w-3 h-3" />
+                              <div className="flex items-center justify-between bg-orange-600 text-white px-2.5 py-2 sm:px-3 sm:py-2.5 rounded-lg sm:rounded-xl shadow-sm font-bold text-xs w-full">
+                                <button 
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    onRemoveFromCart(item.id);
+                                  }} 
+                                  className="p-1 hover:bg-orange-700 rounded cursor-pointer"
+                                >
+                                  <Minus className="w-3.5 h-3.5" />
                                 </button>
                                 <span>{qty}</span>
-                                <button onClick={() => onAddToCart(item, restaurant)} className="p-0.5 hover:bg-orange-700 rounded">
-                                  <Plus className="w-3 h-3" />
+                                <button 
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    onAddToCart(item, restaurant);
+                                  }} 
+                                  className="p-1 hover:bg-orange-700 rounded cursor-pointer"
+                                >
+                                  <Plus className="w-3.5 h-3.5" />
                                 </button>
                               </div>
                             )}
@@ -259,11 +314,11 @@ export const RestaurantMenuModal: React.FC<RestaurantMenuModalProps> = ({
         {totalCartCount > 0 && (
           <div className="sticky bottom-0 z-20 bg-slate-950 text-white p-4 border-t border-slate-800 flex items-center justify-between shadow-2xl">
             <div className="flex items-center space-x-3">
-              <div className="p-2.5 bg-orange-600 text-white rounded-xl">
+              <div className="p-2 bg-orange-600 text-white rounded-lg">
                 <ShoppingBag className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-xs font-black text-orange-400">{totalCartCount} items in cart</p>
+                <p className="text-xs font-bold text-orange-400">{totalCartCount} items in cart</p>
                 <p className="text-sm font-black">${totalCartPrice.toFixed(2)} + taxes</p>
               </div>
             </div>
@@ -273,15 +328,283 @@ export const RestaurantMenuModal: React.FC<RestaurantMenuModalProps> = ({
                 onClose();
                 onOpenCart();
               }}
-              className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-wider shadow-lg shadow-orange-600/30 flex items-center space-x-2"
+              className="bg-orange-600 hover:bg-orange-700 text-white px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider shadow-md shadow-orange-600/30 flex items-center space-x-2 cursor-pointer"
             >
               <span>View Cart & Checkout</span>
-              <span className="bg-orange-700 px-2 py-0.5 rounded-lg">{totalCartCount}</span>
+              <span className="bg-orange-700 px-2 py-0.5 rounded-md">{totalCartCount}</span>
             </button>
           </div>
         )}
 
       </div>
+
+      {/* Comprehensive Product Details Modal with Real Ingredients, Nutrition & Customizations */}
+      {selectedDishDetail && (
+        <div className="fixed inset-0 z-[70] bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-in fade-in duration-200">
+          <div className={`w-full max-w-xl rounded-xl overflow-hidden shadow-2xl border flex flex-col my-auto max-h-[90vh] ${
+            isDarkMode ? 'bg-slate-900 border-slate-700 text-white' : 'bg-white border-slate-200 text-slate-900'
+          }`}>
+            {/* Big Dish Photo with Veg badge & Close */}
+            <div className="relative h-64 sm:h-72 w-full overflow-hidden bg-slate-900 shrink-0">
+              <img
+                src={selectedDishDetail.image}
+                alt={selectedDishDetail.name}
+                referrerPolicy="no-referrer"
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=800';
+                }}
+              />
+              {/* Soft gradient exclusively at bottom edge for text badge contrast */}
+              <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-slate-950/85 via-slate-950/30 to-transparent pointer-events-none" />
+              
+              <button
+                onClick={() => setSelectedDishDetail(null)}
+                className="absolute top-3.5 right-3.5 w-9 h-9 rounded-full bg-white/95 text-slate-800 hover:bg-white flex items-center justify-center shadow-lg transition-transform active:scale-95 cursor-pointer z-10"
+                title="Close"
+              >
+                <X className="w-5 h-5 stroke-[2.5]" />
+              </button>
+
+              <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between text-white">
+                <div className="flex items-center space-x-2">
+                  <span className="w-4 h-4 rounded-xs border flex items-center justify-center p-0.5 bg-white shadow-xs border-slate-300">
+                    <span className={`w-2.5 h-2.5 rounded-full ${selectedDishDetail.isVeg ? 'bg-emerald-600' : 'bg-rose-600'}`}></span>
+                  </span>
+                  <span className="text-xs font-bold uppercase tracking-wider bg-slate-900/80 backdrop-blur-xs px-2.5 py-0.5 rounded">
+                    {selectedDishDetail.isVeg ? 'Pure Vegetarian' : 'Non-Vegetarian'}
+                  </span>
+                </div>
+
+                {selectedDishDetail.isBestseller && (
+                  <span className="bg-amber-500 text-slate-950 text-xs font-black px-2.5 py-0.5 rounded shadow-xs flex items-center space-x-1">
+                    <Flame className="w-3 h-3 fill-slate-950" />
+                    <span>Chef's Bestseller</span>
+                  </span>
+                )}
+              </div>
+            </div>
+
+            {/* Scrollable Content Area */}
+            <div className="p-5 sm:p-6 overflow-y-auto space-y-5">
+              
+              {/* Product Header & Pricing */}
+              <div>
+                <div className="flex items-start justify-between gap-3">
+                  <div className="space-y-1">
+                    <h3 className={`text-lg sm:text-2xl font-black ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+                      {selectedDishDetail.name}
+                    </h3>
+                    <p className="text-xs text-orange-600 dark:text-orange-400 font-semibold flex items-center space-x-2">
+                      <span>{selectedDishDetail.portion || 'Serves 1-2 (650g)'}</span>
+                      <span>•</span>
+                      <span>{selectedDishDetail.prepTime || '20-25 mins prep'}</span>
+                    </p>
+                  </div>
+                  <span className="text-xl sm:text-2xl font-black text-orange-600 dark:text-orange-400 shrink-0">
+                    ${selectedDishDetail.price.toFixed(2)}
+                  </span>
+                </div>
+
+                <p className={`text-xs sm:text-sm mt-3 leading-relaxed ${isDarkMode ? 'text-slate-300' : 'text-slate-600'}`}>
+                  {selectedDishDetail.description}
+                </p>
+              </div>
+
+              {/* Key Ingredients Section */}
+              <div className="space-y-2">
+                <div className="flex items-center space-x-1.5 text-xs font-bold uppercase tracking-wider text-orange-600 dark:text-orange-400">
+                  <Utensils className="w-3.5 h-3.5" />
+                  <span>Key Ingredients</span>
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                  {(selectedDishDetail.ingredients && selectedDishDetail.ingredients.length > 0
+                    ? selectedDishDetail.ingredients
+                    : [
+                        'Aged Basmati Rice',
+                        'Tender Chicken',
+                        'Desi Ghee',
+                        'Caramelized Onions',
+                        'Fresh Mint',
+                        'Spices'
+                      ]
+                  ).map((ing) => (
+                    <span
+                      key={ing}
+                      className={`text-[11px] font-medium px-2.5 py-1 rounded-lg border ${
+                        isDarkMode ? 'bg-slate-950/70 border-slate-800 text-slate-300' : 'bg-slate-50 border-slate-200 text-slate-700'
+                      }`}
+                    >
+                      {ing}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Nutrition & Macro Facts */}
+              <div className="space-y-2">
+                <div className="flex items-center space-x-1.5 text-xs font-bold uppercase tracking-wider text-orange-600 dark:text-orange-400">
+                  <HeartPulse className="w-3.5 h-3.5 text-rose-500" />
+                  <span>Nutrition</span>
+                </div>
+                <div className="grid grid-cols-4 gap-2 text-center">
+                  <div className={`p-2 rounded-xl border ${isDarkMode ? 'bg-slate-950/60 border-slate-800' : 'bg-slate-50 border-slate-200'}`}>
+                    <span className="block text-[10px] text-slate-400 uppercase font-bold">Calories</span>
+                    <span className="text-xs sm:text-sm font-bold text-amber-500">
+                      {selectedDishDetail.nutrition?.calories || selectedDishDetail.calories || 780} kcal
+                    </span>
+                  </div>
+                  <div className={`p-2 rounded-xl border ${isDarkMode ? 'bg-slate-950/60 border-slate-800' : 'bg-slate-50 border-slate-200'}`}>
+                    <span className="block text-[10px] text-slate-400 uppercase font-bold">Protein</span>
+                    <span className="text-xs sm:text-sm font-bold text-emerald-500">
+                      {selectedDishDetail.nutrition?.protein || '42g'}
+                    </span>
+                  </div>
+                  <div className={`p-2 rounded-xl border ${isDarkMode ? 'bg-slate-950/60 border-slate-800' : 'bg-slate-50 border-slate-200'}`}>
+                    <span className="block text-[10px] text-slate-400 uppercase font-bold">Carbs</span>
+                    <span className="text-xs sm:text-sm font-bold text-blue-500">
+                      {selectedDishDetail.nutrition?.carbs || '86g'}
+                    </span>
+                  </div>
+                  <div className={`p-2 rounded-xl border ${isDarkMode ? 'bg-slate-950/60 border-slate-800' : 'bg-slate-50 border-slate-200'}`}>
+                    <span className="block text-[10px] text-slate-400 uppercase font-bold">Fat</span>
+                    <span className="text-xs sm:text-sm font-bold text-rose-500">
+                      {selectedDishDetail.nutrition?.fat || '28g'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Spice Level Selection */}
+              <div className="space-y-1.5">
+                <label className={`text-xs font-bold uppercase tracking-wider ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
+                  Choose Spice Heat:
+                </label>
+                <div className="grid grid-cols-3 gap-2">
+                  {(['Mild', 'Medium', 'Extra Spicy'] as const).map((level) => (
+                    <button
+                      key={level}
+                      onClick={() => setSpiceLevel(level)}
+                      className={`py-2 px-3 rounded-lg text-xs font-bold border transition-all cursor-pointer ${
+                        spiceLevel === level
+                          ? 'bg-orange-600 text-white border-orange-600 shadow-xs'
+                          : isDarkMode
+                            ? 'bg-slate-800 text-slate-300 border-slate-700 hover:border-slate-600'
+                            : 'bg-white text-slate-700 border-slate-200 hover:border-orange-300'
+                      }`}
+                    >
+                      {level}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Optional Add-Ons & Extras */}
+              {selectedDishDetail.addOns && selectedDishDetail.addOns.length > 0 && (
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <label className={`text-xs font-bold uppercase tracking-wider ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
+                      Recommended Add-Ons & Extras:
+                    </label>
+                    <span className="text-[10px] text-slate-400">Optional</span>
+                  </div>
+                  <div className="space-y-1.5">
+                    {selectedDishDetail.addOns.map((addOn) => {
+                      const isChecked = selectedAddOnIds.includes(addOn.id);
+                      return (
+                        <div
+                          key={addOn.id}
+                          onClick={() => {
+                            setSelectedAddOnIds(prev => 
+                              prev.includes(addOn.id) ? prev.filter(id => id !== addOn.id) : [...prev, addOn.id]
+                            );
+                          }}
+                          className={`flex items-center justify-between p-2.5 rounded-xl border cursor-pointer transition-all ${
+                            isChecked
+                              ? 'bg-orange-500/10 border-orange-500 text-orange-600 dark:text-orange-400 font-bold'
+                              : isDarkMode
+                                ? 'bg-slate-950/60 border-slate-800 text-slate-300 hover:border-slate-700'
+                                : 'bg-white border-slate-200 text-slate-700 hover:border-orange-200'
+                          }`}
+                        >
+                          <div className="flex items-center space-x-2.5">
+                            <div className={`w-4 h-4 rounded border flex items-center justify-center ${
+                              isChecked ? 'bg-orange-600 border-orange-600 text-white' : 'border-slate-400'
+                            }`}>
+                              {isChecked && <Check className="w-3 h-3 stroke-[3]" />}
+                            </div>
+                            <span className="text-xs font-semibold">{addOn.name}</span>
+                          </div>
+                          <span className="text-xs font-black">+${addOn.price.toFixed(2)}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Quantity & Sticky Add to Order Action */}
+              <div className={`pt-4 border-t flex items-center justify-between gap-4 ${
+                isDarkMode ? 'border-slate-800' : 'border-slate-200'
+              }`}>
+                <div className={`flex items-center space-x-3 border px-3 py-1.5 rounded-xl shrink-0 ${
+                  isDarkMode ? 'bg-slate-950 border-slate-800' : 'bg-slate-100 border-slate-200'
+                }`}>
+                  <button
+                    onClick={() => setDetailQuantity(Math.max(1, detailQuantity - 1))}
+                    className="p-1 rounded hover:bg-slate-800/20 cursor-pointer"
+                  >
+                    <Minus className="w-4 h-4" />
+                  </button>
+                  <span className="font-black text-sm w-5 text-center">{detailQuantity}</span>
+                  <button
+                    onClick={() => setDetailQuantity(detailQuantity + 1)}
+                    className="p-1 rounded hover:bg-slate-800/20 cursor-pointer"
+                  >
+                    <Plus className="w-4 h-4" />
+                  </button>
+                </div>
+
+                {(() => {
+                  const basePrice = selectedDishDetail.price;
+                  const addOnsPrice = (selectedDishDetail.addOns || [])
+                    .filter(a => selectedAddOnIds.includes(a.id))
+                    .reduce((sum, a) => sum + a.price, 0);
+                  const totalPrice = (basePrice + addOnsPrice) * detailQuantity;
+
+                  return (
+                    <button
+                      onClick={() => {
+                        const currentInCart = getDishQty(selectedDishDetail.id);
+                        if (currentInCart === 0) {
+                          for (let i = 0; i < detailQuantity; i++) {
+                            onAddToCart(selectedDishDetail, restaurant);
+                          }
+                        } else if (detailQuantity > currentInCart) {
+                          for (let i = 0; i < (detailQuantity - currentInCart); i++) {
+                            onAddToCart(selectedDishDetail, restaurant);
+                          }
+                        } else if (detailQuantity < currentInCart) {
+                          for (let i = 0; i < (currentInCart - detailQuantity); i++) {
+                            onRemoveFromCart(selectedDishDetail.id);
+                          }
+                        }
+                        setSelectedDishDetail(null);
+                      }}
+                      className="flex-1 bg-orange-600 hover:bg-orange-700 text-white py-3 px-4 rounded-xl font-black text-xs uppercase tracking-wider shadow-md shadow-orange-600/30 flex items-center justify-between cursor-pointer transition-all active:scale-98"
+                    >
+                      <span>{getDishQty(selectedDishDetail.id) > 0 ? 'Update In Order' : 'Add To Order'}</span>
+                      <span>${totalPrice.toFixed(2)}</span>
+                    </button>
+                  );
+                })()}
+              </div>
+
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };

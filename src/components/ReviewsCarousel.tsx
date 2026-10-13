@@ -21,27 +21,27 @@ export const ReviewsCarousel: React.FC = () => {
   return (
     <section 
       id="reviews" 
-      className={`py-16 border-b transition-colors duration-200 ${
+      className={`py-8 sm:py-24 border-b transition-colors duration-200 ${
         isDarkMode ? 'bg-slate-950 border-slate-800/80 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'
       }`}
     >
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 text-center">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10 sm:space-y-12 text-center">
         
-        <div className="space-y-1">
-          <span className="text-[11px] font-black uppercase tracking-[0.25em] text-orange-600 dark:text-orange-400">
+        <div className="space-y-2">
+          <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-orange-600 dark:text-orange-400">
             FOODIE LOVE & STORIES
           </span>
           <h2 className={`text-3xl sm:text-4xl font-black tracking-tight ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
             Loved by 50,000+ Foodies
           </h2>
-          <p className={`text-xs ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
+          <p className={`text-xs sm:text-sm font-normal ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
             Genuine impressions from food lovers ordering daily across the city.
           </p>
         </div>
 
         {/* Carousel Card */}
-        <div className={`rounded-3xl p-6 sm:p-12 shadow-xl border relative min-h-[260px] flex flex-col justify-between transition-colors duration-200 ${
-          isDarkMode ? 'bg-slate-900 border-slate-800 text-white shadow-black/30' : 'bg-white border-slate-200 text-slate-900 shadow-slate-200/50'
+        <div className={`rounded-xl sm:rounded-2xl p-6 sm:p-10 shadow-lg border relative min-h-[250px] flex flex-col justify-between transition-colors duration-200 ${
+          isDarkMode ? 'bg-slate-900 border-slate-800 text-white shadow-black/25' : 'bg-white border-slate-200 text-slate-900 shadow-slate-200/40'
         }`}>
           
           <AnimatePresence mode="wait">
@@ -51,28 +51,28 @@ export const ReviewsCarousel: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.3 }}
-              className="space-y-6"
+              className="space-y-5"
             >
               {/* Stars */}
               <div className="flex justify-center space-x-1">
                 {[...Array(current.rating)].map((_, i) => (
-                  <Star key={i} className="w-5 h-5 fill-amber-400 text-amber-400" />
+                  <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
                 ))}
               </div>
 
               {/* Review Quote */}
-              <p className={`text-sm sm:text-base italic font-medium leading-relaxed max-w-2xl mx-auto ${
+              <p className={`text-sm sm:text-base italic font-normal leading-relaxed max-w-2xl mx-auto ${
                 isDarkMode ? 'text-slate-200' : 'text-slate-700'
               }`}>
                 "{current.comment}"
               </p>
 
               {/* Author & dish loved */}
-              <div className="flex items-center justify-center space-x-4 pt-2">
+              <div className="flex items-center justify-center space-x-3.5 pt-2">
                 <img 
                   src={current.avatar} 
                   alt={current.author} 
-                  className="w-12 h-12 rounded-full object-cover border-2 border-orange-500 shadow-md"
+                  className="w-11 h-11 rounded-full object-cover border border-orange-500 shadow-xs"
                 />
                 <div className="text-left">
                   <div className="flex items-center space-x-1.5">
@@ -93,10 +93,10 @@ export const ReviewsCarousel: React.FC = () => {
           </AnimatePresence>
 
           {/* Navigation Controls */}
-          <div className="flex items-center justify-center space-x-4 pt-8">
+          <div className="flex items-center justify-center space-x-4 pt-6">
             <button
               onClick={prevReview}
-              className={`p-2 rounded-full border transition-colors ${
+              className={`p-2 rounded-lg border transition-colors cursor-pointer ${
                 isDarkMode 
                   ? 'border-slate-800 hover:bg-slate-800 text-slate-300 hover:text-white' 
                   : 'border-slate-200 hover:bg-orange-50 hover:text-orange-600 text-slate-600'

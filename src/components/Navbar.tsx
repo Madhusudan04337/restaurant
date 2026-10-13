@@ -1,40 +1,35 @@
 import React, { useState } from 'react';
-import { MapPin, Search, ShoppingBag, Sparkles, Clock, ChevronDown, X, Calendar, Sun, Moon } from 'lucide-react';
+import { MapPin, Search, ShoppingBag, Sparkles, Clock, ChevronDown, X, Calendar, Sun, Moon, ArrowRight } from 'lucide-react';
 import { CartItem, Order } from '../types';
 import { useTheme } from '../context/ThemeContext';
 
 interface NavbarProps {
   location: string;
   setLocation: (loc: string) => void;
-  cartItems: CartItem[];
-  orders: Order[];
-  onOpenCart: () => void;
-  onOpenFoodieAi: () => void;
-  onOpenOrders: () => void;
-  onOpenReservation: () => void;
   searchQuery: string;
   setSearchQuery: (q: string) => void;
+  isLoggedIn: boolean;
+  currentUser: { name: string; email: string; avatar: string } | null;
+  onOpenLogin: () => void;
+  onOpenRegister: () => void;
+  onOpenProfile: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
   location,
   setLocation,
-  cartItems,
-  orders,
-  onOpenCart,
-  onOpenFoodieAi,
-  onOpenOrders,
-  onOpenReservation,
   searchQuery,
-  setSearchQuery
+  setSearchQuery,
+  isLoggedIn,
+  currentUser,
+  onOpenLogin,
+  onOpenRegister,
+  onOpenProfile
 }) => {
-  const { isDarkMode, toggleTheme } = useTheme();
+  const { isDarkMode } = useTheme();
   const [showLocationModal, setShowLocationModal] = useState(false);
   const [tempLocation, setTempLocation] = useState(location);
   const [activeNav, setActiveNav] = useState('home');
-
-  const totalCartCount = cartItems.reduce((acc, i) => acc + i.quantity, 0);
-  const activeOrders = orders.filter(o => o.status !== 'DELIVERED');
 
   const navLinks = [
     { id: 'home', label: 'Home', href: '#' },
@@ -54,73 +49,91 @@ export const Navbar: React.FC<NavbarProps> = ({
   ];
 
   return (
-    <header className={`sticky top-0 z-50 backdrop-blur-md border-b transition-colors duration-200 ${
+    <header className={`sticky top-0 z-50 backdrop-blur-xl border-b transition-all duration-300 ${
       isDarkMode 
-        ? 'bg-slate-950/95 border-slate-800/90 text-white shadow-xl shadow-black/20' 
-        : 'bg-white/95 border-slate-200 text-slate-900 shadow-xs'
+        ? 'bg-slate-950/90 border-slate-800/80 text-white shadow-2xl shadow-black/40' 
+        : 'bg-white/90 border-slate-200/80 text-slate-900 shadow-sm'
     }`}>
+      {/* Top Utility Announcement Ticker */}
+      <div className={`hidden sm:block py-1.5 px-4 text-center text-xs font-medium border-b transition-colors ${
+        isDarkMode ? 'bg-orange-950/30 border-orange-900/30 text-orange-300' : 'bg-orange-50/80 border-orange-100 text-orange-900'
+      }`}>
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <span className="inline-block w-2 h-2 rounded-full bg-orange-500 animate-pulse"></span>
+            <span>⚡ Free Express Delivery on orders over $30 · Use code <strong className="font-bold underline">CRAVE20</strong> for 20% off</span>
+          </div>
+          <div className="flex items-center space-x-4 text-[11px]">
+            <button onClick={() => setShowLocationModal(true)} className="hover:underline flex items-center space-x-1 font-semibold text-orange-600 dark:text-orange-400">
+              <MapPin className="w-3 h-3" />
+              <span>Deliver to: {location}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-16 sm:h-20">
           
-          {/* Logo & Location */}
-          <div className="flex items-center space-x-6">
+          {/* Logo & Location Dropdown */}
+          <div className="flex items-center space-x-4 lg:space-x-8">
             <a href="#" className="flex items-center space-x-2.5 group">
-              <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-orange-600 to-amber-500 flex items-center justify-center text-white font-black text-xl shadow-md group-hover:scale-105 transition-transform">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-orange-600 via-amber-500 to-yellow-400 flex items-center justify-center text-white font-black text-xl shadow-md group-hover:scale-105 transition-transform">
                 C
               </div>
-              <div className="text-left hidden sm:block">
+              <div className="text-left">
                 <span className={`text-xl font-black tracking-tight transition-colors ${
                   isDarkMode ? 'text-white group-hover:text-orange-400' : 'text-slate-900 group-hover:text-orange-600'
                 }`}>
                   Crave<span className="text-orange-600">Drop</span>
                 </span>
-                <span className="block text-[9px] font-bold text-orange-500 uppercase tracking-widest">
-                  Food & Dining
+                <span className="block text-[8px] font-extrabold text-orange-500 uppercase tracking-widest leading-none">
+                  Gourmet Marketplace
                 </span>
               </div>
             </a>
 
-            {/* Location Selector */}
+            {/* Location Selector Button */}
             <button
               onClick={() => setShowLocationModal(true)}
-              className={`hidden lg:flex items-center space-x-2 py-1 px-2.5 rounded-xl border transition-colors text-left ${
+              className={`hidden md:flex items-center space-x-2 py-1.5 px-3 rounded-xl border transition-all text-left ${
                 isDarkMode 
-                  ? 'bg-slate-900 border-slate-800 hover:bg-slate-850 hover:border-orange-500/30' 
-                  : 'bg-white border-slate-200 hover:bg-orange-50 hover:border-orange-200'
+                  ? 'bg-slate-900/60 border-slate-800 hover:bg-slate-800 hover:border-slate-700' 
+                  : 'bg-slate-50 border-slate-200/80 hover:bg-orange-50/50 hover:border-orange-200'
               }`}
             >
-              <MapPin className="w-4 h-4 text-orange-500 shrink-0" />
+              <div className="p-1 rounded-lg bg-orange-500/10 text-orange-500">
+                <MapPin className="w-3.5 h-3.5" />
+              </div>
               <div>
                 <div className="flex items-center space-x-1">
-                  <span className={`text-xs font-bold truncate max-w-[130px] ${
+                  <span className={`text-xs font-bold truncate max-w-[140px] ${
                     isDarkMode ? 'text-slate-200' : 'text-slate-800'
                   }`}>
                     {location}
                   </span>
                   <ChevronDown className="w-3 h-3 text-slate-400" />
                 </div>
-                <span className="text-[10px] text-slate-500 font-medium">25-30m delivery</span>
+                <span className="text-[10px] text-slate-500 font-medium">Est. 25-30 min</span>
               </div>
             </button>
           </div>
 
-          {/* Navigation Links with Scroll-Spy & Active Pill */}
-          <nav className={`hidden md:flex items-center space-x-1 p-1.5 rounded-2xl border ${
-            isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-slate-100/80 border-slate-200'
-          }`}>
+          {/* Navigation Links (Desktop) */}
+          <nav className="hidden lg:flex items-center space-x-1">
             {navLinks.map((link) => (
               <a
                 key={link.id}
                 href={link.href}
                 onClick={() => setActiveNav(link.id)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all ${
+                className={`px-3 py-2 rounded-lg text-xs font-semibold transition-all relative ${
                   activeNav === link.id
                     ? isDarkMode 
-                      ? 'bg-orange-600 text-white shadow-md' 
-                      : 'bg-white text-slate-900 shadow-sm'
+                      ? 'text-orange-400 font-bold bg-orange-500/10' 
+                      : 'text-orange-600 font-bold bg-orange-50'
                     : isDarkMode 
-                      ? 'text-slate-400 hover:text-white' 
-                      : 'text-slate-600 hover:text-orange-600'
+                      ? 'text-slate-400 hover:text-white hover:bg-slate-900/50' 
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/60'
                 }`}
               >
                 {link.label}
@@ -128,81 +141,43 @@ export const Navbar: React.FC<NavbarProps> = ({
             ))}
           </nav>
 
-          {/* Right Actions */}
-          <div className="flex items-center space-x-2 sm:space-x-3">
-            
-            {/* Dark Mode / Light Mode Theme Toggle Button */}
-            <button
-              onClick={toggleTheme}
-              className={`p-2.5 rounded-xl border transition-all flex items-center justify-center ${
-                isDarkMode 
-                  ? 'bg-slate-900 border-slate-800 text-amber-400 hover:bg-slate-850 hover:border-amber-400/40 shadow-xs' 
-                  : 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200 hover:text-slate-900 shadow-xs'
-              }`}
-              title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-              aria-label="Toggle theme"
-            >
-              {isDarkMode ? (
-                <Sun className="w-4 h-4 fill-amber-400 text-amber-400" />
-              ) : (
-                <Moon className="w-4 h-4 fill-slate-700 text-slate-700" />
-              )}
-            </button>
-
-            {/* Foodie AI Assistant */}
-            <button
-              onClick={onOpenFoodieAi}
-              className="flex items-center space-x-1.5 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white px-3 py-2 rounded-xl text-xs font-bold shadow-md shadow-orange-500/20 transition-all transform hover:scale-105"
-            >
-              <Sparkles className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Foodie AI</span>
-            </button>
-
-            {/* Book Table Button */}
-            <button
-              onClick={onOpenReservation}
-              className={`hidden lg:flex items-center space-x-1.5 px-3.5 py-2 rounded-xl text-xs font-black shadow-sm transition-all ${
-                isDarkMode 
-                  ? 'bg-slate-900 hover:bg-slate-800 text-white border border-slate-800' 
-                  : 'bg-slate-900 hover:bg-slate-800 text-white'
-              }`}
-            >
-              <Calendar className="w-3.5 h-3.5 text-amber-400" />
-              <span>Book Table</span>
-            </button>
-
-            {/* Orders */}
-            <button
-              onClick={onOpenOrders}
-              className={`relative p-2 rounded-xl border transition-colors flex items-center space-x-1 text-xs font-bold ${
-                isDarkMode 
-                  ? 'border-slate-800 hover:bg-slate-900 text-slate-300' 
-                  : 'border-slate-200 hover:bg-slate-50 text-slate-700'
-              }`}
-              title="Your Orders"
-            >
-              <Clock className="w-4 h-4 text-orange-500" />
-              <span className="hidden xl:inline">Orders</span>
-              {activeOrders.length > 0 && (
-                <span className="bg-orange-600 text-white text-[10px] font-black px-1.5 py-0.5 rounded-full ml-1">
-                  {activeOrders.length}
-                </span>
-              )}
-            </button>
-
-            {/* Cart Button */}
-            <button
-              onClick={onOpenCart}
-              className="relative flex items-center space-x-1.5 bg-orange-600 hover:bg-orange-700 text-white px-3.5 py-2 rounded-xl text-xs font-extrabold shadow-md transition-all active:scale-95"
-            >
-              <ShoppingBag className="w-4 h-4" />
-              <span className="hidden sm:inline">Cart</span>
-              {totalCartCount > 0 && (
-                <span className="bg-white text-orange-600 text-[10px] font-black px-1.5 py-0.5 rounded-full">
-                  {totalCartCount}
-                </span>
-              )}
-            </button>
+          {/* Auth & User Profile Buttons */}
+          <div className="flex items-center space-x-2">
+            {isLoggedIn && currentUser ? (
+              <button
+                onClick={onOpenProfile}
+                className={`flex items-center space-x-2 py-1.5 px-3 rounded-xl border text-xs font-bold transition-all ${
+                  isDarkMode 
+                    ? 'bg-slate-900 border-slate-800 text-white hover:border-orange-500' 
+                    : 'bg-orange-50 border-orange-200 text-slate-900 hover:border-orange-400'
+                }`}
+                title="View User Profile"
+              >
+                <div className="w-6 h-6 rounded-lg bg-orange-600 text-white flex items-center justify-center text-[10px] font-black">
+                  {currentUser.avatar || currentUser.name.slice(0, 2).toUpperCase()}
+                </div>
+                <span className="hidden sm:inline">{currentUser.name}</span>
+              </button>
+            ) : (
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={onOpenLogin}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                    isDarkMode 
+                      ? 'text-slate-300 hover:text-white hover:bg-slate-900' 
+                      : 'text-slate-700 hover:text-slate-900 hover:bg-slate-100'
+                  }`}
+                >
+                  Login
+                </button>
+                <button
+                  onClick={onOpenRegister}
+                  className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-orange-600 hover:bg-orange-700 text-white shadow-md shadow-orange-600/20 transition-all"
+                >
+                  Register
+                </button>
+              </div>
+            )}
           </div>
 
         </div>
@@ -211,7 +186,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       {/* Location Modal */}
       {showLocationModal && (
         <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className={`rounded-3xl max-w-sm w-full p-6 shadow-2xl space-y-4 border ${
+          <div className={`rounded-2xl max-w-sm w-full p-6 shadow-2xl space-y-4 border ${
             isDarkMode 
               ? 'bg-slate-900 text-white border-slate-800' 
               : 'bg-white text-slate-900 border-slate-200'
@@ -228,7 +203,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               value={tempLocation}
               onChange={(e) => setTempLocation(e.target.value)}
               placeholder="Enter area, street, or city"
-              className={`w-full p-3 border rounded-2xl text-xs font-bold ${
+              className={`w-full p-3 border rounded-xl text-xs font-semibold ${
                 isDarkMode 
                   ? 'bg-slate-950 border-slate-800 text-white placeholder-slate-500' 
                   : 'bg-slate-50 border-slate-200 text-slate-900 placeholder-slate-400'
@@ -236,12 +211,12 @@ export const Navbar: React.FC<NavbarProps> = ({
             />
 
             <div className="space-y-1">
-              <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Popular Areas</span>
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Popular Areas</span>
               {popularLocations.map((loc) => (
                 <button
                   key={loc}
                   onClick={() => setTempLocation(loc)}
-                  className={`w-full text-left p-2.5 rounded-xl text-xs font-semibold flex justify-between items-center transition-colors ${
+                  className={`w-full text-left p-2.5 rounded-lg text-xs font-semibold flex justify-between items-center transition-colors ${
                     isDarkMode ? 'hover:bg-slate-800 text-slate-300' : 'hover:bg-orange-50 text-slate-700'
                   }`}
                 >
@@ -256,7 +231,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 setLocation(tempLocation);
                 setShowLocationModal(false);
               }}
-              className="w-full bg-orange-600 hover:bg-orange-700 text-white font-black py-3 rounded-2xl text-xs uppercase shadow-md shadow-orange-600/30"
+              className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 rounded-xl text-xs uppercase tracking-wider shadow-md shadow-orange-600/30"
             >
               Confirm Location
             </button>

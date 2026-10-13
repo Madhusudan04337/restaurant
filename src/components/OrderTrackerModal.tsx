@@ -132,16 +132,16 @@ export const OrderTrackerModal: React.FC<OrderTrackerModalProps> = ({
                 className="absolute top-1/2 -translate-y-1/2 transition-all duration-1000 z-10 flex flex-col items-center"
                 style={{ left: currentIdx >= 2 ? '72%' : '32%' }}
               >
-                <div className="w-8 h-8 rounded-full bg-white text-orange-600 flex items-center justify-center shadow-lg border-2 border-orange-500 animate-pulse">
-                  🛵
+                <div className="w-8 h-8 rounded-full bg-white text-orange-600 font-bold text-xs flex items-center justify-center shadow-lg border-2 border-orange-500 animate-pulse">
+                  DEL
                 </div>
                 <span className="text-[9px] text-emerald-400 font-black mt-1">Rider</span>
               </div>
 
               {/* Destination home pin */}
               <div className="absolute right-6 top-1/2 -translate-y-1/2 flex flex-col items-center">
-                <div className="w-7 h-7 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs shadow-md">
-                  🏡
+                <div className="w-7 h-7 rounded-full bg-emerald-600 text-white font-bold text-xs flex items-center justify-center shadow-md">
+                  HOME
                 </div>
                 <span className="text-[9px] text-slate-400 font-bold mt-1">You</span>
               </div>
@@ -149,11 +149,10 @@ export const OrderTrackerModal: React.FC<OrderTrackerModalProps> = ({
 
             {/* Food Freshness & Insulated Thermal Bag Status */}
             <div className="flex items-center justify-between text-[11px] text-slate-300 bg-slate-800/60 p-2.5 rounded-xl">
-              <span className="flex items-center space-x-1.5 font-bold text-amber-300">
-                <span>🔥</span>
-                <span>Thermal Insulated Bag: 68°C Hot</span>
+              <span className="font-bold text-amber-300">
+                Thermal Insulated Bag: 68°C Hot
               </span>
-              <span className="text-slate-400">100% Tamper-Proof Seal ✓</span>
+              <span className="text-slate-400">100% Tamper-Proof Seal</span>
             </div>
           </div>
 
@@ -211,12 +210,12 @@ export const OrderTrackerModal: React.FC<OrderTrackerModalProps> = ({
               : 'bg-slate-50 border-slate-200 text-slate-900'
           }`}>
             <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-orange-100 dark:bg-orange-950/60 text-orange-700 dark:text-orange-400 font-black rounded-2xl flex items-center justify-center text-xl">
-                🛵
+              <div className="w-12 h-12 bg-orange-600 text-white font-black rounded-2xl flex items-center justify-center text-xs shadow-md">
+                DEL
               </div>
               <div>
                 <h5 className={`text-sm font-black ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{order.driver.name}</h5>
-                <p className={`text-xs ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>{order.driver.vehicle} • ⭐ {order.driver.rating}</p>
+                <p className={`text-xs ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>{order.driver.vehicle} • Rating {order.driver.rating}</p>
               </div>
             </div>
 

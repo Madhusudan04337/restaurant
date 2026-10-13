@@ -64,72 +64,76 @@ export const ExpressGroceryQuickBar: React.FC<ExpressGroceryQuickBarProps> = ({ 
   };
 
   return (
-    <section className={`py-10 sm:py-12 border-y transition-colors duration-200 ${
+    <section className={`py-8 sm:py-20 border-y transition-colors duration-200 ${
       isDarkMode 
         ? 'bg-slate-900/90 border-slate-800 text-white' 
-        : 'bg-amber-50/70 border-amber-200/70 text-slate-900'
+        : 'bg-amber-50/60 border-amber-200/60 text-slate-900'
     }`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-10">
         
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-2xl bg-amber-500 text-slate-950 font-black flex items-center justify-center shadow-md">
-              <Zap className="w-5 h-5 fill-slate-950" />
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-center space-x-4">
+            <div className="w-11 h-11 rounded-xl bg-amber-500 text-slate-950 font-bold flex items-center justify-center shadow-xs">
+              <Zap className="w-6 h-6 fill-slate-950" />
             </div>
             <div>
-              <div className="flex items-center space-x-2">
-                <h3 className={`text-base sm:text-lg font-black ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+              <div className="flex items-center space-x-2.5">
+                <h3 className={`text-lg sm:text-xl font-extrabold tracking-tight ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
                   CraveMart 10-Minute Express
                 </h3>
-                <span className="bg-emerald-600 text-white text-[10px] font-black px-2 py-0.5 rounded-full uppercase">
+                <span className="bg-emerald-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider">
                   Lightning Fast
                 </span>
               </div>
-              <p className={`text-xs ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
+              <p className={`text-xs sm:text-sm mt-0.5 ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
                 Late night munchies, artisanal beverages, bakery and gourmet snacks delivered in 10 minutes.
               </p>
             </div>
           </div>
-          <span className={`text-xs font-bold ${isDarkMode ? 'text-amber-400' : 'text-amber-800'}`}>
+          <span className={`text-xs font-semibold ${isDarkMode ? 'text-amber-400' : 'text-amber-800'}`}>
             ⚡ 1,200+ Express Delivery Partners Active
           </span>
         </div>
 
-        {/* Quick Items 1 1/2 Horizontal Peek Carousel on Mobile, Grid on Desktop */}
-        <div className="flex overflow-x-auto snap-x snap-mandatory gap-3 pb-2 sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:overflow-visible scroll-smooth">
+        {/* Quick Items Grid on Desktop, Smooth Scroll on Mobile */}
+        <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 sm:gap-6 pb-2 sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:overflow-visible scroll-smooth">
           {quickItems.map((item) => (
             <div
               key={item.id}
-              className={`w-[72vw] sm:w-auto shrink-0 snap-start rounded-2xl p-3.5 border transition-all flex items-center justify-between gap-3 shadow-xs hover:shadow-md ${
+              className={`w-[78vw] sm:w-auto shrink-0 snap-start rounded-xl p-5 border transition-all flex items-center justify-between gap-4 shadow-xs hover:shadow-md ${
                 isDarkMode 
-                  ? 'bg-slate-950 border-slate-800 hover:border-amber-500/40 text-white' 
+                  ? 'bg-slate-950 border-slate-800 hover:border-slate-700 text-white' 
                   : 'bg-white border-amber-200/80 hover:border-amber-300 text-slate-900'
               }`}
             >
               <img
                 src={item.image}
                 alt={item.name}
-                className="w-16 h-16 rounded-xl object-cover shrink-0"
+                referrerPolicy="no-referrer"
+                className="w-20 h-20 rounded-lg object-cover shrink-0"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=200';
+                }}
               />
 
-              <div className="flex-1 min-w-0 space-y-0.5">
-                <span className={`text-[10px] font-black uppercase flex items-center space-x-0.5 ${
+              <div className="flex-1 min-w-0 space-y-1.5">
+                <span className={`text-[10px] font-bold uppercase flex items-center space-x-1 ${
                   isDarkMode ? 'text-amber-400' : 'text-amber-700'
                 }`}>
                   <Clock className="w-3 h-3 text-amber-500" />
                   <span>{item.time}</span>
                 </span>
-                <h4 className={`text-xs font-black truncate ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+                <h4 className={`text-xs sm:text-sm font-extrabold truncate ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
                   {item.name}
                 </h4>
-                <p className="text-xs font-black text-orange-600 dark:text-orange-400">
+                <p className="text-xs sm:text-sm font-black text-orange-600 dark:text-orange-400">
                   ${item.price.toFixed(2)}
                 </p>
               </div>
 
               <button
                 onClick={() => handleAdd(item)}
-                className="p-2 bg-orange-600 hover:bg-orange-700 text-white rounded-xl shadow-xs shrink-0 transition-transform active:scale-95"
+                className="p-2.5 bg-orange-600 hover:bg-orange-700 text-white rounded-lg shadow-xs shrink-0 transition-transform active:scale-95 cursor-pointer"
                 title="Add to cart"
               >
                 <Plus className="w-4 h-4 stroke-[3]" />

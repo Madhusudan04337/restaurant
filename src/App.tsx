@@ -8,6 +8,7 @@ import { RestaurantList } from './components/RestaurantList';
 import { FeastEstimator } from './components/FeastEstimator';
 import { ExpressGroceryQuickBar } from './components/ExpressGroceryQuickBar';
 import { MasterChefsSection } from './components/MasterChefsSection';
+import { CulinaryStorySection } from './components/CulinaryStorySection';
 import { CraveClubMembership } from './components/CraveClubMembership';
 import { ReviewsCarousel } from './components/ReviewsCarousel';
 import { Footer } from './components/Footer';
@@ -20,7 +21,11 @@ import { CartDrawer } from './components/CartDrawer';
 import { OrderTrackerModal } from './components/OrderTrackerModal';
 import { OrdersDrawer } from './components/OrdersDrawer';
 import { FoodieAiModal } from './components/FoodieAiModal';
-import { Bike, Clock, ArrowRight } from 'lucide-react';
+import { ProfileView } from './components/ProfileView';
+import { LoginPage } from './components/LoginPage';
+import { RegisterPage } from './components/RegisterPage';
+import { UserAccountPage } from './components/UserAccountPage';
+import { Bike, Clock, ArrowRight, X } from 'lucide-react';
 import { useTheme } from './context/ThemeContext';
 
 export default function App() {
@@ -30,22 +35,7 @@ export default function App() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [mobileTab, setMobileTab] = useState<MobileTab>('delivery');
 
-  const [cartItems, setCartItems] = useState<CartItem[]>([
-    {
-      dish: {
-        id: 'item-101',
-        name: 'Hyderabadi Chicken Dum Biryani',
-        description: 'Fragrant basmati rice layered with marinated chicken',
-        price: 14.99,
-        image: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&q=80&w=600',
-        isVeg: false,
-        category: 'Biryani'
-      },
-      restaurantId: 'rest-1',
-      restaurantName: 'The Royal Biryani & Kebabs',
-      quantity: 1
-    }
-  ]);
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   const [orders, setOrders] = useState<Order[]>([
     {
@@ -83,11 +73,27 @@ export default function App() {
   ]);
 
   const [selectedRestaurant, setSelectedRestaurant] = useState<Restaurant | null>(null);
+  const [initialDishToOpen, setInitialDishToOpen] = useState<MenuItem | null>(null);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isFoodieAiOpen, setIsFoodieAiOpen] = useState(false);
   const [isOrdersOpen, setIsOrdersOpen] = useState(false);
   const [isReservationOpen, setIsReservationOpen] = useState(false);
   const [trackedOrder, setTrackedOrder] = useState<Order | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [currentUser, setCurrentUser] = useState<{ name: string; email: string; avatar: string } | null>({
+    name: 'Default User',
+    email: 'user@example.com',
+    avatar: 'DU'
+  });
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [currentView, setCurrentView] = useState<'home' | 'login' | 'register' | 'account'>('home');
+
+  const handleSelectDish = (dish: MenuItem, restaurant: Restaurant) => {
+    setSelectedRestaurant(restaurant);
+    setInitialDishToOpen(dish);
+  };
 
   // Add individual dish to cart
   const handleAddToCart = (dish: MenuItem, restaurantId?: string, restaurantName?: string) => {
@@ -198,23 +204,68 @@ export default function App() {
     }`}>
       
       {/* Sticky Top Header */}
-      <Navbar
-        location={location}
-        setLocation={setLocation}
-        cartItems={cartItems}
-        orders={orders}
-        onOpenCart={() => setIsCartOpen(true)}
-        onOpenFoodieAi={() => setIsFoodieAiOpen(true)}
-        onOpenOrders={() => setIsOrdersOpen(true)}
-        onOpenReservation={() => setIsReservationOpen(true)}
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-      />
+      {currentView !== 'login' && currentView !== 'register' && (
+        <Navbar
+          location={location}
+          setLocation={setLocation}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          isLoggedIn={isLoggedIn}
+          currentUser={currentUser}
+          onOpenLogin={() => setCurrentView('login')}
+          onOpenRegister={() => setCurrentView('register')}
+          onOpenProfile={() => setCurrentView('account')}
+        />
+      )}
 
-      {/* MOBILE EXPERIENCE: Tab-based Ergonomic View (Eliminates Endless Doom-Scrolling!) */}
-      <div className="sm:hidden w-full">
+      {/* Dedicated Sign In Page */}
+      {currentView === 'login' && (
+        <LoginPage
+          onLoginSuccess={(u) => {
+            setCurrentUser(u);
+            setIsLoggedIn(true);
+            setCurrentView('home');
+          }}
+          onNavigateRegister={() => setCurrentView('register')}
+          onBackToHome={() => setCurrentView('home')}
+        />
+      )}
+
+      {/* Dedicated Register Page */}
+      {currentView === 'register' && (
+        <RegisterPage
+          onRegisterSuccess={(u) => {
+            setCurrentUser(u);
+            setIsLoggedIn(true);
+            setCurrentView('home');
+          }}
+          onNavigateLogin={() => setCurrentView('login')}
+          onBackToHome={() => setCurrentView('home')}
+        />
+      )}
+
+      {/* Dedicated User Account Page */}
+      {currentView === 'account' && (
+        <UserAccountPage
+          currentUser={currentUser}
+          location={location}
+          setLocation={setLocation}
+          orders={orders}
+          onSignOut={() => {
+            setIsLoggedIn(false);
+            setCurrentUser(null);
+            setCurrentView('home');
+          }}
+          onBackToHome={() => setCurrentView('home')}
+        />
+      )}
+
+      {/* Home View */}
+      {currentView === 'home' && (
+        <>
+      <div className="sm:hidden w-full pb-24">
         {mobileTab === 'delivery' && (
-          <div className="space-y-4">
+          <div className="space-y-3">
             <HeroSection
               location={location}
               searchQuery={searchQuery}
@@ -225,7 +276,11 @@ export default function App() {
             <MarqueeTicker />
             <div id="restaurant-list-section">
               <RestaurantList
-                onSelectRestaurant={(restaurant) => setSelectedRestaurant(restaurant)}
+                onSelectRestaurant={(restaurant) => {
+                  setSelectedRestaurant(restaurant);
+                  setInitialDishToOpen(null);
+                }}
+                onSelectDish={handleSelectDish}
                 selectedCategory={selectedCategory}
                 setSelectedCategory={setSelectedCategory}
                 searchQuery={searchQuery}
@@ -235,30 +290,31 @@ export default function App() {
         )}
 
         {mobileTab === 'instamart' && (
-          <div className="py-4 px-2 space-y-4">
-            <div className="p-4 bg-orange-600 text-white rounded-2xl shadow-md">
-              <span className="text-[10px] font-black uppercase tracking-widest text-orange-200">10-MINUTE STORE</span>
-              <h2 className="text-xl font-black">CraveMart Express</h2>
-              <p className="text-xs text-orange-100">Midnight snacks, artisanal desserts & cold brews delivered in 10 minutes.</p>
+          <div className="py-3 px-3 space-y-4 max-w-lg mx-auto">
+            <div className="p-4 bg-gradient-to-r from-orange-600 to-amber-600 text-white rounded-xl shadow-xs space-y-1">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-orange-200">10-MINUTE STORE</span>
+              <h2 className="text-lg font-black">CraveMart Express</h2>
+              <p className="text-xs text-orange-100 font-normal">Midnight snacks, artisanal desserts & cold brews delivered in 10 minutes.</p>
             </div>
             <ExpressGroceryQuickBar onAddToCart={(dish, rId, rName) => handleAddToCart(dish, rId, rName)} />
           </div>
         )}
 
         {mobileTab === 'feast' && (
-          <div className="py-2">
+          <div className="py-2 px-2">
             <FeastEstimator onAddFeastToCart={handleAddFeastToCart} />
           </div>
         )}
 
         {mobileTab === 'dinein' && (
-          <div className="space-y-6 pb-6">
-            <div className="p-4 bg-slate-900 text-white rounded-b-3xl text-center space-y-2 border-b border-slate-800">
-              <span className="text-[10px] font-black uppercase text-amber-400">VIP DINING PRIVILEGES</span>
-              <h2 className="text-xl font-black">Table Booking & CraveClub</h2>
+          <div className="space-y-4 pb-4 px-3">
+            <div className="p-4 bg-slate-900 text-white rounded-xl text-center space-y-2 border border-slate-800 shadow-xs">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400">VIP DINING PRIVILEGES</span>
+              <h2 className="text-lg font-black">Table Booking & CraveClub</h2>
+              <p className="text-xs text-slate-400 max-w-sm mx-auto">Skip the line and enjoy exclusive discounts at prime tables.</p>
               <button
                 onClick={() => setIsReservationOpen(true)}
-                className="mt-2 bg-orange-600 hover:bg-orange-700 text-white px-5 py-2.5 rounded-xl text-xs font-black uppercase shadow-md active:scale-95 transition-transform"
+                className="mt-1 bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg text-xs font-bold uppercase shadow-xs active:scale-95 transition-transform"
               >
                 Reserve a Table Now
               </button>
@@ -269,18 +325,21 @@ export default function App() {
         )}
 
         {mobileTab === 'orders' && (
-          <div className="py-6 px-4 max-w-lg mx-auto space-y-4">
+          <div className="py-4 px-3 max-w-lg mx-auto space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className={`text-lg font-black ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
-                Your Orders ({orders.length})
-              </h2>
+              <div>
+                <h2 className={`text-lg font-black ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+                  Your Orders ({orders.length})
+                </h2>
+                <p className="text-xs text-slate-400">Live order status and previous history</p>
+              </div>
               <span className="text-xs text-orange-600 dark:text-orange-400 font-bold">
                 {orders.filter(o => o.status !== 'DELIVERED').length} Active
               </span>
             </div>
 
             {orders.length === 0 ? (
-              <div className={`text-center py-16 rounded-3xl border p-6 space-y-2 ${
+              <div className={`text-center py-12 rounded-xl border p-6 space-y-3 ${
                 isDarkMode ? 'bg-slate-900 border-slate-800 text-white' : 'bg-white border-slate-200 text-slate-900'
               }`}>
                 <Bike className="w-10 h-10 text-orange-500 mx-auto" />
@@ -292,34 +351,34 @@ export default function App() {
                 </p>
                 <button
                   onClick={() => setMobileTab('delivery')}
-                  className="bg-orange-600 text-white px-4 py-2 rounded-xl text-xs font-bold"
+                  className="bg-orange-600 text-white px-4 py-2 rounded-lg text-xs font-bold shadow-xs cursor-pointer"
                 >
                   Browse Food
                 </button>
               </div>
             ) : (
-              <div className="space-y-3">
+              <div className="space-y-3.5">
                 {orders.map((order) => {
                   const isDelivered = order.status === 'DELIVERED';
                   return (
                     <div
                       key={order.id}
                       onClick={() => setTrackedOrder(order)}
-                      className={`rounded-2xl p-4 border shadow-xs hover:border-orange-500 cursor-pointer space-y-3 transition-colors ${
+                      className={`rounded-xl p-4 border shadow-xs hover:border-orange-500/50 cursor-pointer space-y-3 transition-colors ${
                         isDarkMode 
                           ? 'bg-slate-900 border-slate-800 text-white hover:border-orange-500/40' 
                           : 'bg-white border-slate-200 text-slate-900'
                       }`}
                     >
                       <div className="flex items-center justify-between">
-                        <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase ${
+                        <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase ${
                           isDelivered 
                             ? isDarkMode ? 'bg-emerald-950/70 text-emerald-400 border border-emerald-800/60' : 'bg-emerald-100 text-emerald-800'
                             : isDarkMode ? 'bg-orange-950/70 text-orange-400 border border-orange-800/60 animate-pulse' : 'bg-orange-100 text-orange-800 animate-pulse'
                         }`}>
                           {isDelivered ? 'Delivered' : `Live: ${order.status}`}
                         </span>
-                        <span className={`text-xs font-bold ${isDarkMode ? 'text-slate-400' : 'text-slate-400'}`}>
+                        <span className={`text-xs font-semibold ${isDarkMode ? 'text-slate-400' : 'text-slate-400'}`}>
                           #{order.id}
                         </span>
                       </div>
@@ -333,13 +392,13 @@ export default function App() {
                         </p>
                       </div>
 
-                      <div className={`pt-2 border-t flex items-center justify-between text-xs ${
+                      <div className={`pt-2.5 border-t flex items-center justify-between text-xs ${
                         isDarkMode ? 'border-slate-800' : 'border-slate-100'
                       }`}>
                         <span className={`font-black ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
                           ${order.totalAmount.toFixed(2)}
                         </span>
-                        <button className="bg-orange-600 text-white px-3 py-1.5 rounded-xl font-bold text-xs flex items-center space-x-1 shadow-xs">
+                        <button className="bg-orange-600 text-white px-3 py-1.5 rounded-lg font-bold text-xs flex items-center space-x-1 shadow-xs">
                           <span>{isDelivered ? 'View Receipt' : 'Live GPS Track'}</span>
                           <ArrowRight className="w-3.5 h-3.5" />
                         </button>
@@ -377,7 +436,11 @@ export default function App() {
         {/* Restaurant discovery and filtering section */}
         <div id="restaurant-list-section">
           <RestaurantList
-            onSelectRestaurant={(restaurant) => setSelectedRestaurant(restaurant)}
+            onSelectRestaurant={(restaurant) => {
+              setSelectedRestaurant(restaurant);
+              setInitialDishToOpen(null);
+            }}
+            onSelectDish={handleSelectDish}
             selectedCategory={selectedCategory}
             setSelectedCategory={setSelectedCategory}
             searchQuery={searchQuery}
@@ -389,6 +452,9 @@ export default function App() {
 
         {/* Master Chefs & Culinary Artisans Showcase */}
         <MasterChefsSection onSelectRestaurant={(restaurant) => setSelectedRestaurant(restaurant)} />
+
+        {/* Immersive Culinary Storytelling Section */}
+        <CulinaryStorySection />
 
         {/* CraveClub VIP Membership Pass */}
         <CraveClubMembership />
@@ -426,7 +492,11 @@ export default function App() {
       {/* Restaurant Menu Modal */}
       <RestaurantMenuModal
         restaurant={selectedRestaurant}
-        onClose={() => setSelectedRestaurant(null)}
+        initialDish={initialDishToOpen}
+        onClose={() => {
+          setSelectedRestaurant(null);
+          setInitialDishToOpen(null);
+        }}
         cartItems={cartItems}
         onAddToCart={(dish, rest) => handleAddToCart(dish, rest.id, rest.name)}
         onRemoveFromCart={handleRemoveFromCart}
@@ -475,6 +545,123 @@ export default function App() {
           setIsFoodieAiOpen(false);
         }}
       />
+        </>
+      )}
+
+      {/* Login Modal */}
+      {isLoginOpen && (
+        <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-sm w-full p-6 text-white space-y-4 shadow-2xl">
+            <div className="flex items-center justify-between">
+              <h3 className="text-base font-black">Welcome Back</h3>
+              <button onClick={() => setIsLoginOpen(false)} className="text-slate-400 hover:text-white">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              setIsLoggedIn(true);
+              setCurrentUser({ name: 'Madhusudan Sharma', email: 'madhusudan04337@gmail.com', avatar: 'MS' });
+              setIsLoginOpen(false);
+            }} className="space-y-3">
+              <div>
+                <label className="text-[10px] font-bold text-slate-400 uppercase">Email Address</label>
+                <input type="email" required defaultValue="madhusudan04337@gmail.com" className="w-full mt-1 p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white" />
+              </div>
+              <div>
+                <label className="text-[10px] font-bold text-slate-400 uppercase">Password</label>
+                <input type="password" required defaultValue="••••••••" className="w-full mt-1 p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white" />
+              </div>
+              <button type="submit" className="w-full py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-xl text-xs uppercase tracking-wider shadow-lg shadow-orange-600/30">
+                Sign In
+              </button>
+            </form>
+            <div className="text-center text-xs text-slate-400">
+              Don't have an account?{' '}
+              <button onClick={() => { setIsLoginOpen(false); setIsRegisterOpen(true); }} className="text-orange-400 font-bold hover:underline">
+                Register
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Register Modal */}
+      {isRegisterOpen && (
+        <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-sm w-full p-6 text-white space-y-4 shadow-2xl">
+            <div className="flex items-center justify-between">
+              <h3 className="text-base font-black">Create CraveDrop Account</h3>
+              <button onClick={() => setIsRegisterOpen(false)} className="text-slate-400 hover:text-white">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              setIsLoggedIn(true);
+              setCurrentUser({ name: 'New Foodie', email: 'foodie@cravedrop.com', avatar: 'NF' });
+              setIsRegisterOpen(false);
+            }} className="space-y-3">
+              <div>
+                <label className="text-[10px] font-bold text-slate-400 uppercase">Full Name</label>
+                <input type="text" required placeholder="John Doe" className="w-full mt-1 p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white" />
+              </div>
+              <div>
+                <label className="text-[10px] font-bold text-slate-400 uppercase">Email Address</label>
+                <input type="email" required placeholder="john@example.com" className="w-full mt-1 p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white" />
+              </div>
+              <div>
+                <label className="text-[10px] font-bold text-slate-400 uppercase">Password</label>
+                <input type="password" required placeholder="••••••••" className="w-full mt-1 p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white" />
+              </div>
+              <button type="submit" className="w-full py-3 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-xl text-xs uppercase tracking-wider shadow-lg shadow-orange-600/30">
+                Register & Join
+              </button>
+            </form>
+            <div className="text-center text-xs text-slate-400">
+              Already have an account?{' '}
+              <button onClick={() => { setIsRegisterOpen(false); setIsLoginOpen(true); }} className="text-orange-400 font-bold hover:underline">
+                Login
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Profile Modal */}
+      {isProfileOpen && (
+        <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 text-white space-y-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+              <h3 className="text-base font-black">User Profile & Account</h3>
+              <button onClick={() => setIsProfileOpen(false)} className="text-slate-400 hover:text-white">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            
+            <ProfileView location={location} />
+
+            <div className="pt-2 border-t border-slate-800 flex justify-between items-center">
+              <button
+                onClick={() => {
+                  setIsLoggedIn(false);
+                  setCurrentUser(null);
+                  setIsProfileOpen(false);
+                }}
+                className="px-4 py-2.5 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 font-bold text-xs border border-red-500/20"
+              >
+                Sign Out
+              </button>
+              <button
+                onClick={() => setIsProfileOpen(false)}
+                className="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
