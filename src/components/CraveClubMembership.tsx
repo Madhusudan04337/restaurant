@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Crown, Check, Sparkles, Zap, ShieldCheck } from 'lucide-react';
 import { motion } from 'motion/react';
+import { useTheme } from '../context/ThemeContext';
 
 export const CraveClubMembership: React.FC = () => {
+  const { isDarkMode } = useTheme();
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('annual');
   const [activePlan, setActivePlan] = useState<string>('gold');
   const [joinedSuccess, setJoinedSuccess] = useState<string | null>(null);
@@ -61,50 +63,70 @@ export const CraveClubMembership: React.FC = () => {
   };
 
   return (
-    <section id="crave-club" className="py-8 sm:py-24 bg-slate-950 text-white relative overflow-hidden">
+    <section 
+      id="crave-club" 
+      className={`py-8 sm:py-20 relative overflow-hidden transition-colors duration-300 ${
+        isDarkMode 
+          ? 'bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white' 
+          : 'bg-gradient-to-b from-amber-50/40 via-white to-orange-50/30 text-slate-900'
+      }`}
+    >
       {/* Background gradients */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-orange-600/10 rounded-full blur-3xl pointer-events-none" />
+      <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-3xl pointer-events-none transition-opacity ${
+        isDarkMode ? 'bg-orange-600/10' : 'bg-gradient-to-br from-amber-200/25 to-orange-200/20'
+      }`} />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10 sm:space-y-14 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-12 relative z-10">
         
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto space-y-3">
-          <div className="inline-flex items-center space-x-1.5 bg-amber-500/15 border border-amber-500/30 text-amber-300 px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider">
-            <Crown className="w-4 h-4 text-amber-400" />
-            <span>PRIVILEGED VIP MEMBERSHIP</span>
+          <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider border shadow-xs">
+            <span className={isDarkMode ? 'text-amber-400 bg-amber-950/60 border-amber-800/60' : 'text-amber-800 bg-amber-100 border-amber-200'}>
+              👑 PRIVILEGED VIP MEMBERSHIP
+            </span>
           </div>
 
-          <h2 className="text-3xl sm:text-5xl font-black tracking-tight text-white">
+          <h2 className={`text-2xl sm:text-4xl lg:text-5xl font-serif font-black tracking-tight ${
+            isDarkMode ? 'text-white' : 'text-slate-900'
+          }`}>
             CraveClub VIP Passes
           </h2>
-          <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-normal">
-            Elevate your culinary journey with unlimited free deliveries, VIP priority kitchen preparation, exclusive secret menus, and flat dining bill discounts.
+          <p className={`text-xs sm:text-sm leading-relaxed max-w-xl mx-auto ${
+            isDarkMode ? 'text-slate-300' : 'text-slate-600'
+          }`}>
+            Elevate your dining journey with unlimited free deliveries, priority kitchen prep, exclusive secret menus, and flat dining bill discounts.
           </p>
 
           {/* Billing Cycle Toggle */}
-          <div className="inline-flex items-center bg-slate-900 p-1 rounded-xl border border-slate-800 mt-4">
+          <div className={`inline-flex items-center p-1 rounded-2xl border transition-colors mt-3 shadow-xs ${
+            isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-orange-100'
+          }`}>
             <button
               onClick={() => setBillingCycle('monthly')}
-              className={`px-4 sm:px-5 py-2 rounded-lg text-xs font-semibold transition-all ${
-                billingCycle === 'monthly' ? 'bg-orange-600 text-white shadow-xs font-bold' : 'text-slate-400 hover:text-white'
+              className={`px-4 sm:px-5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                billingCycle === 'monthly' 
+                  ? 'bg-gradient-to-r from-orange-600 to-amber-600 text-white shadow-xs' 
+                  : isDarkMode ? 'text-slate-400 hover:text-white' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               Monthly Billing
             </button>
             <button
               onClick={() => setBillingCycle('annual')}
-              className={`px-4 sm:px-5 py-2 rounded-lg text-xs font-semibold transition-all flex items-center space-x-1.5 ${
-                billingCycle === 'annual' ? 'bg-orange-600 text-white shadow-xs font-bold' : 'text-slate-400 hover:text-white'
+              className={`px-4 sm:px-5 py-2 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer ${
+                billingCycle === 'annual' 
+                  ? 'bg-gradient-to-r from-orange-600 to-amber-600 text-white shadow-xs' 
+                  : isDarkMode ? 'text-slate-400 hover:text-white' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               <span>Annual Billing</span>
-              <span className="bg-amber-400 text-slate-950 text-[10px] font-bold px-1.5 py-0.2 rounded-md">SAVE 25%</span>
+              <span className="bg-amber-400 text-slate-950 text-[10px] font-black px-1.5 py-0.5 rounded-md">SAVE 25%</span>
             </button>
           </div>
         </div>
 
         {/* Membership Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 items-stretch">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-8 items-stretch">
           {tiers.map((tier) => {
             const price = billingCycle === 'annual' ? tier.annualPrice : tier.monthlyPrice;
             const isHighlight = tier.highlight;
@@ -113,33 +135,43 @@ export const CraveClubMembership: React.FC = () => {
               <motion.div
                 key={tier.id}
                 whileHover={{ y: -4 }}
-                className={`rounded-xl sm:rounded-2xl p-6 sm:p-8 flex flex-col justify-between transition-all relative ${
+                className={`rounded-2xl p-5 sm:p-7 flex flex-col justify-between transition-all relative border shadow-lg ${
                   isHighlight
-                    ? 'bg-gradient-to-b from-slate-900 to-slate-950 border border-orange-500 shadow-xl shadow-orange-600/15'
-                    : 'bg-slate-900/80 border border-slate-800'
+                    ? isDarkMode
+                      ? 'bg-gradient-to-b from-slate-900 to-slate-950 border-orange-500 shadow-orange-600/15'
+                      : 'bg-gradient-to-b from-white via-orange-50/20 to-white border-orange-400 shadow-orange-500/10'
+                    : isDarkMode
+                      ? 'bg-slate-900/80 border-slate-800 text-white'
+                      : 'bg-white border-slate-200 text-slate-900'
                 }`}
               >
                 {/* Badge */}
                 <div className="flex justify-between items-center mb-4">
-                  <span className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md ${
-                    isHighlight ? 'bg-orange-600 text-white' : 'bg-slate-800 text-slate-300'
+                  <span className={`text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-lg ${
+                    isHighlight ? 'bg-orange-600 text-white shadow-xs' : isDarkMode ? 'bg-slate-800 text-slate-300' : 'bg-slate-100 text-slate-700'
                   }`}>
                     {tier.badge}
                   </span>
-                  {isHighlight && <Sparkles className="w-4 h-4 text-amber-400" />}
+                  {isHighlight && <Sparkles className="w-4 h-4 text-amber-500" />}
                 </div>
 
                 {/* Plan Title & Price */}
-                <div className="space-y-2 pb-5 border-b border-slate-800">
-                  <h3 className="text-xl sm:text-2xl font-black text-white">{tier.name}</h3>
-                  <p className="text-xs text-slate-400 font-normal">{tier.subtitle}</p>
+                <div className={`space-y-2 pb-5 border-b ${
+                  isDarkMode ? 'border-slate-800' : 'border-orange-100'
+                }`}>
+                  <h3 className={`text-xl sm:text-2xl font-serif font-black ${
+                    isDarkMode ? 'text-white' : 'text-slate-900'
+                  }`}>{tier.name}</h3>
+                  <p className={`text-xs ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>{tier.subtitle}</p>
 
                   <div className="flex items-baseline space-x-1 pt-2">
-                    <span className="text-4xl sm:text-5xl font-black text-white">${price.toFixed(2)}</span>
+                    <span className={`text-3xl sm:text-4xl font-black ${
+                      isDarkMode ? 'text-white' : 'text-slate-900'
+                    }`}>${price.toFixed(2)}</span>
                     <span className="text-xs text-slate-400 font-medium">/ month</span>
                   </div>
                   {billingCycle === 'annual' && (
-                    <span className="text-[10px] text-emerald-400 font-semibold block">
+                    <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold block">
                       Billed annually (${(price * 12).toFixed(2)}/yr)
                     </span>
                   )}
@@ -147,15 +179,28 @@ export const CraveClubMembership: React.FC = () => {
 
                 {/* Feature checklist */}
                 <div className="py-5 space-y-3 flex-1">
-                  <span className="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Privileges Included:</span>
+                  <span className={`text-[10px] font-black uppercase tracking-wider block ${
+                    isDarkMode ? 'text-slate-400' : 'text-slate-500'
+                  }`}>
+                    Privileges Included:
+                  </span>
                   {tier.features.map((feature, idx) => (
-                    <div key={idx} className="flex items-start space-x-2.5 text-xs text-slate-200">
+                    <div 
+                      key={idx} 
+                      className={`flex items-start space-x-2.5 text-xs font-semibold ${
+                        isDarkMode ? 'text-slate-200' : 'text-slate-800'
+                      }`}
+                    >
                       <div className={`w-4 h-4 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
-                        isHighlight ? 'bg-orange-500 text-white' : 'bg-slate-800 text-slate-300'
+                        isHighlight 
+                          ? 'bg-orange-600 text-white shadow-xs' 
+                          : isDarkMode 
+                            ? 'bg-slate-800 text-slate-300 border border-slate-700' 
+                            : 'bg-orange-100 text-orange-700 border border-orange-200'
                       }`}>
                         <Check className="w-3 h-3 stroke-[3]" />
                       </div>
-                      <span className="leading-relaxed font-normal">{feature}</span>
+                      <span className="leading-relaxed">{feature}</span>
                     </div>
                   ))}
                 </div>
@@ -164,10 +209,12 @@ export const CraveClubMembership: React.FC = () => {
                 <div className="pt-4">
                   <button
                     onClick={() => handleJoin(tier.name)}
-                    className={`w-full py-3.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all transform active:scale-98 shadow-md cursor-pointer ${
+                    className={`w-full py-3.5 rounded-xl text-xs font-black uppercase tracking-wider transition-all transform active:scale-98 shadow-md cursor-pointer ${
                       isHighlight
-                        ? 'bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white shadow-orange-600/25'
-                        : 'bg-white hover:bg-orange-50 text-slate-900'
+                        ? 'bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white shadow-orange-600/30'
+                        : isDarkMode
+                          ? 'bg-slate-800 hover:bg-slate-700 text-white border border-slate-700'
+                          : 'bg-slate-900 hover:bg-orange-600 text-white border border-slate-900 shadow-sm'
                     }`}
                   >
                     {joinedSuccess === tier.name ? (
@@ -176,7 +223,11 @@ export const CraveClubMembership: React.FC = () => {
                       <span>Join {tier.name}</span>
                     )}
                   </button>
-                  <p className="text-[10px] text-slate-500 text-center mt-2">Cancel anytime with 1 click</p>
+                  <p className={`text-[10px] text-center mt-2 ${
+                    isDarkMode ? 'text-slate-500' : 'text-slate-400'
+                  }`}>
+                    Cancel anytime with 1 click
+                  </p>
                 </div>
               </motion.div>
             );

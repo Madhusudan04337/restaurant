@@ -33,7 +33,7 @@ export const FloatingDock: React.FC<FloatingDockProps> = ({
     return (
       <button
         onClick={() => setIsHidden(false)}
-        className="fixed right-0 top-1/2 -translate-y-1/2 z-40 hidden sm:flex items-center bg-orange-600 hover:bg-orange-700 text-white px-2.5 py-3 rounded-l-xl shadow-xl transition-all font-bold text-xs space-x-1"
+        className="fixed right-0 top-1/2 -translate-y-1/2 z-40 hidden md:flex items-center bg-orange-600 hover:bg-orange-700 text-white px-2.5 py-3 rounded-l-xl shadow-xl transition-all font-bold text-xs space-x-1"
         title="Show Quick Dock"
       >
         <ChevronLeft className="w-4 h-4" />
@@ -43,7 +43,7 @@ export const FloatingDock: React.FC<FloatingDockProps> = ({
   }
 
   return (
-    <aside aria-label="Quick Actions" className="fixed right-4 top-1/2 -translate-y-1/2 z-40 hidden sm:flex flex-col items-end">
+    <aside aria-label="Quick Actions" className="fixed right-4 top-1/2 -translate-y-1/2 z-40 hidden md:flex flex-col items-end">
       <div className={`backdrop-blur-md border shadow-2xl rounded-2xl p-1.5 flex flex-col items-center space-y-1.5 transition-all duration-300 ${
         isDarkMode 
           ? 'bg-slate-900/90 border-slate-800 text-white shadow-black/50' 

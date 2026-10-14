@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Award, ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Award, ChevronLeft, ChevronRight, ArrowRight, Play, Pause, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { RESTAURANTS } from '../data/mockData';
 import { Restaurant } from '../types';
@@ -12,6 +12,7 @@ interface MasterChefsSectionProps {
 export const MasterChefsSection: React.FC<MasterChefsSectionProps> = ({ onSelectRestaurant }) => {
   const { isDarkMode } = useTheme();
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isAutoScrollActive, setIsAutoScrollActive] = useState(true);
 
   const chefs = [
     {
@@ -56,6 +57,17 @@ export const MasterChefsSection: React.FC<MasterChefsSectionProps> = ({ onSelect
     }
   ];
 
+  // Auto-scroll effect: advances every 4.2 seconds
+  useEffect(() => {
+    if (!isAutoScrollActive) return;
+
+    const timer = setInterval(() => {
+      setCurrentIndex((prev) => (prev === chefs.length - 1 ? 0 : prev + 1));
+    }, 4200);
+
+    return () => clearInterval(timer);
+  }, [isAutoScrollActive, chefs.length]);
+
   const prevChef = () => {
     setCurrentIndex((prev) => (prev === 0 ? chefs.length - 1 : prev - 1));
   };
@@ -76,33 +88,59 @@ export const MasterChefsSection: React.FC<MasterChefsSectionProps> = ({ onSelect
   return (
     <section 
       id="master-chefs" 
-      className={`py-8 sm:py-24 border-b transition-colors duration-200 ${
-        isDarkMode ? 'bg-slate-950 border-slate-800/80 text-white' : 'bg-white border-slate-200 text-slate-900'
+      className={`py-8 sm:py-20 border-b transition-colors duration-200 ${
+        isDarkMode ? 'bg-slate-950/80 border-slate-800/80 text-white' : 'bg-gradient-to-b from-orange-50/40 via-white to-amber-50/30 border-orange-100 text-slate-900'
       }`}
+      onMouseEnter={() => setIsAutoScrollActive(false)}
+      onMouseLeave={() => setIsAutoScrollActive(true)}
+      onTouchStart={() => setIsAutoScrollActive(false)}
+      onTouchEnd={() => {
+        setTimeout(() => setIsAutoScrollActive(true), 3500);
+      }}
     >
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10 sm:space-y-12">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-10">
         
-        {/* Header */}
+        {/* Header with Auto-Scroll status */}
         <div className="text-center max-w-2xl mx-auto space-y-2.5">
-          <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-orange-600 dark:text-orange-400">
-            THE CULINARY ARTISANS
-          </span>
-          <h2 className={`text-3xl sm:text-5xl font-black tracking-tight ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+          <div className="inline-flex items-center space-x-2">
+            <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-orange-600 dark:text-orange-400">
+              THE CULINARY ARTISANS
+            </span>
+            <button
+              onClick={() => setIsAutoScrollActive(!isAutoScrollActive)}
+              className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-orange-100 dark:bg-orange-950/60 text-orange-700 dark:text-orange-300 flex items-center space-x-1 border border-orange-200 dark:border-orange-800/60 cursor-pointer"
+              title={isAutoScrollActive ? 'Pause Auto-Scroll' : 'Resume Auto-Scroll'}
+            >
+              {isAutoScrollActive ? (
+                <>
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <span>Auto-scroll ON</span>
+                </>
+              ) : (
+                <>
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                  <span>Paused</span>
+                </>
+              )}
+            </button>
+          </div>
+
+          <h2 className={`text-2xl sm:text-4xl font-serif font-black tracking-tight ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
             Meet Our Master Chefs
           </h2>
           <p className={`text-xs sm:text-sm leading-relaxed font-normal ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
-            Visionary culinary artists dedicated to fresh ingredients, authentic traditions, and unforgettable dining delivered directly to your doorstep.
+            Visionary culinary artists dedicated to fresh ingredients, authentic heritage traditions, and unforgettable dining.
           </p>
         </div>
 
         {/* Carousel Container */}
         <div className={`rounded-2xl sm:rounded-3xl border overflow-hidden shadow-xl transition-colors duration-200 ${
-          isDarkMode ? 'bg-slate-900 border-slate-800 text-white' : 'bg-white border-slate-200 text-slate-900'
+          isDarkMode ? 'bg-slate-900 border-slate-800 text-white shadow-black/40' : 'bg-white border-orange-200/80 text-slate-900 shadow-orange-500/5'
         }`}>
-          <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[420px]">
+          <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[380px] sm:min-h-[420px]">
             
             {/* Left: Chef Image with Experience Badge */}
-            <div className="lg:col-span-5 relative bg-slate-100 dark:bg-slate-800 min-h-[300px] lg:min-h-full">
+            <div className="lg:col-span-5 relative bg-slate-100 dark:bg-slate-800 min-h-[260px] lg:min-h-full">
               <AnimatePresence mode="wait">
                 <motion.img
                   key={currentChef.id}
@@ -137,7 +175,7 @@ export const MasterChefsSection: React.FC<MasterChefsSectionProps> = ({ onSelect
                     <span className="text-xs font-bold uppercase tracking-wider text-orange-600 dark:text-orange-400">
                       {currentChef.title}
                     </span>
-                    <h3 className={`text-2xl sm:text-3xl font-black mt-1 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+                    <h3 className={`text-2xl sm:text-3xl font-serif font-black mt-1 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
                       {currentChef.name}
                     </h3>
                   </div>

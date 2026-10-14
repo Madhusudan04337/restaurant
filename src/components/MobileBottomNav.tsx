@@ -32,11 +32,11 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
       aria-label="Mobile Navigation" 
       className={`fixed bottom-0 inset-x-0 z-40 sm:hidden backdrop-blur-md border-t transition-colors duration-200 py-1.5 px-2 safe-area-pb ${
         isDarkMode 
-          ? 'bg-slate-950/95 border-slate-800/90 shadow-[0_-4px_25px_rgba(0,0,0,0.6)] text-slate-400' 
-          : 'bg-white/95 border-slate-200/90 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] text-slate-500'
+          ? 'bg-slate-950/95 border-slate-800/90 shadow-[0_-4px_25px_rgba(0,0,0,0.6)] text-slate-300' 
+          : 'bg-white/95 border-slate-200/90 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] text-slate-700'
       }`}
     >
-      <div className="flex items-center justify-around">
+      <div className="flex items-center justify-around max-w-lg mx-auto">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -48,27 +48,27 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
                 setActiveTab(tab.id);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition-all relative ${
+              className={`flex flex-col items-center justify-center min-h-[48px] py-1 px-2.5 rounded-xl transition-all relative cursor-pointer ${
                 isActive 
-                  ? 'text-orange-500 font-black scale-105' 
+                  ? 'text-orange-600 dark:text-orange-400 font-extrabold scale-105' 
                   : isDarkMode
-                    ? 'text-slate-400 hover:text-slate-200 font-semibold'
-                    : 'text-slate-500 hover:text-slate-900 font-semibold'
+                    ? 'text-slate-400 hover:text-white font-semibold'
+                    : 'text-slate-600 hover:text-slate-900 font-semibold'
               }`}
             >
               <div className="relative">
                 <Icon className={`w-5 h-5 ${isActive ? 'stroke-[2.5]' : 'stroke-2'}`} />
                 {tab.badge && tab.badge > 0 ? (
-                  <span className="absolute -top-1.5 -right-2 bg-orange-600 text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center animate-pulse">
+                  <span className="absolute -top-1.5 -right-2 bg-orange-600 text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center animate-pulse shadow-xs">
                     {tab.badge}
                   </span>
                 ) : null}
               </div>
-              <span className="text-[10px] tracking-tight mt-0.5">
+              <span className="text-[10px] tracking-tight mt-0.5 font-bold">
                 {tab.label}
               </span>
               {isActive && (
-                <span className="w-1.5 h-1.5 rounded-full bg-orange-500 mt-0.5 shadow-sm" />
+                <span className="w-1.5 h-1.5 rounded-full bg-orange-600 dark:bg-orange-400 mt-0.5 shadow-xs" />
               )}
             </button>
           );

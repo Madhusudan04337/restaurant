@@ -6,20 +6,28 @@ import { useTheme } from '../context/ThemeContext';
 interface TableReservationModalProps {
   isOpen: boolean;
   onClose: () => void;
+  initialRestaurantName?: string;
 }
 
 export const TableReservationModal: React.FC<TableReservationModalProps> = ({
   isOpen,
-  onClose
+  onClose,
+  initialRestaurantName
 }) => {
   const { isDarkMode } = useTheme();
   const [fullName, setFullName] = useState('Priya Sharma');
   const [phoneNumber, setPhoneNumber] = useState('+91 98765 43210');
-  const [selectedRestaurant, setSelectedRestaurant] = useState(RESTAURANTS[0].name);
+  const [selectedRestaurant, setSelectedRestaurant] = useState(initialRestaurantName || RESTAURANTS[0].name);
   const [reservationDate, setReservationDate] = useState('2026-10-14');
   const [guestCount, setGuestCount] = useState('2 Guests');
   const [selectedTimeSlot, setSelectedTimeSlot] = useState('8:00 PM');
   const [confirmed, setConfirmed] = useState(false);
+
+  React.useEffect(() => {
+    if (initialRestaurantName) {
+      setSelectedRestaurant(initialRestaurantName);
+    }
+  }, [initialRestaurantName]);
 
   if (!isOpen) return null;
 

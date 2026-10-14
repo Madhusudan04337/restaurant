@@ -7,6 +7,8 @@ import { MarqueeTicker } from './components/MarqueeTicker';
 import { RestaurantList } from './components/RestaurantList';
 import { FeastEstimator } from './components/FeastEstimator';
 import { ExpressGroceryQuickBar } from './components/ExpressGroceryQuickBar';
+import { InstamartMobileView } from './components/InstamartMobileView';
+import { DineInView } from './components/DineInView';
 import { MasterChefsSection } from './components/MasterChefsSection';
 import { CulinaryStorySection } from './components/CulinaryStorySection';
 import { CraveClubMembership } from './components/CraveClubMembership';
@@ -78,7 +80,13 @@ export default function App() {
   const [isFoodieAiOpen, setIsFoodieAiOpen] = useState(false);
   const [isOrdersOpen, setIsOrdersOpen] = useState(false);
   const [isReservationOpen, setIsReservationOpen] = useState(false);
+  const [reservationVenueName, setReservationVenueName] = useState<string | undefined>(undefined);
+  const [likedDishIds, setLikedDishIds] = useState<string[]>(['item-101', 'item-201', 'item-301']);
   const [trackedOrder, setTrackedOrder] = useState<Order | null>(null);
+
+  const handleToggleLike = (dishId: string) => {
+    setLikedDishIds(prev => prev.includes(dishId) ? prev.filter(id => id !== dishId) : [...prev, dishId]);
+  };
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [currentUser, setCurrentUser] = useState<{ name: string; email: string; avatar: string } | null>({
     name: 'Default User',
@@ -251,6 +259,9 @@ export default function App() {
           location={location}
           setLocation={setLocation}
           orders={orders}
+          likedDishIds={likedDishIds}
+          onToggleLike={handleToggleLike}
+          onAddToCart={handleAddToCart}
           onSignOut={() => {
             setIsLoggedIn(false);
             setCurrentUser(null);
@@ -284,43 +295,45 @@ export default function App() {
                 selectedCategory={selectedCategory}
                 setSelectedCategory={setSelectedCategory}
                 searchQuery={searchQuery}
+                onAddToCart={handleAddToCart}
+                likedDishIds={likedDishIds}
+                onToggleLike={handleToggleLike}
               />
             </div>
           </div>
         )}
 
         {mobileTab === 'instamart' && (
-          <div className="py-3 px-3 space-y-4 max-w-lg mx-auto">
-            <div className="p-4 bg-gradient-to-r from-orange-600 to-amber-600 text-white rounded-xl shadow-xs space-y-1">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-orange-200">10-MINUTE STORE</span>
-              <h2 className="text-lg font-black">CraveMart Express</h2>
-              <p className="text-xs text-orange-100 font-normal">Midnight snacks, artisanal desserts & cold brews delivered in 10 minutes.</p>
-            </div>
-            <ExpressGroceryQuickBar onAddToCart={(dish, rId, rName) => handleAddToCart(dish, rId, rName)} />
+          <div className="py-2.5 px-3 max-w-lg mx-auto">
+            <InstamartMobileView
+              cartItems={cartItems}
+              onAddToCart={handleAddToCart}
+              onRemoveFromCart={handleRemoveFromCart}
+              onOpenCart={() => setIsCartOpen(true)}
+              location={location}
+            />
           </div>
         )}
 
         {mobileTab === 'feast' && (
-          <div className="py-2 px-2">
+          <div className="w-full">
             <FeastEstimator onAddFeastToCart={handleAddFeastToCart} />
           </div>
         )}
 
         {mobileTab === 'dinein' && (
-          <div className="space-y-4 pb-4 px-3">
-            <div className="p-4 bg-slate-900 text-white rounded-xl text-center space-y-2 border border-slate-800 shadow-xs">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400">VIP DINING PRIVILEGES</span>
-              <h2 className="text-lg font-black">Table Booking & CraveClub</h2>
-              <p className="text-xs text-slate-400 max-w-sm mx-auto">Skip the line and enjoy exclusive discounts at prime tables.</p>
-              <button
-                onClick={() => setIsReservationOpen(true)}
-                className="mt-1 bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg text-xs font-bold uppercase shadow-xs active:scale-95 transition-transform"
-              >
-                Reserve a Table Now
-              </button>
-            </div>
-            <CraveClubMembership />
-            <MasterChefsSection onSelectRestaurant={(restaurant) => setSelectedRestaurant(restaurant)} />
+          <div className="w-full px-2 sm:px-4">
+            <DineInView
+              onOpenReservation={(venueName) => {
+                setReservationVenueName(venueName);
+                setIsReservationOpen(true);
+              }}
+              onSelectRestaurant={(restaurant) => {
+                setSelectedRestaurant(restaurant);
+                setInitialDishToOpen(null);
+              }}
+              location={location}
+            />
           </div>
         )}
 
@@ -444,6 +457,9 @@ export default function App() {
             selectedCategory={selectedCategory}
             setSelectedCategory={setSelectedCategory}
             searchQuery={searchQuery}
+            onAddToCart={handleAddToCart}
+            likedDishIds={likedDishIds}
+            onToggleLike={handleToggleLike}
           />
         </div>
 
@@ -506,7 +522,11 @@ export default function App() {
       {/* Dine-In Table Booking Modal */}
       <TableReservationModal
         isOpen={isReservationOpen}
-        onClose={() => setIsReservationOpen(false)}
+        onClose={() => {
+          setIsReservationOpen(false);
+          setReservationVenueName(undefined);
+        }}
+        initialRestaurantName={reservationVenueName}
       />
 
       {/* Cart Drawer */}

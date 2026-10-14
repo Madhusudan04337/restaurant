@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, Lock, ArrowRight, ShieldCheck, Sparkles, CheckCircle2, ArrowLeft } from 'lucide-react';
+import { Mail, Lock, ArrowRight, ShieldCheck, Sparkles, CheckCircle2, ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 
 interface LoginPageProps {
@@ -16,6 +16,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
   const { isDarkMode } = useTheme();
   const [email, setEmail] = useState('user@example.com');
   const [password, setPassword] = useState('password123');
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [successMsg, setSuccessMsg] = useState(false);
 
@@ -102,10 +103,10 @@ export const LoginPage: React.FC<LoginPageProps> = ({
 
               <div>
                 <div className="flex items-center justify-between">
-                  <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
+                  <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                     Password
                   </label>
-                  <a href="#" className="text-[11px] font-bold text-orange-500 hover:underline">
+                  <a href="#" className="text-[11px] font-bold text-orange-600 dark:text-orange-400 hover:underline">
                     Forgot password?
                   </a>
                 </div>
@@ -114,17 +115,25 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                     <Lock className="w-4 h-4" />
                   </div>
                   <input
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className={`block w-full pl-10 pr-3 py-3 text-xs rounded-xl border focus:outline-hidden focus:ring-2 focus:ring-orange-500 transition-colors ${
+                    className={`block w-full pl-10 pr-10 py-3 text-xs rounded-xl border focus:outline-hidden focus:ring-2 focus:ring-orange-500 transition-colors ${
                       isDarkMode 
-                        ? 'bg-slate-950 border-slate-800 text-white placeholder-slate-600' 
+                        ? 'bg-slate-950 border-slate-800 text-white placeholder-slate-500' 
                         : 'bg-slate-50 border-slate-200 text-slate-900 placeholder-slate-400'
                     }`}
                     placeholder="••••••••"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
                 </div>
               </div>
 

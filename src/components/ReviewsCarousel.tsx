@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Star, ChevronLeft, ChevronRight, Quote, CheckCircle2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { REVIEWS } from '../data/mockData';
@@ -7,6 +7,15 @@ import { useTheme } from '../context/ThemeContext';
 export const ReviewsCarousel: React.FC = () => {
   const { isDarkMode } = useTheme();
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+
+  useEffect(() => {
+    if (isPaused) return;
+    const timer = setInterval(() => {
+      setCurrentIndex((prev) => (prev === REVIEWS.length - 1 ? 0 : prev + 1));
+    }, 4500);
+    return () => clearInterval(timer);
+  }, [isPaused]);
 
   const prevReview = () => {
     setCurrentIndex((prev) => (prev === 0 ? REVIEWS.length - 1 : prev - 1));
@@ -24,6 +33,10 @@ export const ReviewsCarousel: React.FC = () => {
       className={`py-8 sm:py-24 border-b transition-colors duration-200 ${
         isDarkMode ? 'bg-slate-950 border-slate-800/80 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'
       }`}
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+      onTouchStart={() => setIsPaused(true)}
+      onTouchEnd={() => setTimeout(() => setIsPaused(false), 3000)}
     >
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10 sm:space-y-12 text-center">
         

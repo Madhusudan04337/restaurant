@@ -17,10 +17,10 @@ export const MobileCartBar: React.FC<MobileCartBarProps> = ({ cartItems, onOpenC
   // Minimized floating bubble button (Takes minimal screen space, doesn't block content)
   if (isMinimized) {
     return (
-      <div className="fixed bottom-[58px] right-3 z-40 sm:hidden">
+      <div className="fixed bottom-[64px] right-3 z-40 sm:hidden">
         <button
           onClick={() => setIsMinimized(false)}
-          className="relative flex items-center space-x-1.5 bg-orange-600 hover:bg-orange-700 text-white px-3 py-2 rounded-full shadow-xl border border-orange-400/40 active:scale-95 transition-all text-xs font-black animate-fade-in"
+          className="relative flex items-center space-x-1.5 bg-orange-600 hover:bg-orange-700 text-white px-3 py-2 rounded-full shadow-xl border border-orange-400/40 active:scale-95 transition-all text-xs font-black animate-fade-in cursor-pointer"
           title="Expand View Cart"
         >
           <ShoppingBag className="w-4 h-4" />
@@ -36,7 +36,7 @@ export const MobileCartBar: React.FC<MobileCartBarProps> = ({ cartItems, onOpenC
 
   // Ultra-slim, low-profile compact sticky bar
   return (
-    <div className="fixed bottom-[58px] sm:bottom-6 inset-x-2.5 sm:inset-x-auto sm:right-6 z-40">
+    <div className="fixed bottom-[64px] sm:bottom-6 inset-x-2.5 sm:inset-x-auto sm:right-6 z-40">
       <div className="bg-slate-950/92 backdrop-blur-md text-white rounded-xl py-1.5 px-2.5 shadow-2xl border border-slate-800/90 flex items-center justify-between gap-2 max-w-md mx-auto transition-all">
         
         {/* Left: Cart Info (Click opens cart) */}

@@ -70,7 +70,7 @@ export const CulinaryStorySection: React.FC = () => {
             <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-orange-600 dark:text-orange-400">
               THE CRAVEDROP CHRONICLE
             </span>
-            <h2 className={`text-3xl sm:text-5xl font-black tracking-tight mt-1 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+            <h2 className={`text-3xl sm:text-5xl font-serif font-bold italic tracking-tight mt-1 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
               The Story of a Masterpiece
             </h2>
             <p className={`text-xs sm:text-sm mt-2 leading-relaxed ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
@@ -162,7 +162,7 @@ export const CulinaryStorySection: React.FC = () => {
                       <span className="text-xs font-bold uppercase tracking-widest text-orange-600 dark:text-orange-400">
                         {current.subtitle}
                       </span>
-                      <h3 className={`text-2xl sm:text-4xl font-black tracking-tight ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+                      <h3 className={`text-2xl sm:text-4xl font-serif font-black tracking-tight ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
                         {current.title}
                       </h3>
                     </div>

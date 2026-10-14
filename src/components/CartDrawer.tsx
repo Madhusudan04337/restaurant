@@ -154,13 +154,21 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                       </div>
                     </div>
 
-                    <div className="flex items-center space-x-2 bg-orange-600 text-white px-2.5 py-1 rounded-lg text-xs font-bold shrink-0">
-                      <button onClick={() => onRemoveFromCart(cartItem.dish.id)} className="p-0.5 hover:bg-orange-700 rounded cursor-pointer">
-                        <Minus className="w-3 h-3" />
+                    <div className="flex items-center space-x-2 bg-orange-600 text-white px-1.5 py-1 rounded-xl text-xs font-bold shrink-0 shadow-xs">
+                      <button 
+                        onClick={() => onRemoveFromCart(cartItem.dish.id)} 
+                        className="w-7 h-7 flex items-center justify-center hover:bg-orange-700 rounded-lg cursor-pointer transition-colors"
+                        aria-label="Decrease quantity"
+                      >
+                        <Minus className="w-3.5 h-3.5" />
                       </button>
-                      <span className="w-3 text-center">{cartItem.quantity}</span>
-                      <button onClick={() => onAddToCart(cartItem.dish, cartItem.restaurantId, cartItem.restaurantName)} className="p-0.5 hover:bg-orange-700 rounded cursor-pointer">
-                        <Plus className="w-3 h-3" />
+                      <span className="w-5 text-center font-black">{cartItem.quantity}</span>
+                      <button 
+                        onClick={() => onAddToCart(cartItem.dish, cartItem.restaurantId, cartItem.restaurantName)} 
+                        className="w-7 h-7 flex items-center justify-center hover:bg-orange-700 rounded-lg cursor-pointer transition-colors"
+                        aria-label="Increase quantity"
+                      >
+                        <Plus className="w-3.5 h-3.5" />
                       </button>
                     </div>
                   </div>
