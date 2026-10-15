@@ -30,8 +30,8 @@ export const ReviewsCarousel: React.FC = () => {
   return (
     <section 
       id="reviews" 
-      className={`py-8 sm:py-24 border-b transition-colors duration-200 ${
-        isDarkMode ? 'bg-slate-950 border-slate-800/80 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'
+      className={`py-8 sm:py-24 border-b ${
+        isDarkMode ? 'bg-[#091126] border-blue-900/40 text-white' : 'bg-[#faf8f5] border-stone-200/80 text-slate-900'
       }`}
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
@@ -53,8 +53,8 @@ export const ReviewsCarousel: React.FC = () => {
         </div>
 
         {/* Carousel Card */}
-        <div className={`rounded-xl sm:rounded-2xl p-6 sm:p-10 shadow-lg border relative min-h-[250px] flex flex-col justify-between transition-colors duration-200 ${
-          isDarkMode ? 'bg-slate-900 border-slate-800 text-white shadow-black/25' : 'bg-white border-slate-200 text-slate-900 shadow-slate-200/40'
+        <div className={`rounded-xl sm:rounded-2xl p-6 sm:p-10 shadow-lg border relative min-h-[250px] flex flex-col justify-between ${
+          isDarkMode ? 'bg-[#0f1b3b] border-blue-900/40 text-white shadow-blue-950/40' : 'bg-white border-stone-200 text-slate-900 shadow-sm'
         }`}>
           
           <AnimatePresence mode="wait">

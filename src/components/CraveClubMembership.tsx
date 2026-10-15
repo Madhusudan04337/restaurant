@@ -65,10 +65,10 @@ export const CraveClubMembership: React.FC = () => {
   return (
     <section 
       id="crave-club" 
-      className={`py-8 sm:py-20 relative overflow-hidden transition-colors duration-300 ${
+      className={`py-8 sm:py-20 relative overflow-hidden ${
         isDarkMode 
-          ? 'bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white' 
-          : 'bg-gradient-to-b from-amber-50/40 via-white to-orange-50/30 text-slate-900'
+          ? 'bg-gradient-to-b from-[#0b1329] via-[#0e1938] to-[#0b1329] text-white' 
+          : 'bg-[#faf8f5] text-slate-900'
       }`}
     >
       {/* Background gradients */}

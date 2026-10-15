@@ -102,8 +102,8 @@ export const DineInView: React.FC<DineInViewProps> = ({
       {/* 1. Fluid Luxury Hero with Ambient Gradients (No poster cutout!) */}
       <section className={`relative pt-5 pb-8 sm:py-14 px-3 sm:px-6 rounded-3xl overflow-hidden transition-colors duration-300 border ${
         isDarkMode 
-          ? 'bg-gradient-to-b from-slate-900 via-slate-950 to-slate-950 border-slate-800/80 text-white' 
-          : 'bg-gradient-to-b from-orange-50/80 via-amber-50/30 to-white border-orange-100 text-slate-900'
+          ? 'bg-gradient-to-b from-[#0f1b3b] via-[#0b1329] to-[#0b1329] border-blue-900/40 text-white' 
+          : 'bg-gradient-to-b from-orange-50/80 via-amber-50/30 to-[#faf8f5] border-stone-200/80 text-slate-900'
       }`}>
         {/* Soft background ambient glow */}
         <div className={`absolute top-0 right-1/4 w-72 sm:w-96 h-72 sm:h-96 rounded-full blur-3xl pointer-events-none ${

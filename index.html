@@ -10,14 +10,58 @@
     <meta property="og:description" content="Discover top restaurants, order delicious food with lightning-fast delivery, grocery essentials, and AI culinary recommendations." />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
-    <!-- Google Fonts: Plus Jakarta Sans (Primary UI) & Playfair Display (Artisanal Accent) as per Typography Guide -->
+
+    <!-- Critical Zero-Flicker & Zero-Margin CSS: Eliminates white gap/line on page refresh or theme switch -->
+    <style>
+      html, body {
+        margin: 0 !important;
+        padding: 0 !important;
+        border: 0 !important;
+        outline: none !important;
+        width: 100%;
+        min-height: 100%;
+      }
+      html.dark, html.dark body {
+        background-color: #0b1329 !important;
+        color: #f8fafc;
+        color-scheme: dark;
+      }
+      html.light, html.light body {
+        background-color: #faf8f5 !important;
+        color: #0f172a;
+        color-scheme: light;
+      }
+    </style>
+
+    <!-- Synchronous Theme Setup: Prevents white flash or line delay before React mounts -->
+    <script>
+      (function() {
+        try {
+          var mode = localStorage.getItem('cravedrop_theme_mode') || localStorage.getItem('cravedrop_theme');
+          var isDark = mode !== 'light'; // Default to Navy Blue dark theme
+          var root = document.documentElement;
+          if (isDark) {
+            root.classList.add('dark');
+            root.classList.remove('light');
+            root.style.colorScheme = 'dark';
+            root.style.backgroundColor = '#0b1329';
+          } else {
+            root.classList.add('light');
+            root.classList.remove('dark');
+            root.style.colorScheme = 'light';
+            root.style.backgroundColor = '#faf8f5';
+          }
+        } catch (e) {}
+      })();
+    </script>
+
+    <!-- Google Fonts: Plus Jakarta Sans (Primary UI) & Playfair Display (Artisanal Accent) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   </head>
-  <body>
+  <body class="bg-[#0b1329] dark:bg-[#0b1329] m-0 p-0 overflow-x-hidden">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
-

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   MapPin, 
   Search, 
@@ -49,6 +49,15 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [activeNav, setActiveNav] = useState('home');
   const [isLocating, setIsLocating] = useState(false);
   const [locationStatus, setLocationStatus] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 15);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const navLinks = [
     { id: 'home', label: 'Home', href: '#' },
@@ -179,14 +188,18 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   return (
-    <header className={`sticky top-0 z-50 backdrop-blur-xl border-b transition-all duration-300 ${
+    <header className={`fixed top-0 inset-x-0 z-50 border-b ${
+      isScrolled ? 'backdrop-blur-xl shadow-xl' : 'backdrop-blur-md shadow-xs'
+    } ${
       isDarkMode 
-        ? 'bg-slate-950/92 border-slate-800/80 text-white shadow-2xl shadow-black/40' 
-        : 'bg-white/95 border-slate-200/80 text-slate-900 shadow-xs'
+        ? 'bg-[#0b1329] border-blue-900/40 text-white shadow-blue-950/60' 
+        : 'bg-white border-slate-200/80 text-slate-900'
     }`}>
-      {/* Top Utility Announcement Ticker */}
-      <div className={`py-1.5 px-3 sm:px-4 text-xs font-medium border-b transition-colors ${
-        isDarkMode ? 'bg-orange-950/40 border-orange-900/30 text-orange-200' : 'bg-orange-50/90 border-orange-100 text-orange-900'
+      {/* Top Utility Announcement Ticker - collapses on scroll */}
+      <div className={`overflow-hidden transition-all duration-300 ${
+        isScrolled ? 'max-h-0 opacity-0 py-0 border-none' : 'max-h-12 opacity-100 py-1.5 border-b'
+      } ${
+        isDarkMode ? 'bg-[#0f1b3b] border-blue-900/30 text-amber-200' : 'bg-orange-50/90 border-orange-100 text-orange-900'
       }`}>
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
           <div className="flex items-center space-x-2 truncate min-w-0">
@@ -238,7 +251,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 setShowLocationModal(true);
                 setLocationStatus(null);
               }}
-              className={`flex items-center space-x-1.5 py-1.5 px-2.5 sm:px-3 rounded-xl border transition-all text-left cursor-pointer shrink-0 max-w-[140px] xs:max-w-[180px] sm:max-w-xs ${
+              className={`flex items-center space-x-1.5 py-1.5 px-2.5 sm:px-3 rounded-xl border text-left cursor-pointer shrink-0 max-w-[140px] xs:max-w-[180px] sm:max-w-xs ${
                 isDarkMode 
                   ? 'bg-slate-900/80 border-slate-800 hover:bg-slate-800 hover:border-slate-700' 
                   : 'bg-slate-50 border-slate-200/90 hover:bg-orange-50/50 hover:border-orange-300'
@@ -288,35 +301,37 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Theme Toggle & Auth / Profile Buttons - Guaranteed Mobile Visibility */}
           <div className="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
-            {/* Always-visible Theme Toggle Button */}
+            {/* 1-Click Instant Theme Toggle: Sun (Dark Mode) <-> Moon (Light Mode) */}
             <button
               onClick={toggleTheme}
-              aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
-              className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center transition-all border cursor-pointer active:scale-95 shadow-xs ${
+              aria-label={isDarkMode ? 'Switch to Sunlit Light mode' : 'Switch to Midnight Dark mode'}
+              className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center border cursor-pointer active:scale-90 shadow-xs group ${
                 isDarkMode 
                   ? 'bg-slate-900 border-slate-700 text-amber-400 hover:bg-slate-800 hover:border-amber-400/50' 
-                  : 'bg-white border-slate-200 text-slate-700 hover:bg-orange-50 hover:border-orange-300'
+                  : 'bg-white border-slate-200 text-slate-700 hover:bg-orange-50 hover:border-orange-300 shadow-sm'
               }`}
-              title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+              title={isDarkMode ? 'Switch to Sunlit Light Theme' : 'Switch to Midnight Dark Theme'}
             >
-              {isDarkMode ? (
-                <Sun className="w-4 h-4 sm:w-4.5 sm:h-4.5 fill-amber-400 text-amber-400" />
-              ) : (
-                <Moon className="w-4 h-4 sm:w-4.5 sm:h-4.5 fill-slate-700 text-slate-700" />
-              )}
+              <span>
+                {isDarkMode ? (
+                  <Sun className="w-4 h-4 sm:w-4.5 sm:h-4.5 fill-amber-400 text-amber-400" />
+                ) : (
+                  <Moon className="w-4 h-4 sm:w-4.5 sm:h-4.5 fill-slate-700 text-slate-700" />
+                )}
+              </span>
             </button>
 
             {isLoggedIn && currentUser ? (
               <button
                 onClick={onOpenProfile}
-                className={`flex items-center space-x-1.5 sm:space-x-2 py-1.5 px-2 sm:px-3 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
+                className={`flex items-center space-x-1.5 sm:space-x-2 py-1.5 px-2 sm:px-3 rounded-xl border text-xs font-bold cursor-pointer ${
                   isDarkMode 
                     ? 'bg-slate-900 border-slate-800 text-white hover:border-orange-500' 
                     : 'bg-orange-50 border-orange-200 text-slate-900 hover:border-orange-400'
                 }`}
                 title="View Account Profile"
               >
-                <div className="w-6 h-6 rounded-lg bg-orange-600 text-white flex items-center justify-center text-[10px] font-black shrink-0 shadow-xs">
+                <div className="w-6 h-6 rounded-full bg-orange-600 text-white flex items-center justify-center text-[10px] font-black shrink-0 shadow-xs">
                   {currentUser.avatar || currentUser.name.slice(0, 2).toUpperCase()}
                 </div>
                 <span className="hidden sm:inline max-w-[110px] truncate">{currentUser.name}</span>

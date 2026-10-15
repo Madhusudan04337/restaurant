@@ -57,13 +57,13 @@ export const RestaurantMenuModal: React.FC<RestaurantMenuModalProps> = ({
     <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
       <div className={`rounded-2xl sm:rounded-3xl max-w-5xl w-full max-h-[94vh] overflow-y-auto shadow-2xl relative flex flex-col my-auto border transition-colors duration-200 ${
         isDarkMode 
-          ? 'bg-slate-900 border-slate-800 text-white shadow-black/70' 
+          ? 'bg-[#0c1630] border-blue-900/50 text-white shadow-blue-950/80' 
           : 'bg-white border-slate-200 text-slate-900'
       }`}>
         
         {/* Sticky Header with Back/Close button */}
         <div className={`sticky top-0 z-20 backdrop-blur-md px-6 py-4 sm:px-8 sm:py-5 border-b flex items-center justify-between transition-colors ${
-          isDarkMode ? 'bg-slate-900/95 border-slate-800 text-white' : 'bg-white/95 border-slate-100 text-slate-900'
+          isDarkMode ? 'bg-[#0c1630]/95 border-blue-900/40 text-white' : 'bg-white/95 border-slate-100 text-slate-900'
         }`}>
           <button
             onClick={onClose}
@@ -89,7 +89,7 @@ export const RestaurantMenuModal: React.FC<RestaurantMenuModalProps> = ({
 
         {/* Restaurant Banner & Details */}
         <div className={`p-6 sm:p-10 border-b transition-colors ${
-          isDarkMode ? 'bg-slate-950/60 border-slate-800' : 'bg-slate-50 border-slate-100'
+          isDarkMode ? 'bg-[#091126] border-blue-900/40' : 'bg-slate-50 border-slate-100'
         }`}>
           <div className="flex flex-col sm:flex-row justify-between items-start gap-6">
             <div className="space-y-3">
@@ -113,7 +113,7 @@ export const RestaurantMenuModal: React.FC<RestaurantMenuModalProps> = ({
             </div>
 
             <div className={`flex items-center space-x-5 p-4 rounded-2xl border shadow-xs shrink-0 ${
-              isDarkMode ? 'bg-slate-900 border-slate-800 text-white' : 'bg-white border-slate-200 text-slate-800'
+              isDarkMode ? 'bg-[#0f1b3b] border-blue-900/40 text-white' : 'bg-white border-slate-200 text-slate-800'
             }`}>
               <div className="text-center px-1">
                 <div className="flex items-center justify-center space-x-1 text-emerald-500 font-extrabold text-sm">
@@ -136,7 +136,7 @@ export const RestaurantMenuModal: React.FC<RestaurantMenuModalProps> = ({
 
         {/* Menu Navigation Tabs & Filters - Spacious & Airy */}
         <div className={`sticky top-[73px] z-10 px-6 sm:px-8 py-3.5 border-b flex items-center justify-between gap-6 overflow-x-auto transition-colors ${
-          isDarkMode ? 'bg-slate-900/95 border-slate-800' : 'bg-white/95 border-slate-100'
+          isDarkMode ? 'bg-[#0c1630]/95 border-blue-900/40' : 'bg-white/95 border-slate-100'
         }`}>
           <div className="flex items-center space-x-3 overflow-x-auto pb-1 scrollbar-none">
             {restaurant.menu.map((cat) => (
@@ -200,7 +200,7 @@ export const RestaurantMenuModal: React.FC<RestaurantMenuModalProps> = ({
                           }}
                           className={`p-3 sm:p-6 rounded-xl sm:rounded-2xl border transition-all duration-200 cursor-pointer flex flex-col justify-between gap-2.5 sm:flex-row sm:items-center sm:gap-5 group ${
                             isDarkMode 
-                              ? 'bg-slate-900/60 border-slate-800 hover:border-slate-700 text-white shadow-sm' 
+                              ? 'bg-[#101b3b]/70 border-blue-900/40 hover:border-blue-700/60 text-white shadow-sm' 
                               : 'bg-white border-slate-200 hover:border-orange-300 shadow-sm'
                           }`}
                         >

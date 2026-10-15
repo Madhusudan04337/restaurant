@@ -228,7 +228,7 @@ export const RestaurantList: React.FC<RestaurantListProps> = ({
                 onClick={() => onSelectRestaurant(restaurant)}
                 className={`w-[78vw] sm:w-[320px] shrink-0 snap-start rounded-2xl overflow-hidden border transition-all cursor-pointer group shadow-xs hover:shadow-lg ${
                   isDarkMode 
-                    ? 'bg-slate-900 border-slate-800 hover:border-slate-700 text-white' 
+                    ? 'bg-[#101b3b] border-blue-900/40 hover:border-blue-700/60 text-white' 
                     : 'bg-white border-slate-200/90 hover:border-orange-200 text-slate-900'
                 }`}
               >
@@ -326,7 +326,7 @@ export const RestaurantList: React.FC<RestaurantListProps> = ({
                     }}
                     className={`w-[220px] sm:w-[280px] shrink-0 snap-start rounded-2xl p-3 border transition-all cursor-pointer flex flex-col justify-between group shadow-xs hover:shadow-lg ${
                       isDarkMode 
-                        ? 'bg-slate-900 border-slate-800 hover:border-slate-700 text-white' 
+                        ? 'bg-[#101b3b] border-blue-900/40 hover:border-blue-700/60 text-white' 
                         : 'bg-white border-slate-200/90 hover:border-orange-200 text-slate-900'
                     }`}
                   >

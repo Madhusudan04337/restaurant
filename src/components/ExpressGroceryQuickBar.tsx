@@ -64,7 +64,7 @@ export const ExpressGroceryQuickBar: React.FC<ExpressGroceryQuickBarProps> = ({ 
   };
 
   return (
-    <section className={`py-8 sm:py-20 border-y transition-colors duration-200 ${
+    <section className={`py-8 sm:py-20 border-y ${
       isDarkMode 
         ? 'bg-slate-900/90 border-slate-800 text-white' 
         : 'bg-amber-50/60 border-amber-200/60 text-slate-900'

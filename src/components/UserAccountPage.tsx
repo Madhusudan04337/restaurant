@@ -108,19 +108,19 @@ export const UserAccountPage: React.FC<UserAccountPageProps> = ({
   ];
 
   // Theme-aware styles with high-contrast font scale
-  const cardBg = isDarkMode ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200/90 shadow-sm';
-  const innerCardBg = isDarkMode ? 'bg-slate-950/70 border-slate-800' : 'bg-slate-50 border-slate-200/80';
+  const cardBg = isDarkMode ? 'bg-[#101b3b] border-blue-900/40 text-white' : 'bg-white border-stone-200/90 shadow-sm';
+  const innerCardBg = isDarkMode ? 'bg-[#0b1329]/90 border-blue-900/30' : 'bg-[#faf8f5] border-stone-200/80';
   const labelClass = 'block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5';
   const inputClass = `w-full px-3.5 py-3 rounded-xl border text-sm font-semibold transition-all outline-none ${
     isDarkMode 
-      ? 'bg-slate-950 border-slate-800 text-white placeholder-slate-500 focus:border-orange-500 focus:ring-1 focus:ring-orange-500/30' 
+      ? 'bg-[#0b1329] border-blue-900/40 text-white placeholder-blue-300/40 focus:border-orange-500 focus:ring-1 focus:ring-orange-500/30' 
       : 'bg-white border-slate-200 text-slate-900 placeholder-slate-400 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20'
   }`;
 
   return (
     <div
       className={`min-h-[100dvh] py-6 sm:py-10 px-3.5 sm:px-6 lg:px-8 transition-colors duration-200 ${
-        isDarkMode ? 'bg-slate-950 text-white' : 'bg-slate-50 text-slate-900'
+        isDarkMode ? 'bg-[#0b1329] text-white' : 'bg-[#faf8f5] text-slate-900'
       }`}
     >
       <div className="max-w-5xl mx-auto space-y-6 sm:space-y-8">
@@ -200,10 +200,10 @@ export const UserAccountPage: React.FC<UserAccountPageProps> = ({
 
         </div>
 
-        {/* 6 Balanced Segmented Navigation Tabs */}
+        {/* Navigation Tabs: Horizontal Scrollable on Mobile, Grid on Desktop */}
         <nav
           aria-label="Account sections"
-          className="grid grid-cols-3 sm:grid-cols-6 gap-2 sm:gap-2.5"
+          className="flex sm:grid sm:grid-cols-6 overflow-x-auto pb-2 gap-2.5 scrollbar-none"
         >
           {tabs.map((tab) => {
             const Icon = tab.icon;
@@ -213,7 +213,7 @@ export const UserAccountPage: React.FC<UserAccountPageProps> = ({
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 aria-current={isActive ? 'page' : undefined}
-                className={`flex flex-col items-center justify-center gap-1.5 py-3 px-2 rounded-2xl text-xs font-bold transition-all cursor-pointer border ${
+                className={`shrink-0 sm:shrink flex items-center sm:flex-col items-center justify-center gap-2 sm:gap-1.5 py-3 px-4 sm:px-2 rounded-2xl text-xs font-bold transition-all cursor-pointer border ${
                   isActive
                     ? 'bg-gradient-to-r from-orange-600 to-amber-600 text-white border-orange-600 shadow-md shadow-orange-600/25 font-black'
                     : isDarkMode
@@ -221,7 +221,7 @@ export const UserAccountPage: React.FC<UserAccountPageProps> = ({
                       : 'bg-white border-slate-200 text-slate-700 hover:border-orange-200 hover:bg-orange-50/50 shadow-xs'
                 }`}
               >
-                <div className="relative">
+                <div className="relative flex items-center justify-center">
                   <Icon className={`w-4 h-4 ${isActive ? 'text-white' : tab.id === 'favorites' ? 'text-rose-500' : 'text-slate-500 dark:text-slate-400'}`} />
                   {tab.badge !== undefined && tab.badge > 0 && (
                     <span className={`absolute -top-1.5 -right-2.5 text-[9px] font-black px-1.5 py-0.2 rounded-full leading-tight ${
@@ -231,7 +231,7 @@ export const UserAccountPage: React.FC<UserAccountPageProps> = ({
                     </span>
                   )}
                 </div>
-                <span className="truncate w-full text-center">{tab.label}</span>
+                <span className="whitespace-nowrap sm:truncate sm:w-full sm:text-center">{tab.label}</span>
               </button>
             );
           })}

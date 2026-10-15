@@ -49,13 +49,26 @@ export const OrdersDrawer: React.FC<OrdersDrawerProps> = ({
 
         <div className="flex-1 overflow-y-auto p-5 space-y-4">
           {orders.length === 0 ? (
-            <div className="text-center py-20 space-y-2">
-              <p className={`text-xs font-bold ${isDarkMode ? 'text-slate-200' : 'text-slate-800'}`}>
-                No active or past orders
-              </p>
-              <p className={`text-xs ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
-                Place an order to track live delivery.
-              </p>
+            <div className={`text-center py-16 px-6 rounded-2xl border space-y-4 my-auto ${
+              isDarkMode ? 'bg-slate-950/60 border-slate-800' : 'bg-orange-50/50 border-orange-100'
+            }`}>
+              <div className="w-16 h-16 rounded-2xl bg-orange-600/15 text-orange-600 dark:text-orange-400 mx-auto flex items-center justify-center">
+                <Bike className="w-8 h-8" />
+              </div>
+              <div className="space-y-1">
+                <h3 className={`text-base font-black ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+                  No active orders right now
+                </h3>
+                <p className={`text-xs max-w-xs mx-auto leading-relaxed ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
+                  Explore our top-rated gourmet kitchens or 10-minute CraveMart essentials to place your first order.
+                </p>
+              </div>
+              <button
+                onClick={onClose}
+                className="px-5 py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-black text-xs uppercase tracking-wider rounded-xl shadow-md shadow-orange-600/30 transition-all cursor-pointer active:scale-95"
+              >
+                Browse Restaurants
+              </button>
             </div>
           ) : (
             <div className="space-y-4">

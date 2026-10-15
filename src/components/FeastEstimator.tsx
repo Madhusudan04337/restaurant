@@ -45,20 +45,20 @@ export const FeastEstimator: React.FC<FeastEstimatorProps> = ({ onAddFeastToCart
       id="feast-estimator" 
       className={`py-8 sm:py-20 relative overflow-hidden transition-colors duration-300 ${
         isDarkMode 
-          ? 'bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white' 
-          : 'bg-gradient-to-b from-orange-50/70 via-amber-50/30 to-white text-slate-900'
+          ? 'bg-[#0d1633] text-white' 
+          : 'bg-[#f7f4ed] text-slate-900'
       }`}
     >
-      {/* Soft gradient edge fade masks so it melts seamlessly into the page without harsh poster cutoffs */}
+      {/* Soft gradient edge fade masks so it melts seamlessly into the page without harsh cutoffs */}
       <div className={`absolute top-0 inset-x-0 h-10 pointer-events-none z-10 ${
         isDarkMode 
-          ? 'bg-gradient-to-b from-slate-950 to-transparent' 
-          : 'bg-gradient-to-b from-slate-50 to-transparent'
+          ? 'bg-gradient-to-b from-[#0b1329] to-transparent' 
+          : 'bg-gradient-to-b from-[#faf8f5] to-transparent'
       }`} />
       <div className={`absolute bottom-0 inset-x-0 h-10 pointer-events-none z-10 ${
         isDarkMode 
-          ? 'bg-gradient-to-t from-slate-950 to-transparent' 
-          : 'bg-gradient-to-t from-slate-50 to-transparent'
+          ? 'bg-gradient-to-t from-[#0b1329] to-transparent' 
+          : 'bg-gradient-to-t from-[#faf8f5] to-transparent'
       }`} />
 
       {/* Radiant ambient glow orbs with gentle gradient transitions */}

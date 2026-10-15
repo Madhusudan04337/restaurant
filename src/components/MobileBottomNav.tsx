@@ -30,10 +30,10 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
   return (
     <nav 
       aria-label="Mobile Navigation" 
-      className={`fixed bottom-0 inset-x-0 z-40 sm:hidden backdrop-blur-md border-t transition-colors duration-200 py-1.5 px-2 safe-area-pb ${
+      className={`fixed bottom-0 inset-x-0 z-40 sm:hidden backdrop-blur-md border-t py-1.5 px-2 safe-area-pb ${
         isDarkMode 
-          ? 'bg-slate-950/95 border-slate-800/90 shadow-[0_-4px_25px_rgba(0,0,0,0.6)] text-slate-300' 
-          : 'bg-white/95 border-slate-200/90 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] text-slate-700'
+          ? 'bg-[#0b1329] border-blue-900/40 shadow-[0_-4px_25px_rgba(2,6,23,0.7)] text-slate-300' 
+          : 'bg-[#faf8f5] border-slate-200/90 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] text-slate-700'
       }`}
     >
       <div className="flex items-center justify-around max-w-lg mx-auto">
@@ -48,7 +48,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
                 setActiveTab(tab.id);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              className={`flex flex-col items-center justify-center min-h-[48px] py-1 px-2.5 rounded-xl transition-all relative cursor-pointer ${
+              className={`flex flex-col items-center justify-center min-h-[48px] py-1 px-2.5 rounded-xl relative cursor-pointer ${
                 isActive 
                   ? 'text-orange-600 dark:text-orange-400 font-extrabold scale-105' 
                   : isDarkMode

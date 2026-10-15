@@ -1,6 +1,5 @@
 import React from 'react';
-import { Search, MapPin, Sparkles, Flame, Clock, Tag, ArrowRight } from 'lucide-react';
-import { motion } from 'motion/react';
+import { Search, Flame, Clock, Tag, Sparkles } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 
 interface HeroSectionProps {
@@ -30,7 +29,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   ];
 
   return (
-    <section className="relative w-full min-h-[50vh] sm:min-h-[62vh] lg:min-h-[76vh] flex items-end overflow-hidden bg-slate-950">
+    <section className={`relative w-full min-h-[50vh] sm:min-h-[62vh] lg:min-h-[76vh] flex items-end overflow-hidden ${
+      isDarkMode 
+        ? 'bg-[#0b1329] text-white' 
+        : 'bg-[#faf8f5] text-slate-950'
+    }`}>
       
       {/* Big Full-Bleed Background Image (Zero Margin) */}
       <div className="absolute inset-0">
@@ -39,9 +42,18 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           alt="Gourmet Food Table Feast"
           className="w-full h-full object-cover object-center transform scale-100"
         />
-        {/* Layered dark gradients for contrast and readability */}
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-slate-950/50" />
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/70 to-transparent" />
+        {/* Layered gradients tailored per theme for instant, flawless contrast */}
+        {isDarkMode ? (
+          <>
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0b1329] via-[#0b1329]/80 to-[#0b1329]/50" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#0b1329]/95 via-[#0b1329]/75 to-transparent" />
+          </>
+        ) : (
+          <>
+            <div className="absolute inset-0 bg-gradient-to-t from-[#faf8f5] via-[#faf8f5]/90 to-white/50" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#faf8f5]/95 via-[#faf8f5]/80 to-white/30" />
+          </>
+        )}
       </div>
 
       {/* Hero Content Container */}
@@ -54,26 +66,34 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             <span>Fast Delivery in {location}</span>
           </span>
 
-          <span className="bg-slate-900/80 backdrop-blur-md text-amber-300 border border-white/20 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider">
+          <span className={`px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${
+            isDarkMode 
+              ? 'bg-[#121c3b]/90 backdrop-blur-md text-amber-300 border border-blue-800/40 shadow-xs' 
+              : 'bg-amber-100/90 backdrop-blur-md text-amber-900 border border-amber-300/80 shadow-xs'
+          }`}>
             ⚡ 25-30 Mins Avg
           </span>
         </div>
 
         {/* Big Bold Headline */}
         <div className="space-y-1.5 sm:space-y-3 max-w-3xl">
-          <h1 className="text-2xl sm:text-5xl lg:text-6xl font-black text-white leading-tight tracking-tight drop-shadow-lg">
+          <h1 className={`text-2xl sm:text-5xl lg:text-6xl font-black leading-tight tracking-tight ${
+            isDarkMode ? 'text-white drop-shadow-lg' : 'text-slate-950'
+          }`}>
             Craving Delicious Food Delivered Hot &amp; Fast?
           </h1>
-          <p className="text-[11px] sm:text-base lg:text-lg text-slate-200 font-normal leading-snug sm:leading-relaxed drop-shadow max-w-2xl">
+          <p className={`text-[11px] sm:text-base lg:text-lg font-medium leading-snug sm:leading-relaxed max-w-2xl ${
+            isDarkMode ? 'text-blue-100 drop-shadow' : 'text-slate-700'
+          }`}>
             Order from top-rated restaurants, authentic dum biryanis, artisan woodfired pizzas, and gourmet burgers in minutes.
           </p>
         </div>
 
-        {/* Big Interactive Search Bar (Theme adaptive) */}
-        <div className={`max-w-2xl w-full backdrop-blur-md p-1.5 sm:p-2.5 rounded-2xl shadow-2xl border flex flex-col sm:flex-row items-center gap-2 transition-colors duration-200 ${
+        {/* Big Interactive Search Bar (Instant adaptive) */}
+        <div className={`max-w-2xl w-full backdrop-blur-md p-1.5 sm:p-2.5 rounded-2xl shadow-2xl border flex flex-col sm:flex-row items-center gap-2 ${
           isDarkMode 
-            ? 'bg-slate-900/95 border-slate-700/80 shadow-black/60' 
-            : 'bg-white/95 border-white/80 shadow-slate-950/20'
+            ? 'bg-[#101b3b]/95 border-blue-900/50 shadow-2xl shadow-blue-950/80' 
+            : 'bg-white/95 border-orange-200/90 shadow-xl shadow-orange-950/10'
         }`}>
           <div className="flex items-center space-x-2.5 pl-2.5 w-full sm:w-auto text-slate-400">
             <Search className="w-4 h-4 sm:w-5 sm:h-5 text-orange-500 shrink-0" />
@@ -83,7 +103,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search dishes, restaurants, biryani..."
               className={`w-full sm:w-88 py-2 sm:py-3 bg-transparent text-xs sm:text-sm font-bold focus:outline-hidden ${
-                isDarkMode ? 'text-white placeholder-slate-400' : 'text-slate-900 placeholder-slate-400'
+                isDarkMode ? 'text-white placeholder-blue-300/50' : 'text-slate-900 placeholder-slate-400'
               }`}
             />
           </div>
@@ -91,7 +111,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           <div className="flex items-center space-x-2 w-full sm:w-auto sm:ml-auto">
             <button
               onClick={onOpenFoodieAi}
-              className="w-full sm:w-auto bg-gradient-to-r from-orange-600 via-orange-500 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white font-black px-4 py-2.5 sm:px-6 sm:py-3 rounded-xl text-xs uppercase tracking-wider shadow-md shadow-orange-600/30 transition-all flex items-center justify-center space-x-1.5 active:scale-95 cursor-pointer"
+              className="w-full sm:w-auto bg-gradient-to-r from-orange-600 via-orange-500 to-amber-600 hover:from-orange-700 hover:to-amber-700 text-white font-black px-4 py-2.5 sm:px-6 sm:py-3 rounded-xl text-xs uppercase tracking-wider shadow-md shadow-orange-600/30 flex items-center justify-center space-x-1.5 active:scale-95 cursor-pointer"
             >
               <Sparkles className="w-4 h-4" />
               <span>Ask Foodie AI</span>
@@ -101,14 +121,20 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
         {/* Quick Cravings Filter Chips */}
         <div className="flex items-center space-x-1.5 overflow-x-auto pb-0.5 scrollbar-none text-xs">
-          <span className="text-slate-300 font-extrabold uppercase tracking-wider text-[10px] shrink-0 mr-1">
+          <span className={`font-extrabold uppercase tracking-wider text-[10px] shrink-0 mr-1 ${
+            isDarkMode ? 'text-blue-200/80' : 'text-slate-600'
+          }`}>
             Cravings:
           </span>
           {quickPills.map((pill) => (
             <button
               key={pill.id}
               onClick={() => onSelectCategory(pill.id)}
-              className="bg-slate-900/80 hover:bg-orange-600 hover:text-white text-slate-200 border border-white/20 backdrop-blur-md px-3 py-1 rounded-lg text-xs font-bold whitespace-nowrap transition-all shrink-0 active:scale-95"
+              className={`px-3 py-1 rounded-lg text-xs font-bold whitespace-nowrap shrink-0 active:scale-95 cursor-pointer ${
+                isDarkMode
+                  ? 'bg-[#121e42]/85 hover:bg-orange-600 hover:text-white text-blue-100 border border-blue-800/40 backdrop-blur-md'
+                  : 'bg-white/95 hover:bg-orange-600 hover:text-white text-slate-800 border border-orange-200/80 shadow-xs backdrop-blur-md'
+              }`}
             >
               {pill.label}
             </button>
@@ -116,34 +142,54 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         </div>
 
         {/* Promotional Ribbon Cards */}
-        <div className="hidden sm:grid grid-cols-1 md:grid-cols-3 gap-4 pt-3 border-t border-white/10">
-          <div className="bg-slate-900/75 backdrop-blur-md border border-white/15 p-4 rounded-xl flex items-center space-x-3.5 text-white shadow-xs">
+        <div className={`hidden sm:grid grid-cols-1 md:grid-cols-3 gap-4 pt-3 border-t ${
+          isDarkMode ? 'border-blue-900/30' : 'border-slate-300/60'
+        }`}>
+          <div className={`p-4 rounded-xl flex items-center space-x-3.5 shadow-xs ${
+            isDarkMode 
+              ? 'bg-[#101a38]/85 backdrop-blur-md border border-blue-900/40 text-white shadow-xs' 
+              : 'bg-white/90 backdrop-blur-md border border-orange-100 text-slate-800 shadow-md shadow-orange-500/5'
+          }`}>
             <div className="w-9 h-9 rounded-lg bg-orange-500/20 text-orange-400 flex items-center justify-center font-bold">
               <Tag className="w-4 h-4" />
             </div>
             <div>
-              <span className="text-xs font-bold uppercase text-orange-400">FLAT 50% OFF</span>
-              <p className="text-[11px] text-slate-300">Use coupon code <strong className="text-white">CRAVE50</strong></p>
+              <span className="text-xs font-bold uppercase text-orange-600 dark:text-orange-400">FLAT 50% OFF</span>
+              <p className={`text-[11px] ${isDarkMode ? 'text-blue-200/80' : 'text-slate-600'}`}>
+                Use coupon code <strong className={isDarkMode ? 'text-white' : 'text-slate-900'}>CRAVE50</strong>
+              </p>
             </div>
           </div>
 
-          <div className="bg-slate-900/75 backdrop-blur-md border border-white/15 p-4 rounded-xl flex items-center space-x-3.5 text-white shadow-xs">
+          <div className={`p-4 rounded-xl flex items-center space-x-3.5 shadow-xs ${
+            isDarkMode 
+              ? 'bg-[#101a38]/85 backdrop-blur-md border border-blue-900/40 text-white shadow-xs' 
+              : 'bg-white/90 backdrop-blur-md border border-orange-100 text-slate-800 shadow-md shadow-orange-500/5'
+          }`}>
             <div className="w-9 h-9 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
               <Clock className="w-4 h-4" />
             </div>
             <div>
-              <span className="text-xs font-bold uppercase text-emerald-400">Express Delivery</span>
-              <p className="text-[11px] text-slate-300">On-time guarantee or $5 cashback</p>
+              <span className="text-xs font-bold uppercase text-emerald-600 dark:text-emerald-400">Express Delivery</span>
+              <p className={`text-[11px] ${isDarkMode ? 'text-blue-200/80' : 'text-slate-600'}`}>
+                On-time guarantee or $5 cashback
+              </p>
             </div>
           </div>
 
-          <div className="bg-slate-900/75 backdrop-blur-md border border-white/15 p-4 rounded-xl flex items-center space-x-3.5 text-white shadow-xs">
+          <div className={`p-4 rounded-xl flex items-center space-x-3.5 shadow-xs ${
+            isDarkMode 
+              ? 'bg-[#101a38]/85 backdrop-blur-md border border-blue-900/40 text-white shadow-xs' 
+              : 'bg-white/90 backdrop-blur-md border border-orange-100 text-slate-800 shadow-md shadow-orange-500/5'
+          }`}>
             <div className="w-9 h-9 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold">
               <Sparkles className="w-4 h-4" />
             </div>
             <div>
-              <span className="text-xs font-bold uppercase text-amber-400">Zero Delivery Fee</span>
-              <p className="text-[11px] text-slate-300">Free delivery on orders above $20</p>
+              <span className="text-xs font-bold uppercase text-amber-600 dark:text-amber-400">Zero Delivery Fee</span>
+              <p className={`text-[11px] ${isDarkMode ? 'text-blue-200/80' : 'text-slate-600'}`}>
+                Free delivery on orders above $20
+              </p>
             </div>
           </div>
         </div>

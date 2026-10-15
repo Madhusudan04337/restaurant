@@ -88,8 +88,8 @@ export const MasterChefsSection: React.FC<MasterChefsSectionProps> = ({ onSelect
   return (
     <section 
       id="master-chefs" 
-      className={`py-8 sm:py-20 border-b transition-colors duration-200 ${
-        isDarkMode ? 'bg-slate-950/80 border-slate-800/80 text-white' : 'bg-gradient-to-b from-orange-50/40 via-white to-amber-50/30 border-orange-100 text-slate-900'
+      className={`py-8 sm:py-20 border-b ${
+        isDarkMode ? 'bg-[#091126] border-blue-900/40 text-white' : 'bg-[#faf8f5] border-stone-200/80 text-slate-900'
       }`}
       onMouseEnter={() => setIsAutoScrollActive(false)}
       onMouseLeave={() => setIsAutoScrollActive(true)}

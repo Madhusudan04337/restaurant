@@ -207,8 +207,10 @@ export default function App() {
   };
 
   return (
-    <div className={`min-h-screen font-sans selection:bg-orange-500 selection:text-white relative pb-20 sm:pb-0 overflow-x-hidden transition-colors duration-200 ${
-      isDarkMode ? 'bg-slate-950 text-slate-100' : 'bg-slate-50 text-slate-900'
+    <div className={`min-h-screen font-sans selection:bg-orange-500 selection:text-white relative pb-20 sm:pb-0 overflow-x-hidden ${
+      currentView !== 'login' && currentView !== 'register' ? 'pt-[110px] sm:pt-[124px]' : ''
+    } ${
+      isDarkMode ? 'bg-[#0b1329] text-slate-100' : 'bg-[#faf8f5] text-slate-900'
     }`}>
       
       {/* Sticky Top Header */}
@@ -482,7 +484,7 @@ export default function App() {
         <Footer />
       </main>
 
-      {/* MOBILE ONLY: Native Bottom Navigation Tab Bar (Swiggy/Zomato App Style) */}
+      {/* MOBILE ONLY: Native Bottom Navigation Tab Bar */}
       <MobileBottomNav
         activeTab={mobileTab}
         setActiveTab={setMobileTab}

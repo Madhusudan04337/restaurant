@@ -54,8 +54,8 @@ export const CulinaryStorySection: React.FC = () => {
   const IconComponent = current.icon;
 
   return (
-    <section className={`py-12 sm:py-24 border-b transition-colors duration-200 overflow-hidden ${
-      isDarkMode ? 'bg-slate-950 border-slate-800/80 text-white' : 'bg-slate-50 border-slate-200 text-slate-900'
+    <section className={`py-12 sm:py-24 border-b overflow-hidden ${
+      isDarkMode ? 'bg-[#0b1329] border-blue-900/40 text-white' : 'bg-[#faf8f5] border-stone-200/80 text-slate-900'
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         

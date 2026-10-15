@@ -515,7 +515,7 @@ export const InstamartMobileView: React.FC<InstamartMobileViewProps> = ({
                 key={product.id}
                 className={`rounded-2xl p-2.5 sm:p-3 border flex flex-col justify-between transition-all group ${
                   isDarkMode 
-                    ? 'bg-slate-900 border-slate-800 hover:border-slate-700 text-white shadow-xs' 
+                    ? 'bg-[#101b3b] border-blue-900/40 hover:border-blue-700/60 text-white shadow-xs' 
                     : 'bg-white border-slate-200/90 hover:border-orange-200 text-slate-900 shadow-xs'
                 }`}
               >
