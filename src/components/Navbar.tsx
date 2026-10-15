@@ -30,6 +30,8 @@ interface NavbarProps {
   onOpenLogin: () => void;
   onOpenRegister: () => void;
   onOpenProfile: () => void;
+  onNavigateHome: () => void;
+  onSelectNav?: (navId: string) => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -41,7 +43,9 @@ export const Navbar: React.FC<NavbarProps> = ({
   currentUser,
   onOpenLogin,
   onOpenRegister,
-  onOpenProfile
+  onOpenProfile,
+  onNavigateHome,
+  onSelectNav
 }) => {
   const { isDarkMode, toggleTheme } = useTheme();
   const [showLocationModal, setShowLocationModal] = useState(false);
@@ -229,7 +233,15 @@ export const Navbar: React.FC<NavbarProps> = ({
           
           {/* Logo & Mobile Location Trigger */}
           <div className="flex items-center space-x-2 sm:space-x-4 lg:space-x-8 min-w-0">
-            <a href="#" className="flex items-center space-x-2 shrink-0 group">
+            <a 
+              href="#" 
+              onClick={(e) => {
+                e.preventDefault();
+                onNavigateHome();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="flex items-center space-x-2 shrink-0 group cursor-pointer"
+            >
               <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-orange-600 via-amber-500 to-yellow-400 flex items-center justify-center text-white font-black text-lg sm:text-xl shadow-md group-hover:scale-105 transition-transform">
                 C
               </div>
@@ -283,7 +295,14 @@ export const Navbar: React.FC<NavbarProps> = ({
               <a
                 key={link.id}
                 href={link.href}
-                onClick={() => setActiveNav(link.id)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setActiveNav(link.id);
+                  onNavigateHome();
+                  if (onSelectNav) {
+                    onSelectNav(link.id);
+                  }
+                }}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all relative ${
                   activeNav === link.id
                     ? isDarkMode 

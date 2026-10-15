@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Restaurant, MenuItem, CartItem, Order } from './types';
 import { RESTAURANTS, FEAST_OPTIONS } from './data/mockData';
 import { Navbar } from './components/Navbar';
@@ -97,6 +97,30 @@ export default function App() {
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [currentView, setCurrentView] = useState<'home' | 'login' | 'register' | 'account'>('home');
+  const [scrollTarget, setScrollTarget] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (currentView === 'home' && scrollTarget) {
+      const attemptScroll = (attemptsLeft = 6) => {
+        if (scrollTarget === '#') {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          setScrollTarget(null);
+          return;
+        }
+        const el = document.querySelector(scrollTarget);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          setScrollTarget(null);
+        } else if (attemptsLeft > 0) {
+          setTimeout(() => attemptScroll(attemptsLeft - 1), 80);
+        } else {
+          setScrollTarget(null);
+        }
+      };
+      const timer = setTimeout(() => attemptScroll(), 50);
+      return () => clearTimeout(timer);
+    }
+  }, [currentView, scrollTarget, mobileTab]);
 
   const handleSelectDish = (dish: MenuItem, restaurant: Restaurant) => {
     setSelectedRestaurant(restaurant);
@@ -225,6 +249,29 @@ export default function App() {
           onOpenLogin={() => setCurrentView('login')}
           onOpenRegister={() => setCurrentView('register')}
           onOpenProfile={() => setCurrentView('account')}
+          onNavigateHome={() => setCurrentView('home')}
+          onSelectNav={(id) => {
+            setCurrentView('home');
+            if (id === 'restaurants') {
+              setMobileTab('delivery');
+              setScrollTarget('#restaurant-list-section');
+            } else if (id === 'feast-estimator') {
+              setMobileTab('feast');
+              setScrollTarget('#feast-estimator');
+            } else if (id === 'master-chefs') {
+              setMobileTab('delivery');
+              setScrollTarget('#master-chefs');
+            } else if (id === 'crave-club') {
+              setMobileTab('delivery');
+              setScrollTarget('#crave-club');
+            } else if (id === 'reviews') {
+              setMobileTab('delivery');
+              setScrollTarget('#reviews');
+            } else {
+              setMobileTab('delivery');
+              setScrollTarget('#');
+            }
+          }}
         />
       )}
 
@@ -318,7 +365,7 @@ export default function App() {
         )}
 
         {mobileTab === 'feast' && (
-          <div className="w-full">
+          <div id="feast-estimator" className="w-full">
             <FeastEstimator onAddFeastToCart={handleAddFeastToCart} />
           </div>
         )}
@@ -466,19 +513,27 @@ export default function App() {
         </div>
 
         {/* Interactive Feast & Party Estimator */}
-        <FeastEstimator onAddFeastToCart={handleAddFeastToCart} />
+        <div id="feast-estimator">
+          <FeastEstimator onAddFeastToCart={handleAddFeastToCart} />
+        </div>
 
         {/* Master Chefs & Culinary Artisans Showcase */}
-        <MasterChefsSection onSelectRestaurant={(restaurant) => setSelectedRestaurant(restaurant)} />
+        <div id="master-chefs">
+          <MasterChefsSection onSelectRestaurant={(restaurant) => setSelectedRestaurant(restaurant)} />
+        </div>
 
         {/* Immersive Culinary Storytelling Section */}
         <CulinaryStorySection />
 
         {/* CraveClub VIP Membership Pass */}
-        <CraveClubMembership />
+        <div id="crave-club">
+          <CraveClubMembership />
+        </div>
 
         {/* Animated Client Stories & Reviews Carousel */}
-        <ReviewsCarousel />
+        <div id="reviews">
+          <ReviewsCarousel />
+        </div>
 
         {/* Clean, compact Footer on desktop */}
         <Footer />

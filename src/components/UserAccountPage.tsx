@@ -155,7 +155,7 @@ export const UserAccountPage: React.FC<UserAccountPageProps> = ({
           
           {/* Avatar Box */}
           <div className="shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-tr from-orange-600 to-amber-500 text-white font-black text-2xl sm:text-3xl flex items-center justify-center shadow-lg shadow-orange-600/30">
-            {currentUser?.avatar || 'DU'}
+            {currentUser?.avatar && currentUser.avatar !== 'DU' ? currentUser.avatar : (currentUser?.name || 'User').slice(0, 2).toUpperCase()}
           </div>
 
           {/* User Details */}
