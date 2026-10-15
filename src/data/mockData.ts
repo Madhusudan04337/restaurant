@@ -707,7 +707,7 @@ export const REVIEWS = [
     location: 'Downtown • 140+ Orders Placed',
     avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200',
     rating: 5,
-    comment: 'The 25-minute live tracking is unbelievable! The Hyderabadi Dum Biryani arrived steaming hot with crisp flaky parathas. CraveDrop is leagues ahead of standard delivery apps.',
+    comment: 'The 25-minute live tracking is unbelievable! The Hyderabadi Dum Biryani arrived steaming hot with crisp flaky parathas. Rasora is leagues ahead of standard delivery apps.',
     dishLoved: 'Hyderabadi Chicken Dum Biryani'
   },
   {

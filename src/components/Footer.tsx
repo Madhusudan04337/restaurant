@@ -19,7 +19,7 @@ export const Footer: React.FC = () => {
             C
           </div>
           <div>
-            <span className={`font-black text-sm ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>CraveDrop</span>
+            <span className={`font-black text-sm ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>Rasora</span>
             <span className="text-[10px] text-slate-500 block">Fast 25-Min Restaurant Delivery</span>
           </div>
         </div>
@@ -45,7 +45,7 @@ export const Footer: React.FC = () => {
       <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 mt-4 border-t text-center text-[10px] ${
         isDarkMode ? 'border-slate-900 text-slate-600' : 'border-slate-200/60 text-slate-500'
       }`}>
-        © 2026 CraveDrop Food Delivery & Dining. All rights reserved.
+        © 2026 Rasora Food Delivery & Dining. All rights reserved.
       </div>
     </footer>
   );

@@ -65,7 +65,7 @@ export const OrderTrackerModal: React.FC<OrderTrackerModalProps> = ({
         }`}>
           <div>
             <span className="text-[10px] font-black text-orange-600 dark:text-orange-400 uppercase tracking-widest">
-              Live CraveDrop Delivery Tracking
+              Live Rasora Delivery Tracking
             </span>
             <h3 className={`text-xl font-black ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
               Order #{order.id}

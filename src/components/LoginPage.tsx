@@ -48,7 +48,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           }`}
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Back to CraveDrop</span>
+          <span>Back to Rasora</span>
         </button>
       </div>
 
@@ -59,7 +59,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           </div>
         </div>
         <h2 className="mt-6 text-center text-2xl sm:text-3xl font-black tracking-tight">
-          Sign In to CraveDrop
+          Sign In to Rasora
         </h2>
         <p className="mt-2 text-center text-xs text-slate-400">
           Access your gourmet orders, CraveClub membership & 10-minute instant delivery
@@ -165,7 +165,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
 
           <div className="mt-6 pt-6 border-t border-slate-800 text-center">
             <p className="text-xs text-slate-400">
-              Don't have a CraveDrop account?{' '}
+              Don't have a Rasora account?{' '}
               <button
                 onClick={onNavigateRegister}
                 className="font-bold text-orange-500 hover:text-orange-400 underline"

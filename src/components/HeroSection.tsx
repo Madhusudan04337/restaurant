@@ -85,7 +85,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           <p className={`text-[11px] sm:text-base lg:text-lg font-medium leading-snug sm:leading-relaxed max-w-2xl ${
             isDarkMode ? 'text-blue-100 drop-shadow' : 'text-slate-700'
           }`}>
-            Order from top-rated restaurants, authentic dum biryanis, artisan woodfired pizzas, and gourmet burgers in minutes.
+            <span className="sm:hidden">Order top-rated restaurants, authentic biryanis, and artisan pizzas in minutes.</span>
+            <span className="hidden sm:inline">Order from top-rated restaurants, authentic dum biryanis, artisan woodfired pizzas, and gourmet burgers in minutes.</span>
           </p>
         </div>
 

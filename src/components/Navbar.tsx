@@ -242,14 +242,12 @@ export const Navbar: React.FC<NavbarProps> = ({
               }}
               className="flex items-center space-x-2 shrink-0 group cursor-pointer"
             >
-              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-orange-600 via-amber-500 to-yellow-400 flex items-center justify-center text-white font-black text-lg sm:text-xl shadow-md group-hover:scale-105 transition-transform">
-                C
-              </div>
+              <img src="/src/assets/images/rasora_r_icon_1792060983359.jpg" alt="Rasora" className="w-9 h-9 sm:w-10 sm:h-10 object-cover rounded-xl group-hover:scale-105 transition-transform" />
               <div className="text-left hidden xs:block">
                 <span className={`text-base sm:text-xl font-black tracking-tight transition-colors ${
                   isDarkMode ? 'text-white group-hover:text-orange-400' : 'text-slate-900 group-hover:text-orange-600'
                 }`}>
-                  Crave<span className="text-orange-600">Drop</span>
+                  Rasora
                 </span>
                 <span className="block text-[8px] font-extrabold text-orange-500 uppercase tracking-widest leading-none">
                   Gourmet Marketplace

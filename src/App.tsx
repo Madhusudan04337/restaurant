@@ -176,7 +176,7 @@ export default function App() {
           copy.push({
             dish: menuItem,
             restaurantId: 'rest-1',
-            restaurantName: 'CraveDrop Party Kitchen',
+            restaurantName: 'Rasora Party Kitchen',
             quantity: 1
           });
         }
@@ -668,7 +668,7 @@ export default function App() {
         <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-sm w-full p-6 text-white space-y-4 shadow-2xl">
             <div className="flex items-center justify-between">
-              <h3 className="text-base font-black">Create CraveDrop Account</h3>
+              <h3 className="text-base font-black">Create Rasora Account</h3>
               <button onClick={() => setIsRegisterOpen(false)} className="text-slate-400 hover:text-white">
                 <X className="w-4 h-4" />
               </button>

@@ -50,7 +50,7 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({
           }`}
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Back to CraveDrop</span>
+          <span>Back to Rasora</span>
         </button>
       </div>
 
@@ -61,7 +61,7 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({
           </div>
         </div>
         <h2 className="mt-6 text-center text-2xl sm:text-3xl font-black tracking-tight">
-          Create CraveDrop Account
+          Create Rasora Account
         </h2>
         <p className="mt-2 text-center text-xs text-slate-400">
           Join 500,000+ food lovers enjoying 10-minute gourmet delivery & exclusive perks
@@ -76,7 +76,7 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({
             <div className="text-center py-8 space-y-3">
               <CheckCircle2 className="w-12 h-12 text-emerald-500 mx-auto animate-bounce" />
               <h3 className="text-lg font-black">Account Created!</h3>
-              <p className="text-xs text-slate-400">Welcome to CraveDrop. Setting up your profile...</p>
+              <p className="text-xs text-slate-400">Welcome to Rasora. Setting up your profile...</p>
             </div>
           ) : (
             <form className="space-y-4" onSubmit={handleSubmit}>
@@ -201,7 +201,7 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({
 
           <div className="mt-6 pt-6 border-t border-slate-800 text-center">
             <p className="text-xs text-slate-400">
-              Already have a CraveDrop account?{' '}
+              Already have a Rasora account?{' '}
               <button
                 onClick={onNavigateLogin}
                 className="font-bold text-orange-500 hover:text-orange-400 underline"
@@ -215,7 +215,7 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({
         <div className="mt-6 text-center">
           <div className="inline-flex items-center space-x-2 text-[11px] text-slate-500">
             <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
-            <span>By registering, you agree to CraveDrop's Terms & Privacy Policy</span>
+            <span>By registering, you agree to Rasora's Terms & Privacy Policy</span>
           </div>
         </div>
       </div>

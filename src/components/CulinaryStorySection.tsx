@@ -169,7 +169,8 @@ export const CulinaryStorySection: React.FC = () => {
                   </div>
 
                   <p className={`text-sm sm:text-base leading-relaxed ${isDarkMode ? 'text-slate-300' : 'text-slate-600'}`}>
-                    {current.description}
+                    <span className="sm:hidden">{current.description.split('. ')[0]}.</span>
+                    <span className="hidden sm:inline">{current.description}</span>
                   </p>
 
                   <div className={`p-4 rounded-2xl border flex items-center space-x-3 ${
