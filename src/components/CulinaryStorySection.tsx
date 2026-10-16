@@ -1,13 +1,11 @@
-import React, { useRef, useState } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform } from 'motion/react';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { Sparkles, Leaf, Flame, Timer, CheckCircle, ArrowRight } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
-import { applyImageFallback } from '../utils/imageFallback';
 
 export const CulinaryStorySection: React.FC = () => {
   const { isDarkMode } = useTheme();
   const [activeChapter, setActiveChapter] = useState(0);
-  const sectionRef = useRef<HTMLElement | null>(null);
 
   const chapters = [
     {
@@ -54,17 +52,9 @@ export const CulinaryStorySection: React.FC = () => {
 
   const current = chapters[activeChapter];
   const IconComponent = current.icon;
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ['start end', 'end start']
-  });
-  const imageScale = useTransform(scrollYProgress, [0, 0.45, 1], [1.1, 1.28, 1.14]);
-  const imageY = useTransform(scrollYProgress, [0, 1], ['0%', '-8%']);
-  const imageRotate = useTransform(scrollYProgress, [0, 0.5, 1], [0, 1.5, 0]);
-  const imageOpacity = useTransform(scrollYProgress, [0, 0.15, 1], [0.92, 1, 0.98]);
 
   return (
-    <section ref={sectionRef} className={`py-12 sm:py-24 border-b overflow-hidden ${
+    <section className={`py-12 sm:py-24 border-b overflow-hidden ${
       isDarkMode ? 'bg-[#0b1329] border-blue-900/40 text-white' : 'bg-[#faf8f5] border-stone-200/80 text-slate-900'
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
@@ -133,7 +123,7 @@ export const CulinaryStorySection: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[480px]">
             
             {/* Story Image with Animated Fade */}
-            <div className="lg:col-span-6 lg:sticky lg:top-24 relative bg-slate-100 dark:bg-slate-800 min-h-[320px] lg:min-h-[560px] overflow-hidden">
+            <div className="lg:col-span-6 relative bg-slate-100 dark:bg-slate-800 min-h-[320px] lg:min-h-full overflow-hidden">
               <AnimatePresence mode="wait">
                 <motion.img
                   key={current.id}
@@ -143,15 +133,9 @@ export const CulinaryStorySection: React.FC = () => {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.5, ease: 'easeOut' }}
-                  style={{ scale: imageScale, y: imageY, rotate: imageRotate, opacity: imageOpacity }}
-                  className="w-full h-full object-cover absolute inset-0 will-change-transform"
-                  onError={applyImageFallback}
+                  className="w-full h-full object-cover absolute inset-0"
                 />
               </AnimatePresence>
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-br from-orange-500/10 via-transparent to-transparent pointer-events-none"
-                style={{ opacity: useTransform(scrollYProgress, [0, 0.5, 1], [0.15, 0.3, 0.18]) }}
-              />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent lg:hidden" />
               <div className="absolute bottom-4 left-4 right-4 lg:hidden text-white">
                 <span className="text-xs font-bold uppercase tracking-widest text-orange-400">Chapter {current.chapterNum}</span>

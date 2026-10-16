@@ -1,7 +1,6 @@
 import React from 'react';
 import { Search, Flame, Clock, Tag, Sparkles } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
-import { applyImageFallback } from '../utils/imageFallback';
 
 interface HeroSectionProps {
   location: string;
@@ -42,7 +41,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           src="https://images.unsplash.com/photo-1543353071-10c8ba85a904?auto=format&fit=crop&q=80&w=1920"
           alt="Gourmet Food Table Feast"
           className="w-full h-full object-cover object-center transform scale-100"
-          onError={applyImageFallback}
         />
         {/* Layered gradients tailored per theme for instant, flawless contrast */}
         {isDarkMode ? (

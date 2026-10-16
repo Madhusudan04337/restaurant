@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { motion } from 'motion/react';
 import { 
   Star, 
   Clock, 
@@ -234,11 +235,15 @@ export const RestaurantList: React.FC<RestaurantListProps> = ({
               >
                 {/* Image */}
                 <div className="relative h-36 sm:h-44 w-full overflow-hidden bg-slate-100 dark:bg-slate-800 shrink-0">
-                  <img
+                  <motion.img
                     src={restaurant.image}
                     alt={restaurant.name}
                     referrerPolicy="no-referrer"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    initial={{ scale: 1 }}
+                    whileInView={{ scale: 1.05 }}
+                    viewport={{ amount: 0.1, margin: "-50px 0px -50px 0px" }}
+                    transition={{ duration: 2, ease: "easeInOut" }}
+                    className="w-full h-full object-cover"
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=600';
                     }}
@@ -286,7 +291,14 @@ export const RestaurantList: React.FC<RestaurantListProps> = ({
         if (itemsToDisplay.length === 0) return null;
 
         return (
-          <section key={topic.id} className="space-y-3 pt-1">
+          <motion.section 
+          key={topic.id} 
+          initial={{ opacity: 0, x: -50 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="space-y-3 pt-1"
+        >
             
             {/* Topic Header: Title + Subtitle */}
             <div className="flex items-end justify-between gap-3">
@@ -332,11 +344,15 @@ export const RestaurantList: React.FC<RestaurantListProps> = ({
                   >
                     {/* Dish Image Box with Veg Tag & Favorite Heart */}
                     <div className="relative w-full h-32 sm:h-44 rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-800 mb-2.5 shrink-0">
-                      <img
+                      <motion.img
                         src={dish.image}
                         alt={dish.name}
                         referrerPolicy="no-referrer"
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        initial={{ scale: 1 }}
+                        whileInView={{ scale: 1.05 }}
+                        viewport={{ amount: 0.1, margin: "-50px 0px -50px 0px" }}
+                        transition={{ duration: 2, ease: "easeInOut" }}
+                        className="w-full h-full object-cover"
                         onError={(e) => {
                           (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=400';
                         }}
@@ -425,7 +441,7 @@ export const RestaurantList: React.FC<RestaurantListProps> = ({
               })}
             </div>
 
-          </section>
+          </motion.section>
         );
       })}
 
