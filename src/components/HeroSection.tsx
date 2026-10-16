@@ -29,7 +29,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   ];
 
   return (
-    <section className={`group relative w-full min-h-[50vh] sm:min-h-[62vh] lg:min-h-[76vh] flex items-end overflow-hidden ${
+    <section className={`relative w-full min-h-[50vh] sm:min-h-[62vh] lg:min-h-[76vh] flex items-end overflow-hidden ${
       isDarkMode 
         ? 'bg-[#0b1329] text-white' 
         : 'bg-[#faf8f5] text-slate-950'
@@ -40,7 +40,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         <img
           src="https://images.unsplash.com/photo-1543353071-10c8ba85a904?auto=format&fit=crop&q=80&w=1920"
           alt="Gourmet Food Table Feast"
-          className="motion-image w-full h-full object-cover object-center scale-100 group-hover:scale-105"
+          className="w-full h-full object-cover object-center transform scale-100"
         />
         {/* Layered gradients tailored per theme for instant, flawless contrast */}
         {isDarkMode ? (
@@ -131,7 +131,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             <button
               key={pill.id}
               onClick={() => onSelectCategory(pill.id)}
-              className={`px-3 py-1 rounded-lg text-xs font-bold whitespace-nowrap shrink-0 active:scale-95 cursor-pointer transition-all duration-300 hover:-translate-y-0.5 ${
+              className={`px-3 py-1 rounded-lg text-xs font-bold whitespace-nowrap shrink-0 active:scale-95 cursor-pointer ${
                 isDarkMode
                   ? 'bg-[#121e42]/85 hover:bg-orange-600 hover:text-white text-blue-100 border border-blue-800/40 backdrop-blur-md'
                   : 'bg-white/95 hover:bg-orange-600 hover:text-white text-slate-800 border border-orange-200/80 shadow-xs backdrop-blur-md'
@@ -146,7 +146,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         <div className={`hidden sm:grid grid-cols-1 md:grid-cols-3 gap-4 pt-3 border-t ${
           isDarkMode ? 'border-blue-900/30' : 'border-slate-300/60'
         }`}>
-          <div className={`p-4 rounded-xl flex items-center space-x-3.5 shadow-xs transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md ${
+          <div className={`p-4 rounded-xl flex items-center space-x-3.5 shadow-xs ${
             isDarkMode 
               ? 'bg-[#101a38]/85 backdrop-blur-md border border-blue-900/40 text-white shadow-xs' 
               : 'bg-white/90 backdrop-blur-md border border-orange-100 text-slate-800 shadow-md shadow-orange-500/5'
@@ -162,7 +162,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </div>
           </div>
 
-          <div className={`p-4 rounded-xl flex items-center space-x-3.5 shadow-xs transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md ${
+          <div className={`p-4 rounded-xl flex items-center space-x-3.5 shadow-xs ${
             isDarkMode 
               ? 'bg-[#101a38]/85 backdrop-blur-md border border-blue-900/40 text-white shadow-xs' 
               : 'bg-white/90 backdrop-blur-md border border-orange-100 text-slate-800 shadow-md shadow-orange-500/5'
@@ -178,7 +178,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </div>
           </div>
 
-          <div className={`p-4 rounded-xl flex items-center space-x-3.5 shadow-xs transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md ${
+          <div className={`p-4 rounded-xl flex items-center space-x-3.5 shadow-xs ${
             isDarkMode 
               ? 'bg-[#101a38]/85 backdrop-blur-md border border-blue-900/40 text-white shadow-xs' 
               : 'bg-white/90 backdrop-blur-md border border-orange-100 text-slate-800 shadow-md shadow-orange-500/5'

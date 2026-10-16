@@ -100,7 +100,7 @@ export const ExpressGroceryQuickBar: React.FC<ExpressGroceryQuickBarProps> = ({ 
           {quickItems.map((item) => (
             <div
               key={item.id}
-              className={`group w-[78vw] sm:w-auto shrink-0 snap-start rounded-xl p-5 border transition-all duration-300 flex items-center justify-between gap-4 shadow-xs hover:shadow-xl hover:-translate-y-1 ${
+              className={`w-[78vw] sm:w-auto shrink-0 snap-start rounded-xl p-5 border transition-all flex items-center justify-between gap-4 shadow-xs hover:shadow-md ${
                 isDarkMode 
                   ? 'bg-slate-950 border-slate-800 hover:border-slate-700 text-white' 
                   : 'bg-white border-amber-200/80 hover:border-amber-300 text-slate-900'
@@ -110,7 +110,7 @@ export const ExpressGroceryQuickBar: React.FC<ExpressGroceryQuickBarProps> = ({ 
                 src={item.image}
                 alt={item.name}
                 referrerPolicy="no-referrer"
-                className="motion-image w-20 h-20 rounded-lg object-cover shrink-0 group-hover:scale-105"
+                className="w-20 h-20 rounded-lg object-cover shrink-0"
                 onError={(e) => {
                   (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=200';
                 }}
@@ -133,7 +133,7 @@ export const ExpressGroceryQuickBar: React.FC<ExpressGroceryQuickBarProps> = ({ 
 
               <button
                 onClick={() => handleAdd(item)}
-                className="p-2.5 bg-orange-600 hover:bg-orange-700 text-white rounded-lg shadow-xs shrink-0 transition-all duration-300 hover:-translate-y-0.5 active:scale-95 cursor-pointer"
+                className="p-2.5 bg-orange-600 hover:bg-orange-700 text-white rounded-lg shadow-xs shrink-0 transition-transform active:scale-95 cursor-pointer"
                 title="Add to cart"
               >
                 <Plus className="w-4 h-4 stroke-[3]" />
