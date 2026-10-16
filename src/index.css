@@ -39,11 +39,14 @@ html {
   scroll-behavior: smooth;
   margin: 0;
   padding: 0;
+  scroll-padding-top: 112px;
 }
 
 body {
   margin: 0;
   padding: 0;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* Hide scrollbar / progress bar everywhere as requested by user */
@@ -69,7 +72,19 @@ html.light, html.light body {
   color: #0f172a !important;
 }
 
-/* Global instant theme switching: disable all CSS transitions on containers and buttons to avoid lingering delay or white streaks */
-*, *::before, *::after {
-  transition-property: none !important;
+img {
+  transform-origin: center center;
+}
+
+.motion-image {
+  will-change: transform;
+  transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1), filter 700ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.motion-card {
+  transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 280ms cubic-bezier(0.16, 1, 0.3, 1), border-color 280ms cubic-bezier(0.16, 1, 0.3, 1), background-color 280ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.motion-card:hover {
+  transform: translateY(-2px);
 }

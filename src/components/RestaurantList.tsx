@@ -226,7 +226,7 @@ export const RestaurantList: React.FC<RestaurantListProps> = ({
               <div
                 key={restaurant.id}
                 onClick={() => onSelectRestaurant(restaurant)}
-                className={`w-[78vw] sm:w-[320px] shrink-0 snap-start rounded-2xl overflow-hidden border transition-all cursor-pointer group shadow-xs hover:shadow-lg ${
+                className={`group w-[78vw] sm:w-[320px] shrink-0 snap-start rounded-2xl overflow-hidden border transition-all duration-300 cursor-pointer shadow-xs hover:-translate-y-1 hover:shadow-xl ${
                   isDarkMode 
                     ? 'bg-[#101b3b] border-blue-900/40 hover:border-blue-700/60 text-white' 
                     : 'bg-white border-slate-200/90 hover:border-orange-200 text-slate-900'
@@ -238,7 +238,7 @@ export const RestaurantList: React.FC<RestaurantListProps> = ({
                     src={restaurant.image}
                     alt={restaurant.name}
                     referrerPolicy="no-referrer"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    className="motion-image w-full h-full object-cover group-hover:scale-105"
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=600';
                     }}
@@ -324,7 +324,7 @@ export const RestaurantList: React.FC<RestaurantListProps> = ({
                         onSelectRestaurant(restaurant);
                       }
                     }}
-                    className={`w-[220px] sm:w-[280px] shrink-0 snap-start rounded-2xl p-3 border transition-all cursor-pointer flex flex-col justify-between group shadow-xs hover:shadow-lg ${
+                    className={`group w-[220px] sm:w-[280px] shrink-0 snap-start rounded-2xl p-3 border transition-all duration-300 cursor-pointer flex flex-col justify-between shadow-xs hover:-translate-y-1 hover:shadow-xl ${
                       isDarkMode 
                         ? 'bg-[#101b3b] border-blue-900/40 hover:border-blue-700/60 text-white' 
                         : 'bg-white border-slate-200/90 hover:border-orange-200 text-slate-900'
@@ -336,7 +336,7 @@ export const RestaurantList: React.FC<RestaurantListProps> = ({
                         src={dish.image}
                         alt={dish.name}
                         referrerPolicy="no-referrer"
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        className="motion-image w-full h-full object-cover group-hover:scale-105"
                         onError={(e) => {
                           (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=400';
                         }}
