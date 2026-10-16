@@ -5,6 +5,7 @@
 @theme {
   --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   --font-serif: 'Playfair Display', Georgia, serif;
+  --font-display: 'DM Serif Display', 'Playfair Display', Georgia, serif;
 }
 
 :root {
@@ -14,6 +15,10 @@
 
 .font-serif {
   font-family: 'Playfair Display', Georgia, serif;
+}
+
+.font-display {
+  font-family: 'DM Serif Display', 'Playfair Display', Georgia, serif;
 }
 
 .font-sans {

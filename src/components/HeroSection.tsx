@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { Search, Flame, Clock, Tag, Sparkles } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 
@@ -10,6 +11,29 @@ interface HeroSectionProps {
   onOpenFoodieAi: () => void;
 }
 
+const STORY_CHAPTERS = [
+  {
+    step: '01',
+    phase: 'The Dawn Harvest',
+    bg: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&q=80&w=1920'
+  },
+  {
+    step: '02',
+    phase: 'Artisan Kitchen Craft',
+    bg: 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&q=80&w=1920'
+  },
+  {
+    step: '03',
+    phase: '900° Oak-Wood Crucible',
+    bg: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&q=80&w=1920'
+  },
+  {
+    step: '04',
+    phase: 'Lightning Thermal Arrival',
+    bg: 'https://images.unsplash.com/photo-1543353071-10c8ba85a904?auto=format&fit=crop&q=80&w=1920'
+  }
+];
+
 export const HeroSection: React.FC<HeroSectionProps> = ({
   location,
   searchQuery,
@@ -18,6 +42,17 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   onOpenFoodieAi
 }) => {
   const { isDarkMode } = useTheme();
+  const [activeStory, setActiveStory] = useState(0);
+
+  // Auto-advance story scene every 5.5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveStory((prev) => (prev + 1) % STORY_CHAPTERS.length);
+    }, 5500);
+    return () => clearInterval(interval);
+  }, []);
+
+  const currentChapter = STORY_CHAPTERS[activeStory];
 
   const quickPills = [
     { label: 'Biryani', id: 'biryani' },
@@ -29,35 +64,43 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   ];
 
   return (
-    <section className={`relative w-full min-h-[50vh] sm:min-h-[62vh] lg:min-h-[76vh] flex items-end overflow-hidden ${
+    <section className={`relative w-full min-h-[54vh] sm:min-h-[64vh] lg:min-h-[78vh] flex items-end overflow-hidden ${
       isDarkMode 
         ? 'bg-[#0b1329] text-white' 
         : 'bg-[#faf8f5] text-slate-950'
     }`}>
       
-      {/* Big Full-Bleed Background Image (Zero Margin) */}
-      <div className="absolute inset-0">
-        <img
-          src="https://images.unsplash.com/photo-1543353071-10c8ba85a904?auto=format&fit=crop&q=80&w=1920"
-          alt="Gourmet Food Table Feast"
-          className="w-full h-full object-cover object-center transform scale-100"
-        />
-        {/* Layered gradients tailored per theme for instant, flawless contrast */}
+      {/* Animated Storytelling Background (Seamless Cross-fade, Zero Fog) */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <AnimatePresence mode="sync">
+          <motion.img
+            key={currentChapter.bg}
+            src={currentChapter.bg}
+            alt={currentChapter.phase}
+            initial={{ opacity: 0.35, scale: 1.04 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.9, ease: 'easeInOut' }}
+            className="w-full h-full object-cover object-center absolute inset-0"
+          />
+        </AnimatePresence>
+
+        {/* Balanced Soft Fade Gradient - gentle vignette for comfortable text readability without obscuring food visuals */}
         {isDarkMode ? (
           <>
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0b1329] via-[#0b1329]/80 to-[#0b1329]/50" />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#0b1329]/95 via-[#0b1329]/75 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0b1329] via-[#0b1329]/55 to-[#0b1329]/15" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#0b1329]/75 via-[#0b1329]/40 to-transparent" />
           </>
         ) : (
           <>
-            <div className="absolute inset-0 bg-gradient-to-t from-[#faf8f5] via-[#faf8f5]/90 to-white/50" />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#faf8f5]/95 via-[#faf8f5]/80 to-white/30" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#faf8f5] via-[#faf8f5]/60 to-[#faf8f5]/15" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#faf8f5]/70 via-[#faf8f5]/35 to-transparent" />
           </>
         )}
       </div>
 
       {/* Hero Content Container */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 pb-5 pt-8 sm:pb-16 sm:pt-28 lg:pb-20 lg:pt-36 flex flex-col justify-end space-y-3 sm:space-y-6">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 pb-5 pt-8 sm:pb-16 sm:pt-28 lg:pb-20 lg:pt-36 flex flex-col justify-end space-y-3.5 sm:space-y-6">
         
         {/* Top Badges */}
         <div className="flex flex-wrap items-center gap-2">
@@ -75,18 +118,30 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           </span>
         </div>
 
-        {/* Big Bold Headline */}
-        <div className="space-y-1.5 sm:space-y-3 max-w-3xl">
-          <h1 className={`text-2xl sm:text-5xl lg:text-6xl font-black leading-tight tracking-tight ${
-            isDarkMode ? 'text-white drop-shadow-lg' : 'text-slate-950'
+        {/* Editorial Culinary Headline */}
+        <div className="space-y-2 sm:space-y-3 max-w-3xl">
+          <h1 className={`text-3xl sm:text-5xl lg:text-6xl font-display font-normal leading-[1.12] tracking-tight ${
+            isDarkMode 
+              ? 'text-white drop-shadow-xl' 
+              : 'text-[#26150c] drop-shadow-xs'
           }`}>
-            Craving Delicious Food Delivered Hot &amp; Fast?
+            Craving{' '}
+            <span className={`italic ${
+              isDarkMode
+                ? 'bg-gradient-to-r from-amber-300 via-orange-400 to-amber-200 bg-clip-text text-transparent'
+                : 'bg-gradient-to-r from-orange-600 via-amber-600 to-orange-500 bg-clip-text text-transparent'
+            }`}>
+              Delicious Food
+            </span>{' '}
+            Delivered Hot &amp; Fast?
           </h1>
-          <p className={`text-[11px] sm:text-base lg:text-lg font-medium leading-snug sm:leading-relaxed max-w-2xl ${
-            isDarkMode ? 'text-blue-100 drop-shadow' : 'text-slate-700'
+
+          <p className={`text-xs sm:text-base lg:text-lg font-medium leading-relaxed max-w-2xl ${
+            isDarkMode 
+              ? 'text-slate-100 drop-shadow-md' 
+              : 'text-stone-700'
           }`}>
-            <span className="sm:hidden">Order top-rated restaurants, authentic biryanis, and artisan pizzas in minutes.</span>
-            <span className="hidden sm:inline">Order from top-rated restaurants, authentic dum biryanis, artisan woodfired pizzas, and gourmet burgers in minutes.</span>
+            Order from top-rated kitchens, authentic dum biryanis, artisan woodfired pizzas, and gourmet burgers in minutes.
           </p>
         </div>
 
