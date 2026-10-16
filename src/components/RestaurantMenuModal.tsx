@@ -341,11 +341,11 @@ export const RestaurantMenuModal: React.FC<RestaurantMenuModalProps> = ({
       {/* Comprehensive Product Details Modal with Real Ingredients, Nutrition & Customizations */}
       {selectedDishDetail && (
         <div className="fixed inset-0 z-[70] bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-in fade-in duration-200">
-          <div className={`w-full max-w-xl rounded-xl overflow-hidden shadow-2xl border flex flex-col my-auto max-h-[90vh] ${
+          <div className={`w-full max-w-5xl rounded-xl overflow-hidden shadow-2xl border flex flex-col sm:flex-row my-auto h-[80vh] ${
             isDarkMode ? 'bg-slate-900 border-slate-700 text-white' : 'bg-white border-slate-200 text-slate-900'
           }`}>
             {/* Big Dish Photo with Veg badge & Close */}
-            <div className="relative h-64 sm:h-72 w-full overflow-hidden bg-slate-900 shrink-0">
+            <div className="relative w-full sm:w-1/2 h-64 sm:h-full overflow-hidden bg-slate-900 shrink-0">
               <img
                 src={selectedDishDetail.image}
                 alt={selectedDishDetail.name}
@@ -385,56 +385,37 @@ export const RestaurantMenuModal: React.FC<RestaurantMenuModalProps> = ({
               </div>
             </div>
 
-            {/* Scrollable Content Area */}
-            <div className="p-5 sm:p-6 overflow-y-auto space-y-5">
+            {/* Content Area */}
+            <div className="w-full sm:w-1/2 p-8 overflow-y-auto flex flex-col gap-8">
               
               {/* Product Header & Pricing */}
-              <div>
-                <div className="flex items-start justify-between gap-3">
-                  <div className="space-y-1">
-                    <h3 className={`text-lg sm:text-2xl font-black ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
-                      {selectedDishDetail.name}
-                    </h3>
-                    <p className="text-xs text-orange-600 dark:text-orange-400 font-semibold flex items-center space-x-2">
-                      <span>{selectedDishDetail.portion || 'Serves 1-2 (650g)'}</span>
-                      <span>•</span>
-                      <span>{selectedDishDetail.prepTime || '20-25 mins prep'}</span>
-                    </p>
-                  </div>
-                  <span className="text-xl sm:text-2xl font-black text-orange-600 dark:text-orange-400 shrink-0">
-                    ${selectedDishDetail.price.toFixed(2)}
-                  </span>
+              <div className="flex justify-between items-start gap-4">
+                <div className="space-y-1">
+                  <h3 className={`text-3xl font-extrabold tracking-tighter ${isDarkMode ? 'text-white' : 'text-slate-950'}`}>
+                    {selectedDishDetail.name}
+                  </h3>
+                  <p className="text-sm text-slate-500 font-medium flex items-center gap-3">
+                    <span className="flex items-center gap-1"><Clock className="w-4 h-4" /> {selectedDishDetail.prepTime || '20-25 mins'}</span>
+                    <span className="flex items-center gap-1"><Utensils className="w-4 h-4" /> {selectedDishDetail.portion || 'Serves 1-2'}</span>
+                  </p>
                 </div>
-
-                <p className={`text-xs sm:text-sm mt-3 leading-relaxed ${isDarkMode ? 'text-slate-300' : 'text-slate-600'}`}>
-                  {selectedDishDetail.description}
-                </p>
+                <div className="text-3xl font-black text-orange-600">
+                  ${selectedDishDetail.price.toFixed(2)}
+                </div>
               </div>
 
+              <p className={`text-base leading-relaxed ${isDarkMode ? 'text-slate-300' : 'text-slate-600'}`}>
+                {selectedDishDetail.description}
+              </p>
+
               {/* Key Ingredients Section */}
-              <div className="space-y-2">
-                <div className="flex items-center space-x-1.5 text-xs font-bold uppercase tracking-wider text-orange-600 dark:text-orange-400">
-                  <Utensils className="w-3.5 h-3.5" />
-                  <span>Key Ingredients</span>
-                </div>
-                <div className="flex flex-wrap gap-1.5">
-                  {(selectedDishDetail.ingredients && selectedDishDetail.ingredients.length > 0
-                    ? selectedDishDetail.ingredients
-                    : [
-                        'Aged Basmati Rice',
-                        'Tender Chicken',
-                        'Desi Ghee',
-                        'Caramelized Onions',
-                        'Fresh Mint',
-                        'Spices'
-                      ]
-                  ).map((ing) => (
-                    <span
-                      key={ing}
-                      className={`text-[11px] font-medium px-2.5 py-1 rounded-lg border ${
-                        isDarkMode ? 'bg-slate-950/70 border-slate-800 text-slate-300' : 'bg-slate-50 border-slate-200 text-slate-700'
-                      }`}
-                    >
+              <div className="space-y-3">
+                <h4 className="text-xs font-black uppercase tracking-widest text-slate-400">Key Ingredients</h4>
+                <div className="flex flex-wrap gap-2">
+                  {(selectedDishDetail.ingredients || [
+                    'Aged Basmati Rice', 'Tender Chicken', 'Desi Ghee', 'Caramelized Onions', 'Fresh Mint', 'Spices'
+                  ]).map((ing) => (
+                    <span key={ing} className={`px-3 py-1.5 rounded-full text-xs font-semibold ${isDarkMode ? 'bg-slate-800 text-slate-200' : 'bg-orange-50 text-orange-700'}`}>
                       {ing}
                     </span>
                   ))}
@@ -442,37 +423,18 @@ export const RestaurantMenuModal: React.FC<RestaurantMenuModalProps> = ({
               </div>
 
               {/* Nutrition & Macro Facts */}
-              <div className="space-y-2">
-                <div className="flex items-center space-x-1.5 text-xs font-bold uppercase tracking-wider text-orange-600 dark:text-orange-400">
-                  <HeartPulse className="w-3.5 h-3.5 text-rose-500" />
-                  <span>Nutrition</span>
-                </div>
-                <div className="grid grid-cols-4 gap-2 text-center">
-                  <div className={`p-2 rounded-xl border ${isDarkMode ? 'bg-slate-950/60 border-slate-800' : 'bg-slate-50 border-slate-200'}`}>
-                    <span className="block text-[10px] text-slate-400 uppercase font-bold">Calories</span>
-                    <span className="text-xs sm:text-sm font-bold text-amber-500">
-                      {selectedDishDetail.nutrition?.calories || selectedDishDetail.calories || 780} kcal
-                    </span>
+              <div className="grid grid-cols-4 gap-3">
+                {[
+                  { label: 'Cals', value: selectedDishDetail.nutrition?.calories || 780, color: 'text-amber-500' },
+                  { label: 'Prot', value: selectedDishDetail.nutrition?.protein || '42g', color: 'text-emerald-500' },
+                  { label: 'Carbs', value: selectedDishDetail.nutrition?.carbs || '86g', color: 'text-blue-500' },
+                  { label: 'Fat', value: selectedDishDetail.nutrition?.fat || '28g', color: 'text-rose-500' }
+                ].map((n) => (
+                  <div key={n.label} className={`p-3 rounded-2xl border text-center ${isDarkMode ? 'bg-slate-950 border-slate-800' : 'bg-slate-50 border-slate-100'}`}>
+                    <span className="block text-[10px] uppercase font-bold text-slate-400 mb-1">{n.label}</span>
+                    <span className={`text-sm font-black ${n.color}`}>{n.value}</span>
                   </div>
-                  <div className={`p-2 rounded-xl border ${isDarkMode ? 'bg-slate-950/60 border-slate-800' : 'bg-slate-50 border-slate-200'}`}>
-                    <span className="block text-[10px] text-slate-400 uppercase font-bold">Protein</span>
-                    <span className="text-xs sm:text-sm font-bold text-emerald-500">
-                      {selectedDishDetail.nutrition?.protein || '42g'}
-                    </span>
-                  </div>
-                  <div className={`p-2 rounded-xl border ${isDarkMode ? 'bg-slate-950/60 border-slate-800' : 'bg-slate-50 border-slate-200'}`}>
-                    <span className="block text-[10px] text-slate-400 uppercase font-bold">Carbs</span>
-                    <span className="text-xs sm:text-sm font-bold text-blue-500">
-                      {selectedDishDetail.nutrition?.carbs || '86g'}
-                    </span>
-                  </div>
-                  <div className={`p-2 rounded-xl border ${isDarkMode ? 'bg-slate-950/60 border-slate-800' : 'bg-slate-50 border-slate-200'}`}>
-                    <span className="block text-[10px] text-slate-400 uppercase font-bold">Fat</span>
-                    <span className="text-xs sm:text-sm font-bold text-rose-500">
-                      {selectedDishDetail.nutrition?.fat || '28g'}
-                    </span>
-                  </div>
-                </div>
+                ))}
               </div>
 
               {/* Spice Level Selection */}
