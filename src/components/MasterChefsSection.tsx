@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { RESTAURANTS } from '../data/mockData';
 import { Restaurant } from '../types';
 import { useTheme } from '../context/ThemeContext';
+import { applyImageFallback } from '../utils/imageFallback';
 
 interface MasterChefsSectionProps {
   onSelectRestaurant: (restaurant: Restaurant) => void;
@@ -151,6 +152,7 @@ export const MasterChefsSection: React.FC<MasterChefsSectionProps> = ({ onSelect
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.35 }}
                   className="w-full h-full object-cover absolute inset-0"
+                  onError={applyImageFallback}
                 />
               </AnimatePresence>
               <div className="absolute top-4 left-4 bg-slate-950/85 backdrop-blur-md text-white text-xs font-bold px-3 py-1.5 rounded-lg uppercase tracking-wider flex items-center space-x-1.5 shadow-md">

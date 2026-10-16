@@ -3,6 +3,7 @@ import { Star, ChevronLeft, ChevronRight, Quote, CheckCircle2 } from 'lucide-rea
 import { motion, AnimatePresence } from 'motion/react';
 import { REVIEWS } from '../data/mockData';
 import { useTheme } from '../context/ThemeContext';
+import { applyImageFallback } from '../utils/imageFallback';
 
 export const ReviewsCarousel: React.FC = () => {
   const { isDarkMode } = useTheme();
@@ -86,6 +87,7 @@ export const ReviewsCarousel: React.FC = () => {
                   src={current.avatar} 
                   alt={current.author} 
                   className="w-11 h-11 rounded-full object-cover border border-orange-500 shadow-xs"
+                  onError={applyImageFallback}
                 />
                 <div className="text-left">
                   <div className="flex items-center space-x-1.5">
