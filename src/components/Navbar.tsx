@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { CartItem, Order } from '../types';
 import { useTheme } from '../context/ThemeContext';
+import rasoraLogo from '../assets/images/rasora_r_icon_1792060983359.jpg';
 
 interface NavbarProps {
   location: string;
@@ -242,7 +243,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               }}
               className="flex items-center space-x-2 shrink-0 group cursor-pointer"
             >
-              <img src="/src/assets/images/rasora_r_icon_1792060983359.jpg" alt="Rasora" className="w-9 h-9 sm:w-10 sm:h-10 object-cover rounded-xl group-hover:scale-105 transition-transform" />
+              <img src={rasoraLogo} alt="Rasora" className="w-9 h-9 sm:w-10 sm:h-10 object-cover rounded-xl group-hover:scale-105 transition-transform" />
               <div className="text-left hidden xs:block">
                 <span className={`text-base sm:text-xl font-black tracking-tight transition-colors ${
                   isDarkMode ? 'text-white group-hover:text-orange-400' : 'text-slate-900 group-hover:text-orange-600'
